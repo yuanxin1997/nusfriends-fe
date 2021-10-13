@@ -22,8 +22,8 @@ function Navbar() {
                         style={{ marginRight: "16px" }}
                     />
                 </Link>
-                <Link to="/">Explore</Link>
-                <Link to="/">My Circles</Link>
+                <Link to="explore">Explore</Link>
+                <Link to="/my-circles">My Circles</Link>
             </div>
 
             <ProfileCard>
