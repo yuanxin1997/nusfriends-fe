@@ -120,6 +120,15 @@ a:hover {
     color: var(--accent-darkpink);
 }
 
+.ant-input:hover {
+    border-color: var(--accent-lightpink);
+}
+
+.ant-input:focus {
+    border-color: var(--accent-lightpink);
+    box-shadow: 0 0 0 2px rgba(210, 88, 100, 0.2);
+}
+
 .ant-input-search
     > .ant-input-group
     > .ant-input-group-addon:last-child
@@ -143,6 +152,10 @@ a:hover {
 
 .ant-input-search .ant-input-group .ant-input-affix-wrapper:hover {
     border-color: var(--accent-redpink);
+}
+
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+    border-color: var(--accent-lightpink);
 }
 
 .ant-input-affix-wrapper:focus,

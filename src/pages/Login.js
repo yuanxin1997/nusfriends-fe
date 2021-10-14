@@ -19,7 +19,7 @@ function Login() {
                 flexDirection: "column",
             }}
         >
-            <div style={{ marginBottom: "10px" }}>
+            <div style={{ marginBottom: "24px" }}>
                 <h1>Login</h1>
             </div>
 
@@ -48,7 +48,7 @@ function Login() {
                         </Col>
                         <Col md={15} xs={24}>
                             <Password
-                                placeholder="Enter your email"
+                                placeholder="Enter your password"
                                 style={{
                                     padding: "8px",
                                     borderRadius: "var(--br-md)",
