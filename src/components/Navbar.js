@@ -1,3 +1,5 @@
+import { Col, Row } from "antd";
+import Search from "antd/lib/input/Search";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -25,40 +27,54 @@ function Navbar() {
                 <Link to="/my-circles">My Circles</Link>
             </div>
 
-            <ProfileCard>
-                {/* Right Side */}
-                {/* temp holder for profile pic */}
-                <div
-                    style={{
-                        display: "flex",
-                        backgroundColor: "var(--accent-lightpink",
-                        borderRadius: "var(--br-sm)",
-                        height: "40px",
-                        width: "40px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginRight: "16px",
-                    }}
-                    className="profilepicture"
-                >
-                    J
-                </div>
+            <Row align="middle" gutter={[16, 0]}>
+                <Col>
+                    <Search
+                        placeholder="Search"
+                        allowClear
+                        // onSearch={onSearch}
+                        style={{ width: 200 }}
+                    />
+                </Col>
+                <Col>
+                    <ProfileCard>
+                        {/* Right Side */}
+                        {/* temp holder for profile pic */}
+                        <div
+                            style={{
+                                display: "flex",
+                                backgroundColor: "var(--accent-lightpink",
+                                borderRadius: "var(--br-sm)",
+                                height: "40px",
+                                width: "40px",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginRight: "16px",
+                            }}
+                            className="profilepicture"
+                        >
+                            J
+                        </div>
 
-                {/* to input profile details */}
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        textAlign: "left",
-                    }}
-                    className="profileitems"
-                >
-                    <ProfileName className="profilename">John Doe</ProfileName>
-                    <ProfileInfo className="profileinfo">
-                        Y3 Information Systems
-                    </ProfileInfo>
-                </div>
-            </ProfileCard>
+                        {/* to input profile details */}
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                textAlign: "left",
+                            }}
+                            className="profileitems"
+                        >
+                            <ProfileName className="profilename">
+                                John Doe
+                            </ProfileName>
+                            <ProfileInfo className="profileinfo">
+                                Y3 Information Systems
+                            </ProfileInfo>
+                        </div>
+                    </ProfileCard>
+                </Col>
+            </Row>
         </Nb>
     );
 }

@@ -1,6 +1,7 @@
 import { Button, Col, Input, Row } from "antd";
 import Password from "antd/lib/input/Password";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 function Login() {
@@ -58,9 +59,21 @@ function Login() {
                 </div>
 
                 <div style={{ margin: "50px 0px 24px 0px" }}>
-                    <Button type="primary">Login</Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        style={{ padding: "0px 36px" }}
+                    >
+                        Login
+                    </Button>
                 </div>
             </LoginCard>
+            <div style={{ marginBottom: "20%" }}>
+                Don't have an account?{" "}
+                <Link to={"register"}>
+                    <SignUp>Sign up here!</SignUp>
+                </Link>
+            </div>
         </div>
     );
 }
@@ -70,8 +83,19 @@ const LoginCard = styled.div`
     border-radius: var(--br-lg);
     min-width: 500px;
     box-shadow: var(--shadow);
-    margin-bottom: 20%;
+    margin-bottom: 36px;
     padding: 16px;
+`;
+
+const SignUp = styled.span`
+    color: var(--accent-darkpink);
+    transition: var(--transition);
+    font-weight: 400;
+
+    &:hover {
+        text-decoration: underline;
+        font-weight: 700;
+    }
 `;
 
 export default Login;
