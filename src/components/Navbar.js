@@ -15,7 +15,7 @@ function Navbar() {
             message.info("profile");
             history.push("/user");
         } else if (key == 1) {
-            // to update logout - should remove localstorage deets
+            // TODO: update logout - should remove localstorage deets
             message.info("logout");
             history.push("/login");
         }
@@ -71,7 +71,7 @@ function Navbar() {
                             <div
                                 style={{
                                     display: "flex",
-                                    backgroundColor: "var(--accent-lightpink",
+                                    backgroundColor: "var(--accent-lightpink)",
                                     borderRadius: "var(--br-sm)",
                                     height: "40px",
                                     width: "40px",

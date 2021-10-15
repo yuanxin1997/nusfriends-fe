@@ -22,6 +22,7 @@ function Login() {
         await axios
             .post(`${Url}/users/login`, { user })
             .then((res) => {
+                // TODO: save the returned jwt
                 console.log(res);
                 setPending(false);
                 history.push("/");

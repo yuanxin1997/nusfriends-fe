@@ -24,6 +24,7 @@ function Register() {
         await axios
             .post(`${Url}/users/register`, { user })
             .then((res) => {
+                // TODO: save the returned jwt & userid
                 console.log(res);
                 setPending(false);
                 history.push("/");
