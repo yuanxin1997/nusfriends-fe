@@ -1,10 +1,48 @@
-import { Button, Col, Input, Row } from "antd";
+import { Button, Col, Input, Row, Form } from "antd";
 import Password from "antd/lib/input/Password";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { Url } from "../constants/global";
+import axios from "axios";
 
 function Login() {
+    const history = useHistory();
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState(null);
+
+    const onFinish = async (values) => {
+        const user = {
+            email: values.email,
+            password: values.password,
+        };
+
+        setPending(true);
+
+        await axios
+            .post(`${Url}/users/login`, { user })
+            .then((res) => {
+                console.log(res);
+                setPending(false);
+                history.push("/");
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setError(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setError(error.request.data);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log("Error", error.message);
+                    setError(error.message);
+                }
+                setPending(false);
+                console.log(error.config);
+            });
+    };
+
     return (
         <div
             style={{
@@ -24,49 +62,75 @@ function Login() {
             </div>
 
             <LoginCard>
-                <div style={{ margin: "24px" }}>
-                    <Row align="middle" gutter={[0, 12]}>
-                        <Col md={9} xs={24}>
-                            <h5>Email:</h5>
-                        </Col>
-                        <Col md={15} xs={24}>
-                            <Input
-                                placeholder="Enter your email"
-                                style={{
-                                    padding: "8px",
-                                    borderRadius: "var(--br-md)",
-                                }}
-                            ></Input>
-                        </Col>
-                    </Row>
-                </div>
-
-                <div style={{ margin: "24px" }}>
-                    <Row justify="center" align="middle" gutter={[0, 12]}>
-                        <Col md={9} xs={24}>
-                            <h5>Password:</h5>
-                        </Col>
-                        <Col md={15} xs={24}>
-                            <Password
-                                placeholder="Enter your password"
-                                style={{
-                                    padding: "8px",
-                                    borderRadius: "var(--br-md)",
-                                }}
-                            ></Password>
-                        </Col>
-                    </Row>
-                </div>
-
-                <div style={{ margin: "50px 0px 24px 0px" }}>
-                    <Button
-                        type="primary"
-                        size="large"
-                        style={{ padding: "0px 36px" }}
+                <Form
+                    name="login"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    labelAlign="left"
+                    style={{ padding: "24px" }}
+                    onFinish={onFinish}
+                >
+                    <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your email!",
+                            },
+                        ]}
+                        style={{ marginBottom: "32px" }}
                     >
-                        Login
-                    </Button>
-                </div>
+                        <Input
+                            placeholder="Enter your email"
+                            style={{
+                                padding: "8px",
+                                borderRadius: "var(--br-md)",
+                            }}
+                        ></Input>
+                    </Form.Item>
+                    <Form.Item
+                        label="Password"
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your password!",
+                            },
+                        ]}
+                        style={{ marginBottom: "32px" }}
+                    >
+                        <Password
+                            placeholder="Enter your password"
+                            style={{
+                                padding: "8px",
+                                borderRadius: "var(--br-md)",
+                            }}
+                        ></Password>
+                    </Form.Item>
+                    <Form.Item justify="center">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            size="large"
+                            style={{ padding: "0px 36px" }}
+                            loading={pending}
+                        >
+                            Login
+                        </Button>
+                    </Form.Item>
+                    {error && (
+                        <Form.Item
+                            justify="center"
+                            style={{
+                                color: "var(--error-main)",
+                                fontWeight: "700",
+                            }}
+                        >
+                            {error}
+                        </Form.Item>
+                    )}
+                </Form>
             </LoginCard>
             <div style={{ marginBottom: "20%" }}>
                 Don't have an account?{" "}
