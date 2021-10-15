@@ -189,3 +189,14 @@ a:hover {
 .ant-form-item-label-left {
     align-self: center;
 }
+
+.ant-dropdown-menu-item {
+    color: var(--base-60);
+    transition: var(--transition);
+}
+
+.ant-dropdown-menu-item:hover {
+    background-color: var(--accent-bg);
+    color: var(--accent-darkpink);
+    box-shadow: var(--shadow);
+}
