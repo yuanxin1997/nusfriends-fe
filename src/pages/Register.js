@@ -1,21 +1,17 @@
 import { Button, Col, Input, Row, Form, Space } from "antd";
 import Password from "antd/lib/input/Password";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { Url } from "../constants/global";
 
 function Register() {
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
+    const history = useHistory();
+    const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
 
-    const onFinish = (values) => {
-        setEmail(values.email);
-        setName(values.name);
-        setPassword(values.password);
-
+    const onFinish = async (values) => {
         const user = {
             email: values.email,
             password: values.password,
@@ -23,10 +19,33 @@ function Register() {
             description: "",
         };
 
-        axios
-            .post(`http://localhost:8080/users/register`, { user })
-            .then((res) => console.log(res))
-            .catch((err) => setError(err));
+        setPending(true);
+
+        await axios
+            .post(`${Url}/users/register`, { user })
+            .then((res) => {
+                console.log(res);
+                setPending(false);
+                history.push("/");
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setError(error.response.data);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                    setError(error.request.data);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log("Error", error.message);
+                    setError(error.message);
+                }
+                setPending(false);
+                console.log(error.config);
+            });
     };
 
     return (
@@ -44,7 +63,7 @@ function Register() {
             }}
         >
             <div style={{ marginBottom: "24px" }}>
-                <h1>Be a NUSFriend today!</h1>
+                <h1>Be an NUSFriend today!</h1>
             </div>
 
             <LoginCard>
@@ -122,13 +141,24 @@ function Register() {
                             htmlType="submit"
                             size="large"
                             style={{ padding: "0px 36px" }}
+                            loading={pending}
                         >
                             Register
                         </Button>
                     </Form.Item>
+                    {error && (
+                        <Form.Item
+                            justify="center"
+                            style={{
+                                color: "var(--error-main)",
+                                fontWeight: "700",
+                            }}
+                        >
+                            {error}
+                        </Form.Item>
+                    )}
                 </Form>
             </LoginCard>
-            {error && <div>{error}</div>}
         </div>
     );
 }
@@ -138,19 +168,8 @@ const LoginCard = styled.div`
     border-radius: var(--br-lg);
     min-width: 500px;
     box-shadow: var(--shadow);
-    margin-bottom: 20%;
+    margin-bottom: 10%;
     padding: 16px;
-`;
-
-const SignUp = styled.span`
-    color: var(--accent-darkpink);
-    transition: var(--transition);
-    font-weight: 400;
-
-    &:hover {
-        text-decoration: underline;
-        font-weight: 700;
-    }
 `;
 
 export default Register;

@@ -181,7 +181,11 @@ a:hover {
 }
 
 .ant-btn-primary:focus {
-    background-color: var(--accent-lightpink);
-    border-color: var(--accent-darkpink);
+    background-color: var(--accent-redpink);
+    border-color: var(--accent-redpink);
     box-shadow: var(--shadow);
+}
+
+.ant-form-item-label-left {
+    align-self: center;
 }
