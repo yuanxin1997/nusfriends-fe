@@ -1,9 +1,38 @@
+import { Col, Row, Menu, Dropdown, message } from "antd";
+import Search from "antd/lib/input/Search";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../resources/Logo.png";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 
 function Navbar() {
+    const [user, setUser] = useState(null);
+    const history = useHistory();
+
+    const onClick = ({ key }) => {
+        if (key == 0) {
+            message.info("profile");
+            history.push("/user");
+        } else if (key == 1) {
+            // TODO: update logout - should remove localstorage deets
+            message.info("logout");
+            history.push("/login");
+        }
+    };
+
+    const menu = (
+        <Menu onClick={onClick}>
+            <Menu.Item key="0" icon={<UserOutlined />}>
+                Profile
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key="1" icon={<LogoutOutlined />}>
+                Logout
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <Nb>
             <div
@@ -22,43 +51,59 @@ function Navbar() {
                     />
                 </Link>
                 <Link to="explore">Explore</Link>
-                <Link to="/my-circles">My Circles</Link>
+                <Link to="my-circles">My Circles</Link>
             </div>
 
-            <ProfileCard>
-                {/* Right Side */}
-                {/* temp holder for profile pic */}
-                <div
-                    style={{
-                        display: "flex",
-                        backgroundColor: "var(--accent-lightpink",
-                        borderRadius: "var(--br-sm)",
-                        height: "40px",
-                        width: "40px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginRight: "16px",
-                    }}
-                    className="profilepicture"
-                >
-                    J
-                </div>
+            <Row align="middle" gutter={[16, 0]}>
+                <Col>
+                    <Search
+                        placeholder="Search"
+                        allowClear
+                        // onSearch={onSearch}
+                        style={{ width: 200 }}
+                    />
+                </Col>
+                <Col>
+                    <Dropdown overlay={menu} trigger={["click"]}>
+                        <ProfileCard>
+                            {/* Right Side */}
+                            {/* temp holder for profile pic */}
+                            <div
+                                style={{
+                                    display: "flex",
+                                    backgroundColor: "var(--accent-lightpink)",
+                                    borderRadius: "var(--br-sm)",
+                                    height: "40px",
+                                    width: "40px",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    marginRight: "16px",
+                                }}
+                                className="profilepicture"
+                            >
+                                J
+                            </div>
 
-                {/* to input profile details */}
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        textAlign: "left",
-                    }}
-                    className="profileitems"
-                >
-                    <ProfileName className="profilename">John Doe</ProfileName>
-                    <ProfileInfo className="profileinfo">
-                        Y3 Information Systems
-                    </ProfileInfo>
-                </div>
-            </ProfileCard>
+                            {/* to input profile details */}
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    textAlign: "left",
+                                }}
+                                className="profileitems"
+                            >
+                                <ProfileName className="profilename">
+                                    John Doe
+                                </ProfileName>
+                                <ProfileInfo className="profileinfo">
+                                    Y3 Information Systems
+                                </ProfileInfo>
+                            </div>
+                        </ProfileCard>
+                    </Dropdown>
+                </Col>
+            </Row>
         </Nb>
     );
 }

@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import MyCircles from "./pages/MyCircles";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 
 function App() {
     return (
@@ -15,6 +17,8 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/login" component={Login} />
+                    <Route exact path="/register" component={Register} />
+                    <Route exact path="/user" component={Profile} />
                     <Route exact path="/explore" component={Explore} />
                     <Route exact path="/my-circles" component={MyCircles} />
                     <Route exact path="/circle/:id" />
