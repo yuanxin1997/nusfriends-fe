@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
+import "../styles/CirclePost.css";
 
 function CirclePost(props) {
   return (
-    <div>
+    <div style={{ width: "750px" }}>
       <h3 style={{ textAlign: "left" }}>{props.circleName}</h3>
 
       <CircleCard>
@@ -131,6 +132,7 @@ const styles = {
     justifyContent: "space-between",
     alignContent: "center",
     paddingBottom: "20px",
+    overflowX: "hidden",
   },
   userWrapper: {
     flexDirection: "row",

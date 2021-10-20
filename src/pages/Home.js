@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 import CirclePost from "../components/CirclePost";
 
 function Home() {
@@ -14,12 +13,12 @@ function Home() {
   const numComments = 123;
 
   return (
-    <React.Fragment>
+    <div style={{ justifyContent: "center", alignItems: "center" }}>
       <div
         style={{
           backgroundColor: "#FBF7F7",
-          paddingTop: 30,
-          paddingBottom: 30,
+          paddingTop: 20,
+          paddingBottom: 20,
         }}
       >
         <h1>Welcome Back, {userName}</h1>
@@ -45,7 +44,7 @@ function Home() {
           numComments={numComments}
         />
       </div>
-    </React.Fragment>
+    </div>
   );
 }
 
