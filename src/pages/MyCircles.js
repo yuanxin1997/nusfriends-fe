@@ -1,13 +1,44 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { Col, Row } from "antd";
 import CircleCard from "../components/CircleCard";
-import { TeamOutlined, BulbOutlined, CommentOutlined } from "@ant-design/icons";
+
 import styled from "styled-components";
 import { Layout } from "antd";
+import SideBar from "../components/SideBar";
+import ContainerHeader from "../components/ContainerHeader";
 const { Header, Footer, Sider, Content } = Layout;
 
 function MyCircles() {
+  /* START -- SETUP FOR COMPONENT */
+  const tabData = [
+    {
+      icon: "TeamOutlined",
+      title: "My Circles",
+      path: "/my-circles",
+    },
+    {
+      icon: "CommentOutlined",
+      title: "My Discussions",
+      path: "/my-circles/my-discussions",
+    },
+    {
+      icon: "BulbOutlined",
+      title: "My Answers",
+      path: "/my-circles/my-answers",
+    },
+  ];
+
+  const headData = {
+    title: "My Circles",
+    breadcrumbData: [
+      {
+        name: "My Circles",
+        path: "/my-circles",
+      }
+    ],
+  };
+  /* END -- SETUP FOR COMPONENT */
   const [circles, setCircles] = useState([
     {
       circleName: "NUS Computing",
@@ -32,37 +63,14 @@ function MyCircles() {
   ]);
 
   return (
-    <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }} >
+    <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
-        <SideWrapper>
-          <div>
-            <Link>
-              <TabWrapper className="active">
-                <TeamOutlined className="tabIcon" />
-                <p>My Circles</p>
-              </TabWrapper>
-            </Link>
-
-            <Link>
-              <TabWrapper className="inactive">
-                <CommentOutlined className="tabIcon" />
-                <p>My Discussions</p>
-              </TabWrapper>
-            </Link>
-
-            <Link>
-              <TabWrapper className="inactive">
-                <BulbOutlined className="tabIcon" />
-                <p>My Answers</p>
-              </TabWrapper>
-            </Link>
-          </div>
-        </SideWrapper>
+        <SideBar tabData={tabData} />
       </Sider>
       <Content style={{ backgroundColor: "var(--accent-bg)" }}>
-        <Row>
-          <Col span={24}>
-            <h1 style={{ textAlign: "left", marginTop: 20 }}>My Circles</h1>
+        <Row justify="start">
+          <Col>
+            <ContainerHeader headData={headData} />
           </Col>
         </Row>
         <Row>
@@ -85,34 +93,11 @@ function MyCircles() {
     </Layout>
   );
 }
-
-const SideWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 12em;
-`;
-
-const TabWrapper = styled.div`
-  display: flex;
-  &.active {
-    color: #000000;
-  }
-  &.inactive {
-    color: #d4d5d8;
-  }
-  .tabIcon {
-    font-size: 24px;
-    margin-right: 10px;
-  }
-`;
-
 const BoxesWrapper = styled.div`
   height: 100%;
   width: 85%;
   display: flex;
   flex-direction: column;
-  margin-top: 5em;
+  margin-top: 3em;
 `;
-
 export default MyCircles;
