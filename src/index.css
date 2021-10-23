@@ -207,10 +207,13 @@ a:hover {
 
 .ant-list-item-meta-content {
    align-self: center;
+   margin-right: 1rem;
+   
 }
 
 .ant-list-item-meta-title {
     text-align: left;
+    
 }
 
 .ant-list-item-meta-description {
@@ -228,4 +231,8 @@ a:hover {
 .ant-avatar-string {
     transform: scale(1) translateX(-50%) translateY(-10%) !important;
     font-size: 12px;
+}
+
+.ant-badge-count {
+    border-radius: 8px;
 }
