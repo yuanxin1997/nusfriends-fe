@@ -201,8 +201,14 @@ a:hover {
     box-shadow: var(--shadow);
 }
 
+.ant-list-item-meta-avatar {
+    margin-right: 2rem;
+}
 
 .ant-list-item-meta-content {
-    flex-grow: 0;
-    flex-wrap: wrap;
+   align-self: center;
+}
+
+.ant-list-item-meta-title {
+    text-align: left;
 }
