@@ -11,8 +11,13 @@ import {
   Divider,
   message,
   Image,
+  Tooltip,
 } from "antd";
-import { TrophyOutlined } from "@ant-design/icons";
+import {
+  TrophyOutlined,
+  UserOutlined,
+  AntDesignOutlined,
+} from "@ant-design/icons";
 import CircleCard from "../components/CircleCard";
 
 import styled from "styled-components";
@@ -93,6 +98,16 @@ const Leaderboard = () => {
     },
   ];
 
+  const getRandomColor = () => {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  
+
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
@@ -106,6 +121,25 @@ const Leaderboard = () => {
             <ContainerHeader headData={headData} />
           </Col>
         </Row>
+        <Row justify="start">
+          <Col>
+            <Avatar.Group
+              maxCount={5}
+              size="large"
+              maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+            >
+              {data.map((item, index) => (
+       
+                <Avatar key={index} src={item.picture.large} />
+               
+              ))}
+              <Avatar style={{ backgroundColor: (getRandomColor) }}>K</Avatar>
+              {/* <Avatar style={{ backgroundColor: getRandomColor }}>K</Avatar> */}
+              <Tooltip title="Ant User" placement="top"></Tooltip>
+            </Avatar.Group>
+          </Col>
+        </Row>
+
         <Row>
           <Col span={24}>
             <Wrapper>
