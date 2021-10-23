@@ -12,6 +12,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import MyInbox from "./pages/MyInbox";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     <Route exact path="/my-circles/:id/leaderboard" component={Leaderboard} />
                     <Route exact path="/my-circles/my-discussions" component={MyDiscussions} />
                     <Route exact path="/my-circles/my-answers" component={MyAnswers} />
+                    <Route exact path="/my-inbox" component={MyInbox} />
                     <Route exact path="/circle/:id" />
                 </Switch>
             </div>

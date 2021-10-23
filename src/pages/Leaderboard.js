@@ -99,7 +99,7 @@ const Leaderboard = () => {
   ];
 
   return (
-    <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
+    <Layout style={{ height: "100%", minHeight: "100vp", backgroundColor: "var(--accent-bg)" }}>
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
         <SideBar tabData={tabData} />
       </Sider>
@@ -145,6 +145,7 @@ const Leaderboard = () => {
                     }
                   />
                   <h5>name</h5>
+                  <p>11 likes</p>
                 </SilverCardWrapper>
                 <GoldCardWrapper>
                   <div>
@@ -159,6 +160,7 @@ const Leaderboard = () => {
                     }
                   />
                   <h5>name</h5>
+                  <p>11 likes</p>
                 </GoldCardWrapper>
                 <BronzeCardWrapper>
                   <div>
@@ -173,13 +175,14 @@ const Leaderboard = () => {
                     }
                   />
                   <h5>name</h5>
+                  <p>11 likes</p>
                 </BronzeCardWrapper>
               </LadderWrapper>
               <ListWrapper>
                 <div
                   id="scrollableDiv"
                   style={{
-                    height: 400,
+                    height: "400px",
                     overflow: "auto",
                     padding: "0 16px",
                   }}
@@ -226,8 +229,8 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   height: auto;
-  min-height: 600px;
-  padding: 2em 0;
+  padding: 2rem 0;
+  margin-bottom: 5rem;
   background-color: var(--base-0);
   /* transition: var(--transition); */
   font-weight: 400;
@@ -249,7 +252,7 @@ const ListWrapper = styled.div`
 `;
 
 const GoldCardWrapper = styled.div`
-  padding: 10px 50px 50px 50px;
+  padding: 10px 50px 40px 50px;
   border: 2px #ffd700 solid;
   div {
     font-size: 2rem;
