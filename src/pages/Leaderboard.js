@@ -51,7 +51,7 @@ const Leaderboard = () => {
           </Col>
         </Row>
         <Row>
-            {/* add content here */}
+ 
         </Row>
       </Content>
     </Layout>
