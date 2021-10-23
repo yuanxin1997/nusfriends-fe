@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../resources/Logo.png";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
 
 function Navbar() {
     const [user, setUser] = useState(null);
