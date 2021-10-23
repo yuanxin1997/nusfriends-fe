@@ -200,3 +200,7 @@ a:hover {
     color: var(--accent-darkpink);
     box-shadow: var(--shadow);
 }
+
+.ant-list-item-meta-content {
+    flex: 0;
+}
