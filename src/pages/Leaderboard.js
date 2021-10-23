@@ -12,6 +12,7 @@ import {
   message,
   Image,
   Tooltip,
+  Badge
 } from "antd";
 import {
   TrophyOutlined,
@@ -136,6 +137,7 @@ const Leaderboard = () => {
                   <div>
                     <TrophyOutlined />
                   </div>
+                  <Badge count={2} color="var(--accent-redpink)">
                   <Avatar
                     src={
                       <Image
@@ -144,6 +146,7 @@ const Leaderboard = () => {
                       />
                     }
                   />
+                  </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
                 </SilverCardWrapper>
@@ -151,6 +154,8 @@ const Leaderboard = () => {
                   <div>
                     <TrophyOutlined />
                   </div>
+                  
+                  <Badge count={1} color="var(--accent-redpink)">
                   <Avatar
                     src={
                       <Image
@@ -159,6 +164,7 @@ const Leaderboard = () => {
                       />
                     }
                   />
+                  </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
                 </GoldCardWrapper>
@@ -166,6 +172,7 @@ const Leaderboard = () => {
                   <div>
                     <TrophyOutlined />
                   </div>
+                  <Badge count={3} color="var(--accent-redpink)">
                   <Avatar
                     src={
                       <Image
@@ -174,6 +181,7 @@ const Leaderboard = () => {
                       />
                     }
                   />
+                  </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
                 </BronzeCardWrapper>
@@ -199,10 +207,10 @@ const Leaderboard = () => {
                   >
                     <List
                       dataSource={data}
-                      renderItem={(item) => (
+                      renderItem={(item, index) => (
                         <List.Item key={item.id}>
                           <List.Item.Meta
-                            avatar={<Avatar src={item.picture.large} />}
+                            avatar={<Badge count={index + 4} color="var(--accent-redpink)"><Avatar src={item.picture.large} /></Badge>}
                             title={
                               <a href="https://ant.design">{item.name.last}</a>
                             }
@@ -264,7 +272,7 @@ const GoldCardWrapper = styled.div`
 const SilverCardWrapper = styled.div`
   height: 80%;
   border: 2px #d7d7d7 solid;
-  padding: 10px 30px 30px 30px;
+  padding: 10px 40px 30px 40px;
   div {
     font-size: 1.5rem;
     color: #d7d7d7;
@@ -275,7 +283,7 @@ const SilverCardWrapper = styled.div`
 const BronzeCardWrapper = styled.div`
   height: 80%;
   border: 2px #ad8a56 solid;
-  padding: 10px 30px 30px 30px;
+  padding: 10px 40px 30px 40px;
   div {
     font-size: 1.5rem;
     color: #ad8a56;

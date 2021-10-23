@@ -213,6 +213,10 @@ a:hover {
     text-align: left;
 }
 
+.ant-list-item-meta-description {
+    text-align: left;
+}
+
 .ant-avatar-group .ant-avatar:not(:first-child) {
     margin-left: -16px;
 }

@@ -50,9 +50,9 @@ function Navbar() {
                         style={{ marginRight: "16px" }}
                     />
                 </Link>
-                <Link to="explore">Explore</Link>
-                <Link to="my-circles">My Circles</Link>
-                <Link to="my-inbox">My Inbox</Link>
+                <Link to="/explore">Explore</Link>
+                <Link to="/my-circles">My Circles</Link>
+                <Link to="/my-inbox">My Inbox</Link>
             </div>
 
             <Row align="middle" gutter={[16, 0]}>

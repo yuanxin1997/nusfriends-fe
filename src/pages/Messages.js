@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { List, Col, Row, Skeleton, Divider, Avatar } from "antd";
+import moment from "moment";
 import CircleCard from "../components/CircleCard";
-import moment from 'moment';
+
 import styled from "styled-components";
 import { Layout } from "antd";
 import SideBar from "../components/SideBar";
@@ -50,11 +51,15 @@ const MyInbox = () => {
   ];
 
   const headData = {
-    title: "My Inbox",
+    title: "Messages",
     breadcrumbData: [
       {
         name: "My Inbox",
         path: "/my-inbox",
+      },
+      {
+        name: "Messages",
+        path: "/my-inbox/messages",
       },
     ],
   };
@@ -87,50 +92,33 @@ const MyInbox = () => {
           <Row>
             <Col span={24}>
               <CotainerWrapper>
-                <InfoWrapper>
-                  <p>You have {data.length} messages</p>
-                </InfoWrapper>
                 <CardWrapper>
-                  <div
-                    id="scrollableDiv"
-                    style={{
-                      height: "400px",
-                      overflow: "auto",
-                      padding: "0 16px",
-                    }}
-                  >
-                    <InfiniteScroll
-                      dataLength={data.length}
-                      next={loadMoreData}
-                      hasMore={data.length < 50}
-                      loader={
-                        <Skeleton avatar paragraph={{ rows: 1 }} active />
-                      }
-                      endMessage={
-                        <Divider plain>It is all, nothing more 🤐</Divider>
-                      }
-                      scrollableTarget="scrollableDiv"
-                    >
-                      <List
-                        dataSource={data}
-                        renderItem={(item) => (
-                          <List.Item key={item.id}>
-                            <List.Item.Meta
-                              avatar={<Avatar src={item.picture.large} />}
-                              title={
-                                <a href="https://ant.design">
-                                  {trim(
-                                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                                  )}
-                                </a>
-                              }
-                            />
-                            <div>{moment([2021, 9, 20]).fromNow()}</div>
-                          </List.Item>
-                        )}
-                      />
-                    </InfiniteScroll>
-                  </div>
+                  <Row>
+                    <Col span={24}>
+                      <ContentWrapper>
+                        <h5>Message From:</h5>
+                        <SenderWrapper>
+                          <Avatar src="https://joeschmoe.io/api/v1/random" />
+                          <Sender>name</Sender>
+                        </SenderWrapper>
+                        <p>
+                          Why do we use it? It is a long established fact that a
+                          reader will be distracted by the readable content of a
+                          page when looking at its layout. The point of using
+                          Lorem Ipsum is that it has a more-or-less normal
+                          distribution of letters, as opposed to using 'Content
+                          here, content here', making it look like readable
+                          English. Many desktop publishing packages and web page
+                          editors now use Lorem Ipsum as their default model
+                          text, and a search for 'lorem ipsum' will uncover many
+                          web sites still in their infancy. Various versions
+                          have evolved over the years, sometimes by accident,
+                          sometimes on purpose (injected humour and the like).
+                        </p>
+                        <p>{moment([2021, 9, 20]).fromNow()}</p>
+                      </ContentWrapper>
+                    </Col>
+                  </Row>
                 </CardWrapper>
               </CotainerWrapper>
             </Col>
@@ -148,17 +136,28 @@ const CotainerWrapper = styled.div`
   flex-grow: 1;
 `;
 
-const InfoWrapper = styled.div`
-  margin: 1rem 0;
-  text-align: center;
-  color: var(--base-20);
-  font-size: var(--fs-h5);
-  font-weight: 700;
-`;
-
 const CardWrapper = styled.div`
   background-color: var(--base-0);
   font-weight: 400;
+  padding: 5rem;
+  p {
+     
+  }
+`;
+
+const ContentWrapper = styled.div`
+  text-align: left;
+`;
+
+const Sender = styled.div`
+    margin-left: 1rem;
+
+    align-self: center;
+`;
+
+const SenderWrapper = styled.div`
+  display: flex;
+  margin: 2rem 0;
 `;
 
 export default MyInbox;
