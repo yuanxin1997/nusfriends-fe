@@ -98,16 +98,6 @@ const Leaderboard = () => {
     },
   ];
 
-  const getRandomColor = () => {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-  
-
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
@@ -123,20 +113,18 @@ const Leaderboard = () => {
         </Row>
         <Row justify="start">
           <Col>
-            <Avatar.Group
-              maxCount={5}
-              size="large"
-              maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-            >
-              {data.map((item, index) => (
-       
-                <Avatar key={index} src={item.picture.large} />
-               
-              ))}
-              <Avatar style={{ backgroundColor: (getRandomColor) }}>K</Avatar>
-              {/* <Avatar style={{ backgroundColor: getRandomColor }}>K</Avatar> */}
-              <Tooltip title="Ant User" placement="top"></Tooltip>
-            </Avatar.Group>
+            <UserGroupWrapper>
+              <Avatar.Group
+                maxCount={5}
+                size="large"
+                maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+              >
+                {data.map((item, index) => (
+                  <Avatar key={index} src={item.picture.large} />
+                ))}
+                <Tooltip title="Ant User" placement="top"></Tooltip>
+              </Avatar.Group>
+            </UserGroupWrapper>
           </Col>
         </Row>
 
@@ -249,7 +237,7 @@ const LadderWrapper = styled.div`
   align-self: center;
   width: 80%;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-end;
   div {
     border-radius: 10px;
   }
@@ -290,4 +278,8 @@ const BronzeCardWrapper = styled.div`
     color: #ad8a56;
     margin-bottom: 10px;
   }
+`;
+
+const UserGroupWrapper = styled.div`
+  margin: 1rem 0 0.5rem 0;
 `;
