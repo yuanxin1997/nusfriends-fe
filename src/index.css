@@ -200,3 +200,32 @@ a:hover {
     color: var(--accent-darkpink);
     box-shadow: var(--shadow);
 }
+
+.ant-list-item-meta-avatar {
+    margin-right: 2rem;
+}
+
+.ant-list-item-meta-content {
+   align-self: center;
+}
+
+.ant-list-item-meta-title {
+    text-align: left;
+}
+
+.ant-list-item-meta-description {
+    text-align: left;
+}
+
+.ant-avatar-group .ant-avatar:not(:first-child) {
+    margin-left: -16px;
+}
+
+.ant-avatar-group .ant-avatar {
+    border: 5px solid #fbf7f7;
+}
+
+.ant-avatar-string {
+    transform: scale(1) translateX(-50%) translateY(-10%) !important;
+    font-size: 12px;
+}

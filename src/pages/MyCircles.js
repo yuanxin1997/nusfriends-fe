@@ -1,10 +1,44 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { Col, Row } from "antd";
 import CircleCard from "../components/CircleCard";
-import { TeamOutlined, BulbOutlined, CommentOutlined } from "@ant-design/icons";
 
-function MyCircles() {
+import styled from "styled-components";
+import { Layout } from "antd";
+import SideBar from "../components/SideBar";
+import ContainerHeader from "../components/ContainerHeader";
+const { Header, Footer, Sider, Content } = Layout;
+
+const MyCircles = () => {
+  /* START -- SETUP FOR COMPONENT */
+  const tabData = [
+    {
+      icon: "TeamOutlined",
+      title: "My Circles",
+      path: "/my-circles",
+    },
+    {
+      icon: "CommentOutlined",
+      title: "My Discussions",
+      path: "/my-circles/my-discussions",
+    },
+    {
+      icon: "BulbOutlined",
+      title: "My Answers",
+      path: "/my-circles/my-answers",
+    },
+  ];
+
+  const headData = {
+    title: "My Circles",
+    breadcrumbData: [
+      {
+        name: "My Circles",
+        path: "/my-circles",
+      }
+    ],
+  };
+  /* END -- SETUP FOR COMPONENT */
   const [circles, setCircles] = useState([
     {
       circleName: "NUS Computing",
@@ -29,77 +63,20 @@ function MyCircles() {
   ]);
 
   return (
-    <div>
-      <div style={styles.background}>
-        <div style={styles.leftTab}>
-          {/* empty top border */}
-          <div style={{ flex: 1.5 }}></div>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <TeamOutlined style={styles.tabIcons} />
-              <Link>
-                <h4 style={styles.selectedTab}>My Circles</h4>
-              </Link>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <CommentOutlined style={styles.tabIcons} />
-              <Link>
-                <h4 style={styles.unselectedTab}>My Discussions</h4>
-              </Link>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <BulbOutlined style={styles.tabIcons} />
-              <Link>
-                <h4 style={styles.unselectedTab}>My Answers</h4>
-              </Link>
-            </div>
-          </div>
-
-          {/* empty bottom border */}
-          <div style={{ flex: 6 }}></div>
-        </div>
-
-        {/* Circles display */}
-        <div
-          style={{
-            height: "100%",
-            width: "85%",
-            display: "flex",
-            flexDirection: "column",
-            marginLeft: 15,
-          }}
-        >
-          <div style={{ flex: 1.5 }}>
-            <h1 style={{ textAlign: "left", marginTop: 20 }}>My Circles</h1>
-          </div>
-
-          <div
-            style={{
-              flex: 7,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div style={{}}>
+    <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
+      <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
+        <SideBar tabData={tabData} />
+      </Sider>
+      <Content style={{ backgroundColor: "var(--accent-bg)" }}>
+        <Row justify="start">
+          <Col>
+            <ContainerHeader headData={headData} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+          {/* conntent starts here */}
+            <BoxesWrapper>
               <Row gutter={16}>
                 {circles.map((circle) => (
                   <Col span={8}>
@@ -110,36 +87,18 @@ function MyCircles() {
                   </Col>
                 ))}
               </Row>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </BoxesWrapper>
+          </Col>
+        </Row>
+      </Content>
+    </Layout>
   );
 }
-
-const styles = {
-  background: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-    height: "100%",
-    position: "fixed",
-    flex: 1,
-    backgroundColor: "var(--accent-bg)",
-  },
-  leftTab: {
-    width: "15%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
-  tabIcons: { fontSize: 24, marginRight: "10px" },
-  selectedTab: { marginBottom: "16px" },
-  unselectedTab: {
-    color: "#D4D5D8",
-    marginBottom: "16px",
-  },
-};
-
+const BoxesWrapper = styled.div`
+  height: 100%;
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3em;
+`;
 export default MyCircles;
