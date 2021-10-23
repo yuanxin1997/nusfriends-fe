@@ -220,3 +220,8 @@ a:hover {
 .ant-avatar-group .ant-avatar {
     border: 5px solid #fbf7f7;
 }
+
+.ant-avatar-string {
+    transform: scale(1) translateX(-50%) translateY(-10%) !important;
+    font-size: 12px;
+}
