@@ -3,10 +3,21 @@ import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 import "../styles/CirclePost.css";
 
-function CirclePost(props) {
+function CirclePost({
+  circleNameVisible,
+  circleName,
+  postTitle,
+  postText,
+  posted,
+  numLikes,
+  numComments,
+}) {
   return (
     <div style={{ width: "750px" }}>
-      <h3 style={{ textAlign: "left" }}>{props.circleName}</h3>
+      <h3 style={{ textAlign: "left" }}>
+        {" "}
+        {circleNameVisible === true ? circleName : null}
+      </h3>
 
       <CircleCard>
         <div style={styles.wrapper}>
@@ -54,16 +65,14 @@ function CirclePost(props) {
               textAlign: "right",
             }}
           >
-            {props.posted}
+            {posted}
           </div>
         </div>
 
         <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
-          this is the post title
+          {postTitle}
         </h4>
-        <p style={{ textAlign: "left", paddingBottom: "10px" }}>
-          {props.postText}
-        </p>
+        <p style={{ textAlign: "left", paddingBottom: "10px" }}>{postText}</p>
 
         <div
           style={{
@@ -74,11 +83,11 @@ function CirclePost(props) {
           {/* Bottom Row (Likes and comments) */}
           <div style={styles.bottomRowWrapper}>
             <HeartFilled style={styles.heartStyles} />
-            <text style={styles.textStyle}>{props.numLikes}</text>
+            <text style={styles.textStyle}>{numLikes}</text>
 
             <CommentOutlined style={styles.commentStyle} />
 
-            <text style={styles.textStyle}>{props.numComments}</text>
+            <text style={styles.textStyle}>{numComments}</text>
           </div>
         </div>
       </CircleCard>
