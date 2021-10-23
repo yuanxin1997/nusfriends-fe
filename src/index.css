@@ -201,7 +201,8 @@ a:hover {
     box-shadow: var(--shadow);
 }
 
+
 .ant-list-item-meta-content {
-    flex: 0;
-    padding-left: 3em;
+    flex-grow: 0;
+    flex-wrap: wrap;
 }

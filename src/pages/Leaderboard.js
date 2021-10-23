@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { List, Avatar, Col, Row, Card, Skeleton, Divider, message } from "antd";
+import {
+  List,
+  Avatar,
+  Col,
+  Row,
+  Card,
+  Skeleton,
+  Divider,
+  message,
+  Image,
+} from "antd";
+import { TrophyOutlined } from "@ant-design/icons";
 import CircleCard from "../components/CircleCard";
 
 import styled from "styled-components";
@@ -88,7 +99,7 @@ const Leaderboard = () => {
         <SideBar tabData={tabData} />
       </Sider>
       <Content
-        style={{ backgroundColor: "var(--accent-bg)", marginRight: "10%" }}
+        style={{ backgroundColor: "var(--accent-bg)", marginRight: "16%" }}
       >
         <Row justify="start">
           <Col>
@@ -98,9 +109,50 @@ const Leaderboard = () => {
         <Row>
           <Col span={24}>
             <Wrapper>
-                <LadderWrapper>
-                    
-                </LadderWrapper>
+              <LadderWrapper>
+                <SilverCardWrapper>
+                  <div>
+                    <TrophyOutlined />
+                  </div>
+                  <Avatar
+                    src={
+                      <Image
+                        src="https://joeschmoe.io/api/v1/random"
+                        style={{ width: 32 }}
+                      />
+                    }
+                  />
+                  <h5>name</h5>
+                </SilverCardWrapper>
+                <GoldCardWrapper>
+                  <div>
+                    <TrophyOutlined />
+                  </div>
+                  <Avatar
+                    src={
+                      <Image
+                        src="https://joeschmoe.io/api/v1/random"
+                        style={{ width: 32 }}
+                      />
+                    }
+                  />
+                  <h5>name</h5>
+                </GoldCardWrapper>
+                <BronzeCardWrapper>
+                  <div>
+                    <TrophyOutlined />
+                  </div>
+                  <Avatar
+                    src={
+                      <Image
+                        src="https://joeschmoe.io/api/v1/random"
+                        style={{ width: 32 }}
+                      />
+                    }
+                  />
+                  <h5>name</h5>
+                </BronzeCardWrapper>
+              </LadderWrapper>
               <ListWrapper>
                 <div
                   id="scrollableDiv"
@@ -150,24 +202,58 @@ export default Leaderboard;
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  height: 600px;
-  background-color: white;
+  flex-direction: column;
+  height: auto;
+  min-height: 600px;
+  padding: 2em 0;
+  background-color: var(--base-0);
   /* transition: var(--transition); */
   font-weight: 400;
 `;
 const LadderWrapper = styled.div`
-
+  display: flex;
+  align-self: center;
+  width: 80%;
+  justify-content: space-around;
+  align-items: center;
+  div {
+    border-radius: 10px;
+  }
 `;
 const ListWrapper = styled.div`
+  align-self: center;
   margin-top: 5rem;
   width: 80%;
 `;
 
-// const ItemWrapper = styled.div`
-//   border: 1px red solid;
-//   display: flex;
-//   height: 50px;
-//   justify-content: flex-start;
-//   padding: 1em 2em 1em;
-//   align-items: center;
-// `;
+const GoldCardWrapper = styled.div`
+  padding: 10px 50px 50px 50px;
+  border: 2px #ffd700 solid;
+  div {
+    font-size: 2rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+  }
+`;
+
+const SilverCardWrapper = styled.div`
+  height: 80%;
+  border: 2px #d7d7d7 solid;
+  padding: 10px 30px 30px 30px;
+  div {
+    font-size: 1.5rem;
+    color: #d7d7d7;
+    margin-bottom: 10px;
+  }
+`;
+
+const BronzeCardWrapper = styled.div`
+  height: 80%;
+  border: 2px #ad8a56 solid;
+  padding: 10px 30px 30px 30px;
+  div {
+    font-size: 1.5rem;
+    color: #ad8a56;
+    margin-bottom: 10px;
+  }
+`;
