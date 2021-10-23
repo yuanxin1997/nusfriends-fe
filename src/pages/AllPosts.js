@@ -30,11 +30,11 @@ const AllPosts = () => {
       {
         name: "My Circles",
         path: "/my-circles",
-      }, 
+      },
       {
         name: "to be removed, fetch data and push here",
         path: "this can be empty",
-      }
+      },
     ],
   };
   /* END -- SETUP FOR COMPONENT */
@@ -50,12 +50,10 @@ const AllPosts = () => {
             <ContainerHeader headData={headData} />
           </Col>
         </Row>
-        <Row>
-            {/* add content here */}
-        </Row>
+        <Row>{/* add content here */}</Row>
       </Content>
     </Layout>
   );
-}
+};
 
 export default AllPosts;
