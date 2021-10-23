@@ -18,6 +18,7 @@ import styled from "styled-components";
 import logo from "../resources/Logo.png";
 import moment from "moment";
 import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
+import WebSocket from "isomorphic-ws";
 
 function Navbar() {
   const [user, setUser] = useState(null);
@@ -81,7 +82,26 @@ function Navbar() {
       return content;
     }
   }
+  // web socket START HERE ================
 
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:3030/nus-friends");
+
+    ws.onopen = function open(event) {
+      console.log("connected");
+      ws.send(Date.now());
+    };
+
+    ws.onclose = function close(event) {
+      console.log("disconnected");
+    };
+
+    ws.onmessage = function incoming(event) {
+      console.log(event.data);
+    };
+  }, []);
+
+  // web socket END HERE ================
   const notificationMenu = (
     <NotificationCard>
       <p> Notification</p>
@@ -267,14 +287,13 @@ const NotificationCard = styled.div`
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 10px;
   p {
-      border-radius: 10px 10px 0 0;
-      background-color: var(--accent-lightpink);
-      color: var(--base-0);
-      padding: 0.2rem 0em;
-      text-align: center;
-      font-weight: 900;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--accent-lightpink);
+    color: var(--base-0);
+    padding: 0.2rem 0em;
+    text-align: center;
+    font-weight: 900;
   }
 `;
-
 
 export default Navbar;
