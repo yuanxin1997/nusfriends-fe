@@ -203,4 +203,5 @@ a:hover {
 
 .ant-list-item-meta-content {
     flex: 0;
+    padding-left: 3em;
 }

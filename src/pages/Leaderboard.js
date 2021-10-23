@@ -82,26 +82,14 @@ const Leaderboard = () => {
     },
   ];
 
-  const tdata = [
-    {
-      title: "Ant Design Title 1",
-    },
-    {
-      title: "Ant Design Title 2",
-    },
-    {
-      title: "Ant Design Title 3",
-    },
-    {
-      title: "Ant Design Title 4",
-    },
-  ];
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
         <SideBar tabData={tabData} />
       </Sider>
-      <Content style={{ backgroundColor: "var(--accent-bg)", marginRight: "10%" }}>
+      <Content
+        style={{ backgroundColor: "var(--accent-bg)", marginRight: "10%" }}
+      >
         <Row justify="start">
           <Col>
             <ContainerHeader headData={headData} />
@@ -110,13 +98,16 @@ const Leaderboard = () => {
         <Row>
           <Col span={24}>
             <Wrapper>
+                <LadderWrapper>
+                    
+                </LadderWrapper>
               <ListWrapper>
                 <div
                   id="scrollableDiv"
                   style={{
                     height: 400,
                     overflow: "auto",
-                    padding: "0 16px"
+                    padding: "0 16px",
                   }}
                 >
                   <InfiniteScroll
@@ -139,7 +130,7 @@ const Leaderboard = () => {
                               <a href="https://ant.design">{item.name.last}</a>
                             }
                           />
-                          <div>Content</div>
+                          <div>11 likes</div>
                         </List.Item>
                       )}
                     />
@@ -157,13 +148,19 @@ const Leaderboard = () => {
 export default Leaderboard;
 
 const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
   height: 600px;
   background-color: white;
   /* transition: var(--transition); */
   font-weight: 400;
 `;
-const ListWrapper = styled.div`
+const LadderWrapper = styled.div`
 
+`;
+const ListWrapper = styled.div`
+  margin-top: 5rem;
+  width: 80%;
 `;
 
 // const ItemWrapper = styled.div`
