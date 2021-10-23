@@ -52,43 +52,6 @@ function CreatePostModal({ modalVisible, closeCreateModal }) {
           </Col>
         </Row>
       </Form>
-      {/* <div>
-        <h5>Topic Title</h5>
-        <Input placeholder="Type something..." />
-      </div>
-
-      <div>
-        <h5>Topic Type</h5>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <h6>discussion</h6>
-          <h6> questions</h6>
-          <h6> poll </h6>
-        </div>
-      </div>
-
-      <div>
-        <h5>Topic Body</h5>
-        <Input placeholder="Type something..." />
-      </div>
-
-      <div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <h6>discussion</h6>
-          <h6> questions</h6>
-          <h6> poll </h6>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <h5>Circles/Category</h5>
-          <Input placeholder="Select" />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <h5>Tags</h5>
-          <Input placeholder="Search Tags" />
-        </div>
-      </div> */}
     </Modal>
   );
 }
