@@ -9,7 +9,7 @@ import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
 const { Header, Footer, Sider, Content } = Layout;
 
-function MyCircles() {
+const MyCircles = () => {
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
     {
@@ -75,6 +75,7 @@ function MyCircles() {
         </Row>
         <Row>
           <Col span={24}>
+          {/* conntent starts here */}
             <BoxesWrapper>
               <Row gutter={16}>
                 {circles.map((circle) => (

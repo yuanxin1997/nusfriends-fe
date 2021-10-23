@@ -32,7 +32,7 @@ const MyDiscussions = () => {
         <SideBar tabData={tabData} />
       </Sider>
       <Content style={{ backgroundColor: "var(--accent-bg)" }}>
-
+        {/* content starts here */}
       </Content>
     </Layout>
   );
