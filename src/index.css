@@ -212,3 +212,11 @@ a:hover {
 .ant-list-item-meta-title {
     text-align: left;
 }
+
+.ant-avatar-group .ant-avatar:not(:first-child) {
+    margin-left: -16px;
+}
+
+.ant-avatar-group .ant-avatar {
+    border: 5px solid #fbf7f7;
+}
