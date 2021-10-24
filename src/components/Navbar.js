@@ -9,6 +9,7 @@ import {
     Divider,
     Avatar,
     List,
+    Button,
 } from "antd";
 import Search from "antd/lib/input/Search";
 import React, { useState, useEffect } from "react";
@@ -20,8 +21,8 @@ import moment from "moment";
 import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
 import WebSocket from "isomorphic-ws";
 
-function Navbar() {
-    const [user, setUser] = useState(null);
+function Navbar(props) {
+    const userId = props.currentUser;
     const history = useHistory();
 
     const onClick = ({ key }) => {
@@ -30,6 +31,7 @@ function Navbar() {
             history.push("/user");
         } else if (key == 1) {
             localStorage.clear();
+            props.onUpdate(null);
             message.success("Logged out successfully!");
             history.push("/login");
         }
@@ -170,70 +172,98 @@ function Navbar() {
                 <Link to="/my-inbox">My Inbox</Link>
             </div>
 
-            <Row align="middle" gutter={[16, 0]}>
-                <Col>
-                    <Dropdown
-                        overlay={notificationMenu}
-                        trigger={["click"]}
-                        placement="bottomCenter"
-                        arrow
-                    >
-                        <Badge dot>
-                            <NotificationWrapper>
-                                <BellFilled />
-                            </NotificationWrapper>
-                        </Badge>
-                    </Dropdown>
-                </Col>
-                <Col>
-                    <Search
-                        placeholder="Search"
-                        allowClear
-                        // onSearch={onSearch}
-                        style={{ width: 200 }}
-                    />
-                </Col>
-                <Col>
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                        <ProfileCard>
-                            {/* Right Side */}
-                            {/* temp holder for profile pic */}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    backgroundColor: "var(--accent-lightpink)",
-                                    borderRadius: "var(--br-sm)",
-                                    height: "40px",
-                                    width: "40px",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginRight: "16px",
-                                }}
-                                className="profilepicture"
-                            >
-                                J
-                            </div>
+            {userId == null && (
+                <Row gutter={16}>
+                    <Col>
+                        <Button
+                            type="default"
+                            size="large"
+                            style={{ minWidth: "100px" }}
+                            href="/register"
+                        >
+                            Register
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            type="primary"
+                            size="large"
+                            style={{ minWidth: "100px" }}
+                            href="/login"
+                        >
+                            Login
+                        </Button>
+                    </Col>
+                </Row>
+            )}
 
-                            {/* to input profile details */}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    textAlign: "left",
-                                }}
-                                className="profileitems"
-                            >
-                                <ProfileName className="profilename">
-                                    John Doe
-                                </ProfileName>
-                                <ProfileInfo className="profileinfo">
-                                    Y3 Information Systems
-                                </ProfileInfo>
-                            </div>
-                        </ProfileCard>
-                    </Dropdown>
-                </Col>
-            </Row>
+            {userId != null && (
+                <Row align="middle" gutter={[16, 0]}>
+                    <Col>
+                        <Dropdown
+                            overlay={notificationMenu}
+                            trigger={["click"]}
+                            placement="bottomCenter"
+                            arrow
+                        >
+                            <Badge dot>
+                                <NotificationWrapper>
+                                    <BellFilled />
+                                </NotificationWrapper>
+                            </Badge>
+                        </Dropdown>
+                    </Col>
+                    <Col>
+                        <Search
+                            placeholder="Search"
+                            allowClear
+                            // onSearch={onSearch}
+                            style={{ width: 200 }}
+                        />
+                    </Col>
+                    <Col>
+                        <Dropdown overlay={menu} trigger={["click"]}>
+                            <ProfileCard>
+                                {/* Right Side */}
+                                {/* temp holder for profile pic */}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        backgroundColor:
+                                            "var(--accent-lightpink)",
+                                        borderRadius: "var(--br-sm)",
+                                        height: "40px",
+                                        width: "40px",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        marginRight: "16px",
+                                    }}
+                                    className="profilepicture"
+                                >
+                                    J
+                                </div>
+
+                                {/* to input profile details */}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        textAlign: "left",
+                                    }}
+                                    className="profileitems"
+                                >
+                                    <ProfileName className="profilename">
+                                        John Doe
+                                    </ProfileName>
+                                    <ProfileInfo className="profileinfo">
+                                        Y3 Information Systems
+                                    </ProfileInfo>
+                                </div>
+                            </ProfileCard>
+                        </Dropdown>
+                    </Col>
+                </Row>
+            )}
         </Nb>
     );
 }

@@ -7,7 +7,7 @@ import { Url } from "../constants/global";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-function Login() {
+function Login(props) {
     const history = useHistory();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
@@ -30,6 +30,7 @@ function Login() {
                 var userId = jwt_decode(jwt).user.userId;
                 localStorage.setItem("jwt", jwt);
                 localStorage.setItem("userId", userId);
+                props.onUpdate(userId);
                 history.push("/");
             })
             .catch(function (error) {
@@ -148,7 +149,7 @@ function Login() {
                     )}
                 </Form>
             </LoginCard>
-            <div style={{ marginBottom: "20%" }}>
+            <div style={{ marginBottom: "10%" }}>
                 Don't have an account?{" "}
                 <Link to={"register"}>
                     <SignUp>Sign up here!</SignUp>

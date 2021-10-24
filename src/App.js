@@ -1,6 +1,6 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
-import "react-router-dom";
+import React, { useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
@@ -15,23 +15,57 @@ import Profile from "./pages/Profile";
 import MyInbox from "./pages/MyInbox";
 import Messages from "./pages/Messages";
 function App() {
+    const [userId, setUserId] = useState(localStorage.userId);
+
     return (
         <BrowserRouter>
             <div className="App">
-                <Navbar />
+                <Navbar currentUser={userId} onUpdate={setUserId} />
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/login" component={Login} />
-                    <Route exact path="/register" component={Register} />
+                    <Route
+                        exact
+                        path="/login"
+                        render={() => {
+                            return <Login onUpdate={setUserId} />;
+                        }}
+                    />
+                    <Route
+                        exact
+                        path="/register"
+                        render={() => {
+                            return <Register onUpdate={setUserId} />;
+                        }}
+                    />
                     <Route exact path="/user" component={Profile} />
                     <Route exact path="/explore" component={Explore} />
                     <Route exact path="/my-circles" component={MyCircles} />
-                    <Route exact path="/my-circles/:id/all-posts" component={AllPosts} />
-                    <Route exact path="/my-circles/:id/leaderboard" component={Leaderboard} />
-                    <Route exact path="/my-circles/my-discussions" component={MyDiscussions} />
-                    <Route exact path="/my-circles/my-answers" component={MyAnswers} />
+                    <Route
+                        exact
+                        path="/my-circles/:id/all-posts"
+                        component={AllPosts}
+                    />
+                    <Route
+                        exact
+                        path="/my-circles/:id/leaderboard"
+                        component={Leaderboard}
+                    />
+                    <Route
+                        exact
+                        path="/my-circles/my-discussions"
+                        component={MyDiscussions}
+                    />
+                    <Route
+                        exact
+                        path="/my-circles/my-answers"
+                        component={MyAnswers}
+                    />
                     <Route exact path="/my-inbox" component={MyInbox} />
-                    <Route exact path="/my-inbox/messages" component={Messages} />
+                    <Route
+                        exact
+                        path="/my-inbox/messages"
+                        component={Messages}
+                    />
                     <Route exact path="/circle/:id" />
                 </Switch>
             </div>
