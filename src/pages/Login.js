@@ -15,7 +15,7 @@ function Login(props) {
     // login function
     const onFinish = async (values) => {
         const user = {
-            email: values.email,
+            email: values.email.toLowerCase(),
             password: values.password,
         };
 

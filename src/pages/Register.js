@@ -14,7 +14,7 @@ function Register(props) {
 
     const onFinish = async (values) => {
         const user = {
-            email: values.email,
+            email: values.email.toLowerCase(),
             password: values.password,
             name: values.name,
             description: "",
@@ -98,7 +98,8 @@ function Register(props) {
                         rules={[
                             {
                                 required: true,
-                                message: "Please input your email!",
+                                type: "email",
+                                message: "Please input a valid email!",
                             },
                         ]}
                         style={{ marginBottom: "32px" }}

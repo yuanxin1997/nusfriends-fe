@@ -22,6 +22,7 @@ import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
 import WebSocket from "isomorphic-ws";
 import { Url } from "../constants/global";
 import axios from "axios";
+import PlaceholderPicture from "./PlaceholderPicture";
 
 function Navbar(props) {
     const user = props.currentUser;
@@ -228,22 +229,11 @@ function Navbar(props) {
                             <ProfileCard>
                                 {/* Right Side */}
                                 {/* temp holder for profile pic */}
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        backgroundColor:
-                                            "var(--accent-lightpink)",
-                                        borderRadius: "var(--br-sm)",
-                                        height: "40px",
-                                        width: "40px",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        marginRight: "16px",
-                                    }}
-                                    className="profilepicture"
-                                >
-                                    J
-                                </div>
+                                <PlaceholderPicture
+                                    height="40px"
+                                    width="40px"
+                                    name={user.name}
+                                />
 
                                 {/* to input profile details */}
                                 <div
