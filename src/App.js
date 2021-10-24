@@ -1,6 +1,6 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
@@ -14,13 +14,42 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import MyInbox from "./pages/MyInbox";
 import Messages from "./pages/Messages";
+import { Url } from "./constants/global";
+import axios from "axios";
+
 function App() {
     const [userId, setUserId] = useState(localStorage.userId);
+
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        if (userId !== null) {
+            axios
+                .get(`${Url}/users/${userId}`)
+                .then((res) => {
+                    setCurrentUser(res.data[0]);
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        console.log(error.response.data);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log("Error", error.message);
+                    }
+                    //setPending(false);
+                    console.log(error.config);
+                });
+        } else {
+            setCurrentUser(null);
+        }
+    }, [userId]);
 
     return (
         <BrowserRouter>
             <div className="App">
-                <Navbar currentUser={userId} onUpdate={setUserId} />
+                <Navbar currentUser={currentUser} onUpdate={setUserId} />
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route

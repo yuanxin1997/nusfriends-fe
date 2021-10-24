@@ -7,7 +7,7 @@ import axios from "axios";
 import { Url } from "../constants/global";
 import jwt_decode from "jwt-decode";
 
-function Register() {
+function Register(props) {
     const history = useHistory();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
@@ -31,6 +31,7 @@ function Register() {
                 var userId = jwt_decode(jwt).user.userId;
                 localStorage.setItem("jwt", jwt);
                 localStorage.setItem("userId", userId);
+                props.onUpdate(userId);
                 message.success("You have registered successfully! Welcome!");
                 history.push("/");
             })

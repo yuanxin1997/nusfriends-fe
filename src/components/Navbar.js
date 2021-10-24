@@ -20,9 +20,11 @@ import logo from "../resources/Logo.png";
 import moment from "moment";
 import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
 import WebSocket from "isomorphic-ws";
+import { Url } from "../constants/global";
+import axios from "axios";
 
 function Navbar(props) {
-    const userId = props.currentUser;
+    const user = props.currentUser;
     const history = useHistory();
 
     const onClick = ({ key }) => {
@@ -172,7 +174,7 @@ function Navbar(props) {
                 <Link to="/my-inbox">My Inbox</Link>
             </div>
 
-            {userId == null && (
+            {user == null && (
                 <Row gutter={16}>
                     <Col>
                         <Button
@@ -197,7 +199,7 @@ function Navbar(props) {
                 </Row>
             )}
 
-            {userId != null && (
+            {user != null && (
                 <Row align="middle" gutter={[16, 0]}>
                     <Col>
                         <Dropdown
@@ -253,7 +255,7 @@ function Navbar(props) {
                                     className="profileitems"
                                 >
                                     <ProfileName className="profilename">
-                                        John Doe
+                                        {user.name}
                                     </ProfileName>
                                     <ProfileInfo className="profileinfo">
                                         Y3 Information Systems
