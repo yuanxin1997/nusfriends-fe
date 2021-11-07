@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Modal, Input, Form, Radio, Row, Col } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
 
-function CreateCircleModal({ modalVisible, closeCreateModal }) {
+function CreateCommentModal({ modalVisible, closeCreateModal }) {
   const [form] = Form.useForm();
 
   const { TextArea } = Input;
 
   return (
     <Modal
-      title="Create New Circle"
+      title="Create Comment"
       visible={modalVisible}
       onCancel={() => closeCreateModal()}
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
-      okText="Create Circle"
+      okText="Comment"
       width={850}
     >
       <Form
@@ -23,12 +23,9 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
           layout: "vertical",
         }}
       >
-        <Form.Item label="Circle Title">
-          <Input placeholder="Type something..." />
-        </Form.Item>
-        <Form.Item label="Circle Description">
+        <Form.Item label="Comment">
           <TextArea
-            placeholder="Type something..."
+            placeholder="What are your thoughts?"
             autoSize={{ minRows: 4, maxRows: 8 }}
           />
         </Form.Item>
@@ -37,4 +34,4 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
   );
 }
 
-export default CreateCircleModal;
+export default CreateCommentModal;

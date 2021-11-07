@@ -14,29 +14,43 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import MyInbox from "./pages/MyInbox";
 import Messages from "./pages/Messages";
+import Comments from "./pages/Comments";
 function App() {
-    return (
-        <BrowserRouter>
-            <div className="App">
-                <Navbar />
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/login" component={Login} />
-                    <Route exact path="/register" component={Register} />
-                    <Route exact path="/user" component={Profile} />
-                    <Route exact path="/explore" component={Explore} />
-                    <Route exact path="/my-circles" component={MyCircles} />
-                    <Route exact path="/my-circles/:id/all-posts" component={AllPosts} />
-                    <Route exact path="/my-circles/:id/leaderboard" component={Leaderboard} />
-                    <Route exact path="/my-circles/my-discussions" component={MyDiscussions} />
-                    <Route exact path="/my-circles/my-answers" component={MyAnswers} />
-                    <Route exact path="/my-inbox" component={MyInbox} />
-                    <Route exact path="/my-inbox/messages" component={Messages} />
-                    <Route exact path="/circle/:id" />
-                </Switch>
-            </div>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/user" component={Profile} />
+          <Route exact path="/explore" component={Explore} />
+          <Route exact path="/my-circles" component={MyCircles} />
+          <Route exact path="/my-circles/:id/all-posts" component={AllPosts} />
+          <Route
+            exact
+            path="/my-circles/:id/leaderboard"
+            component={Leaderboard}
+          />
+          <Route
+            exact
+            path="/my-circles/my-discussions"
+            component={MyDiscussions}
+          />
+          <Route
+            exact
+            path="/my-circles/:circleId/:postId/comments"
+            component={Comments}
+          />
+          <Route exact path="/my-circles/my-answers" component={MyAnswers} />
+          <Route exact path="/my-inbox" component={MyInbox} />
+          <Route exact path="/my-inbox/messages" component={Messages} />
+          <Route exact path="/circle/:id" />
+        </Switch>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

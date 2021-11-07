@@ -120,7 +120,7 @@ const MyCircles = () => {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: "95%",
+            width: "90%",
             alignItems: "center",
           }}
         >

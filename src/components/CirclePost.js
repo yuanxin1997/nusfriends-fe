@@ -18,11 +18,10 @@ function CirclePost({
   return (
     <div style={{ width: "750px" }}>
       <Link
-        to={"my-circles/" + 1 + "/all-posts"}
+        to={"/my-circles/" + 1 + "/" + 1 + "/comments"}
         onClick={() => console.log("clicked")}
       >
         <h3 style={{ textAlign: "left" }}>
-          {" "}
           {circleNameVisible === true ? circleName : null}
         </h3>
 
