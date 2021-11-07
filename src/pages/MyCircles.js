@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
 
-import { Col, Row } from "antd";
-import CircleCard from "../components/CircleCard";
-
+import { Col, Row, Layout, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { Layout } from "antd";
+
 import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
+import CircleCard from "../components/CircleCard";
+import CreateCircleModal from "../components/CreateCircleModal";
 const { Sider, Content } = Layout;
 
 const MyCircles = () => {
   /* START -- SETUP FOR COMPONENT */
   const [loading, setLoading] = useState(false);
   const [avatarData, setAvatarData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openCreateModal = () => setModalVisible(true);
+  function closeCreateModal() {
+    setModalVisible(false);
+  }
+
   const tabData = [
     {
       icon: "TeamOutlined",
@@ -106,6 +114,33 @@ const MyCircles = () => {
           <Col>
             <ContainerHeader headData={headData} />
           </Col>
+        </Row>
+        <Row
+          justify="start"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "95%",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              marginLeft: "auto",
+            }}
+          >
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={openCreateModal}
+            >
+              Create a New Circle
+            </Button>
+            <CreateCircleModal
+              modalVisible={modalVisible}
+              closeCreateModal={closeCreateModal}
+            />
+          </div>
         </Row>
         <Row>
           <Col span={24}>

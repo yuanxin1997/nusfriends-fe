@@ -249,3 +249,15 @@ a:hover {
   margin: 0;
   color: var(--base-100);
 }
+
+.ant-radio-button-wrapper {
+  height: 120px;
+  width: 125px;
+  background-color: #c9cdd1;
+}
+
+.ant-radio-button-wrapper > .ant-radio-button {
+  height: 120px;
+  width: 125px;
+  background-color: #d13c69;
+}

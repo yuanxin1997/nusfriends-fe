@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Input, Form, Radio, Row, Col } from "antd";
+import { CommentOutlined } from "@ant-design/icons";
 
 function CreatePostModal({ modalVisible, closeCreateModal }) {
   const [form] = Form.useForm();
@@ -27,9 +28,52 @@ function CreatePostModal({ modalVisible, closeCreateModal }) {
         </Form.Item>
         <Form.Item label="Topic Type" name="layout">
           <Radio.Group value={"vertical"}>
-            <Radio.Button value="discussion">Discussion</Radio.Button>
-            <Radio.Button value="questions">Questions</Radio.Button>
-            <Radio.Button value="poll">Poll</Radio.Button>
+            <Radio.Button
+              value="discussion"
+              style={{
+                marginRight: "20px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CommentOutlined
+                  style={{
+                    fontSize: "40px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+                <div style={{ alignItems: "center" }}>Discussion</div>
+              </div>
+            </Radio.Button>
+            <Radio.Button value="questions" style={{ marginRight: "20px" }}>
+              <div
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CommentOutlined style={{ fontSize: "40px" }} />
+                <div>Questions</div>
+              </div>
+            </Radio.Button>
+            <Radio.Button value="poll" style={{ marginRight: "20px" }}>
+              <div
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CommentOutlined style={{ fontSize: "40px" }} />
+                <div>Poll</div>
+              </div>
+            </Radio.Button>
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Topic Body">
