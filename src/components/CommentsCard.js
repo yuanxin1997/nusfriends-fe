@@ -88,7 +88,7 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
           </div>
         </div>
 
-        <hr style={{ color: "var(--base-20)", marginTop: 30 }} />
+        <hr style={{ color: "var(--base-20)", marginTop: 10 }} />
         <div
           style={{
             display: "flex",
@@ -127,11 +127,10 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
                     fontWeight: "normal",
                     color: "var(--base-20)",
                     marginRight: 15,
-                    
                   }}
                   hov
                 >
-                  <DeleteOutlined style={{ marginRight: 5 }}  />
+                  <DeleteOutlined style={{ marginRight: 5 }} />
                   Delete Comment
                 </a>
 
