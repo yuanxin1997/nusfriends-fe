@@ -1,19 +1,21 @@
-import { Button, Col, Input, Row, Form } from "antd";
+import { Button, Col, Input, Row, Form, message } from "antd";
 import Password from "antd/lib/input/Password";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Url } from "../constants/global";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
-function Login() {
+function Login(props) {
     const history = useHistory();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
 
+    // login function
     const onFinish = async (values) => {
         const user = {
-            email: values.email,
+            email: values.email.toLowerCase(),
             password: values.password,
         };
 
@@ -22,9 +24,13 @@ function Login() {
         await axios
             .post(`${Url}/users/login`, { user })
             .then((res) => {
-                // TODO: save the returned jwt
                 console.log(res);
                 setPending(false);
+                var jwt = res.data.jwtToken;
+                var userId = jwt_decode(jwt).user.userId;
+                localStorage.setItem("jwt", jwt);
+                localStorage.setItem("userId", userId);
+                props.onUpdate(userId);
                 history.push("/");
             })
             .catch(function (error) {
@@ -43,6 +49,16 @@ function Login() {
                 console.log(error.config);
             });
     };
+
+    // check if user is already logged in
+    useEffect(() => {
+        if (localStorage.jwt === undefined) {
+            return "";
+        } else {
+            history.push("/");
+            message.success("Logged in!");
+        }
+    }, []);
 
     return (
         <div
@@ -133,7 +149,7 @@ function Login() {
                     )}
                 </Form>
             </LoginCard>
-            <div style={{ marginBottom: "20%" }}>
+            <div style={{ marginBottom: "10%" }}>
                 Don't have an account?{" "}
                 <Link to={"register"}>
                     <SignUp>Sign up here!</SignUp>

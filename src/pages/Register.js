@@ -1,19 +1,20 @@
-import { Button, Col, Input, Row, Form, Space } from "antd";
+import { Button, Col, Input, Row, Form, message } from "antd";
 import Password from "antd/lib/input/Password";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { Url } from "../constants/global";
+import jwt_decode from "jwt-decode";
 
-function Register() {
+function Register(props) {
     const history = useHistory();
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
 
     const onFinish = async (values) => {
         const user = {
-            email: values.email,
+            email: values.email.toLowerCase(),
             password: values.password,
             name: values.name,
             description: "",
@@ -24,9 +25,14 @@ function Register() {
         await axios
             .post(`${Url}/users/register`, { user })
             .then((res) => {
-                // TODO: save the returned jwt & userid
                 console.log(res);
                 setPending(false);
+                var jwt = res.data.jwtToken;
+                var userId = jwt_decode(jwt).user.userId;
+                localStorage.setItem("jwt", jwt);
+                localStorage.setItem("userId", userId);
+                props.onUpdate(userId);
+                message.success("You have registered successfully! Welcome!");
                 history.push("/");
             })
             .catch(function (error) {
@@ -48,6 +54,16 @@ function Register() {
                 console.log(error.config);
             });
     };
+
+    // check if user is already logged in
+    useEffect(() => {
+        if (localStorage.jwt === undefined) {
+            return "";
+        } else {
+            history.push("/");
+            message.success("Logged in!");
+        }
+    }, []);
 
     return (
         <div
@@ -82,7 +98,8 @@ function Register() {
                         rules={[
                             {
                                 required: true,
-                                message: "Please input your email!",
+                                type: "email",
+                                message: "Please input a valid email!",
                             },
                         ]}
                         style={{ marginBottom: "32px" }}
