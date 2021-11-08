@@ -20,16 +20,55 @@ import {
   AntDesignOutlined,
 } from "@ant-design/icons";
 import CircleCard from "../components/CircleCard";
-
+import axios from "axios";
 import styled from "styled-components";
 import { Layout } from "antd";
 import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
+import { Url } from "../constants/global";
+import { generateDarkColorHex } from "../helpers/helper";
 const { Header, Footer, Sider, Content } = Layout;
 
 const Leaderboard = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [ladder, setLadder] = useState([]);
+  const [totalData, setTotalData] = useState(0);
+  const [cacheData, setCacheData] = useState([]);
+
+  const loadCachedata = () => {
+    const cacheInstance = cacheData;
+    const lengthToRetrieve =
+      cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+    const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+    setData([...data, ...unloadedCacheData]);
+    setCacheData(cacheInstance);
+  };
+
+  const loadData = async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const { data: results } = await axios.get(`${Url}/users/leaderboard`);
+      console.log(data);
+      const cacheInstance = [...results];
+      // cacheInstance.splice(0,7); testing UI
+
+      const ladderData = cacheInstance.splice(0, 3);
+      setLadder(ladderData);
+      setTotalData(cacheInstance.length);
+      const lengthToRetrieve =
+        cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+      const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+      setCacheData(cacheInstance);
+      setData(unloadedCacheData);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const loadMoreData = () => {
     if (loading) {
@@ -41,6 +80,9 @@ const Leaderboard = () => {
     )
       .then((res) => res.json())
       .then((body) => {
+        console.log("hey", ...data);
+        console.log("heee", body.results);
+        console.log("soread", ...body.results);
         setData([...data, ...body.results]);
         setLoading(false);
       })
@@ -50,14 +92,15 @@ const Leaderboard = () => {
   };
 
   useEffect(() => {
-    loadMoreData();
+    // loadMoreData();
+    loadData();
   }, []);
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
     {
       icon: "CommentOutlined",
       title: "All Posts",
-      path: "/my-circles/replace by id/my-discussions",
+      path: "/my-circles/replace by id/all-posts",
     },
     {
       icon: "TrophyOutlined",
@@ -121,7 +164,7 @@ const Leaderboard = () => {
         <Row justify="start">
           <Col>
             <UserGroupWrapper>
-              <Avatar.Group
+              {/* <Avatar.Group
                 maxCount={5}
                 size="large"
                 maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
@@ -130,7 +173,7 @@ const Leaderboard = () => {
                   <Avatar key={index} src={item.picture.large} />
                 ))}
                 <Tooltip title="Ant User" placement="top"></Tooltip>
-              </Avatar.Group>
+              </Avatar.Group> */}
             </UserGroupWrapper>
           </Col>
         </Row>
@@ -139,58 +182,100 @@ const Leaderboard = () => {
           <Col span={24}>
             <Wrapper>
               <LadderWrapper>
-                <SilverCardWrapper>
-                  <div>
-                    <TrophyOutlined />
-                  </div>
-                  <Badge count={2} color="var(--accent-redpink)">
-                    <Avatar
+                {ladder[1] && (
+                  <SilverCardWrapper>
+                    <div>
+                      <TrophyOutlined />
+                    </div>
+                    <Badge count={2} color="var(--accent-redpink)">
+                      {/* <Avatar
                       src={
                         <Image
                           src="https://joeschmoe.io/api/v1/random"
                           style={{ width: 32 }}
                         />
                       }
-                    />
-                  </Badge>
-                  <h5>name</h5>
-                  <p>11 likes</p>
-                </SilverCardWrapper>
-                <GoldCardWrapper>
-                  <div>
-                    <TrophyOutlined />
-                  </div>
+                    /> */}
+                      <Avatar
+                        className="avatar-sdn"
+                        style={{
+                          color: "#ffffff",
+                          backgroundColor: `${generateDarkColorHex()}`,
+                        }}
+                        size="large"
+                      >
+                        <span style={{ fontSize: "var(--fs-b1" }}>
+                          {ladder[1].name.charAt(0)}
+                        </span>
+                      </Avatar>
+                    </Badge>
+                    <h5>{ladder[1].name}</h5>
+                    <p>{ladder[1].no_likes} likes</p>
+                  </SilverCardWrapper>
+                )}
+                {ladder[0] && (
+                  <GoldCardWrapper>
+                    <div>
+                      <TrophyOutlined />
+                    </div>
 
-                  <Badge count={1} color="var(--accent-redpink)">
-                    <Avatar
+                    <Badge count={1} color="var(--accent-redpink)">
+                      {/* <Avatar
                       src={
                         <Image
                           src="https://joeschmoe.io/api/v1/random"
                           style={{ width: 32 }}
                         />
                       }
-                    />
-                  </Badge>
-                  <h5>name</h5>
-                  <p>11 likes</p>
-                </GoldCardWrapper>
-                <BronzeCardWrapper>
-                  <div>
-                    <TrophyOutlined />
-                  </div>
-                  <Badge count={3} color="var(--accent-redpink)">
-                    <Avatar
+                    /> */}
+                      <Avatar
+                        className="avatar-sdn"
+                        style={{
+                          color: "#ffffff",
+                          backgroundColor: `${generateDarkColorHex()}`,
+                        }}
+                        size="large"
+                      >
+                        <span style={{ fontSize: "var(--fs-b1" }}>
+                          {ladder[0].name.charAt(0)}
+                        </span>
+                      </Avatar>
+                    </Badge>
+                    <h5>{ladder[0].name}</h5>
+                    <p>{ladder[0].no_likes} likes</p>
+                  </GoldCardWrapper>
+                )}
+                {ladder[2] && (
+                  <BronzeCardWrapper>
+                    <div>
+                      <TrophyOutlined />
+                    </div>
+                    <Badge count={3} color="var(--accent-redpink)">
+                      {/* <Avatar
                       src={
                         <Image
                           src="https://joeschmoe.io/api/v1/random"
                           style={{ width: 32 }}
                         />
                       }
-                    />
-                  </Badge>
-                  <h5>name</h5>
-                  <p>11 likes</p>
-                </BronzeCardWrapper>
+                    /> */}
+                      <Avatar
+                        className="avatar-sdn"
+                        style={{
+                          color: "#ffffff",
+                          backgroundColor: `${generateDarkColorHex()}`,
+                        }}
+                        size="large"
+                      >
+                        <span style={{ fontSize: "var(--fs-b1" }}>
+                          {ladder[2].name.charAt(0)}
+                        </span>
+                      </Avatar>
+                    </Badge>
+                    <h5>{ladder[2].name}</h5>
+                    <p>{ladder[2].no_likes} likes</p>
+                  </BronzeCardWrapper>
+                )}
               </LadderWrapper>
               <ListWrapper>
                 <div
@@ -202,9 +287,9 @@ const Leaderboard = () => {
                   }}
                 >
                   <InfiniteScroll
-                    dataLength={data.length}
-                    next={loadMoreData}
-                    hasMore={data.length < 50}
+                    dataLength={totalData}
+                    next={loadCachedata}
+                    hasMore={cacheData.length > 0}
                     loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
                     endMessage={
                       <Divider plain>It is all, nothing more 🤐</Divider>
@@ -221,14 +306,24 @@ const Leaderboard = () => {
                                 count={index + 4}
                                 color="var(--accent-redpink)"
                               >
-                                <Avatar src={item.picture.large} />
+                                {/* <Avatar src={item.picture.large} /> */}
+                                <Avatar
+                                  className="avatar-sdn"
+                                  style={{
+                                    color: "#ffffff",
+                                    backgroundColor: `${generateDarkColorHex()}`,
+                                  }}
+                                  size="large"
+                                >
+                                  <span style={{ fontSize: "var(--fs-b1" }}>
+                                    {item.name.charAt(0)}
+                                  </span>
+                                </Avatar>
                               </Badge>
                             }
-                            title={
-                              <a href="https://ant.design">{item.name.last}</a>
-                            }
+                            title={<a href="https://ant.design">{item.name}</a>}
                           />
-                          <div>11 likes</div>
+                          <div>{item.no_likes}</div>
                         </List.Item>
                       )}
                     />
@@ -242,8 +337,6 @@ const Leaderboard = () => {
     </Layout>
   );
 };
-
-export default Leaderboard;
 
 const Wrapper = styled.div`
   display: flex;
@@ -307,3 +400,5 @@ const BronzeCardWrapper = styled.div`
 const UserGroupWrapper = styled.div`
   margin: 1rem 0 0.5rem 0;
 `;
+
+export default Leaderboard;

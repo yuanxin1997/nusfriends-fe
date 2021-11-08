@@ -234,6 +234,15 @@ a:hover {
   font-size: 12px;
 }
 
+.ant-avatar.avatar-sdn .ant-avatar-string {
+  transform: scale(1) translateX(-50%) translateY(0%) !important;
+  font-size: 12px;
+  -webkit-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -moz-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -ms-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -o-transform: scale(1) translateX(-50%) translateY(0%) !important;
+}
+
 .ant-modal-content {
   border-radius: var(--br-lg);
 }
