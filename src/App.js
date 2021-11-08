@@ -17,6 +17,7 @@ import Messages from "./pages/Messages";
 import { Url } from "./constants/global";
 import axios from "axios";
 
+import Comments from "./pages/Comments";
 function App() {
     const [userId, setUserId] = useState(localStorage.userId);
 

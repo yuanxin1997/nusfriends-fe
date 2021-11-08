@@ -12,7 +12,7 @@ import {
   message,
   Image,
   Tooltip,
-  Badge
+  Badge,
 } from "antd";
 import {
   TrophyOutlined,
@@ -100,7 +100,13 @@ const Leaderboard = () => {
   ];
 
   return (
-    <Layout style={{ height: "100%", minHeight: "100vp", backgroundColor: "var(--accent-bg)" }}>
+    <Layout
+      style={{
+        height: "100%",
+        minHeight: "100vp",
+        backgroundColor: "var(--accent-bg)",
+      }}
+    >
       <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
         <SideBar tabData={tabData} />
       </Sider>
@@ -138,14 +144,14 @@ const Leaderboard = () => {
                     <TrophyOutlined />
                   </div>
                   <Badge count={2} color="var(--accent-redpink)">
-                  <Avatar
-                    src={
-                      <Image
-                        src="https://joeschmoe.io/api/v1/random"
-                        style={{ width: 32 }}
-                      />
-                    }
-                  />
+                    <Avatar
+                      src={
+                        <Image
+                          src="https://joeschmoe.io/api/v1/random"
+                          style={{ width: 32 }}
+                        />
+                      }
+                    />
                   </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
@@ -154,16 +160,16 @@ const Leaderboard = () => {
                   <div>
                     <TrophyOutlined />
                   </div>
-                  
+
                   <Badge count={1} color="var(--accent-redpink)">
-                  <Avatar
-                    src={
-                      <Image
-                        src="https://joeschmoe.io/api/v1/random"
-                        style={{ width: 32 }}
-                      />
-                    }
-                  />
+                    <Avatar
+                      src={
+                        <Image
+                          src="https://joeschmoe.io/api/v1/random"
+                          style={{ width: 32 }}
+                        />
+                      }
+                    />
                   </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
@@ -173,14 +179,14 @@ const Leaderboard = () => {
                     <TrophyOutlined />
                   </div>
                   <Badge count={3} color="var(--accent-redpink)">
-                  <Avatar
-                    src={
-                      <Image
-                        src="https://joeschmoe.io/api/v1/random"
-                        style={{ width: 32 }}
-                      />
-                    }
-                  />
+                    <Avatar
+                      src={
+                        <Image
+                          src="https://joeschmoe.io/api/v1/random"
+                          style={{ width: 32 }}
+                        />
+                      }
+                    />
                   </Badge>
                   <h5>name</h5>
                   <p>11 likes</p>
@@ -210,7 +216,14 @@ const Leaderboard = () => {
                       renderItem={(item, index) => (
                         <List.Item key={item.id}>
                           <List.Item.Meta
-                            avatar={<Badge count={index + 4} color="var(--accent-redpink)"><Avatar src={item.picture.large} /></Badge>}
+                            avatar={
+                              <Badge
+                                count={index + 4}
+                                color="var(--accent-redpink)"
+                              >
+                                <Avatar src={item.picture.large} />
+                              </Badge>
+                            }
                             title={
                               <a href="https://ant.design">{item.name.last}</a>
                             }

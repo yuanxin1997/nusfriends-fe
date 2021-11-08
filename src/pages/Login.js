@@ -19,7 +19,7 @@ function Login(props) {
             password: values.password,
         };
 
-        setPending(true);
+    setPending(true);
 
         await axios
             .post(`${Url}/users/login`, { user })
@@ -160,23 +160,23 @@ function Login(props) {
 }
 
 const LoginCard = styled.div`
-    background-color: var(--base-0);
-    border-radius: var(--br-lg);
-    min-width: 500px;
-    box-shadow: var(--shadow);
-    margin-bottom: 36px;
-    padding: 16px;
+  background-color: var(--base-0);
+  border-radius: var(--br-lg);
+  min-width: 500px;
+  box-shadow: var(--shadow);
+  margin-bottom: 36px;
+  padding: 16px;
 `;
 
 const SignUp = styled.span`
-    color: var(--accent-darkpink);
-    transition: var(--transition);
-    font-weight: 400;
+  color: var(--accent-darkpink);
+  transition: var(--transition);
+  font-weight: 400;
 
-    &:hover {
-        text-decoration: underline;
-        font-weight: 700;
-    }
+  &:hover {
+    text-decoration: underline;
+    font-weight: 700;
+  }
 `;
 
 export default Login;
