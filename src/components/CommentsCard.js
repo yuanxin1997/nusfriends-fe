@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HeartFilled } from "@ant-design/icons";
+import { HeartFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import styled from "styled-components";
 
@@ -87,6 +87,67 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
             </div>
           </div>
         </div>
+
+        <hr style={{ color: "var(--base-20)", marginTop: 30 }} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          {/* Bottom Row (Likes and comments) */}
+          <div style={styles.bottomRowWrapper}>
+            {type === "post" ? (
+              <div>
+                <a
+                  style={{
+                    fontWeight: "normal",
+                    color: "var(--base-20)",
+                    marginRight: 15,
+                  }}
+                >
+                  <DeleteOutlined style={{ marginRight: 5 }} />
+                  Delete Post
+                </a>
+
+                <a
+                  style={{
+                    fontWeight: "normal",
+                    color: "var(--base-20)",
+                  }}
+                >
+                  <EditOutlined style={{ marginRight: 5 }} />
+                  Edit Post
+                </a>
+              </div>
+            ) : (
+              <div>
+                <a
+                  style={{
+                    fontWeight: "normal",
+                    color: "var(--base-20)",
+                    marginRight: 15,
+                    
+                  }}
+                  hov
+                >
+                  <DeleteOutlined style={{ marginRight: 5 }}  />
+                  Delete Comment
+                </a>
+
+                <a
+                  style={{
+                    fontWeight: "normal",
+                    color: "var(--base-20)",
+                  }}
+                >
+                  <EditOutlined style={{ marginRight: 5 }} />
+                  Edit Comment
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
       </CommentCard>
     </div>
   );
@@ -100,7 +161,7 @@ const CommentCard = styled.div`
   margin-bottom: 36x;
   padding: 16px;
   padding-top: 20px;
-  padding-bottom: 36px;
+  padding-bottom: 20px;
 `;
 
 const ProfileCard = styled.div`

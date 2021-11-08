@@ -8,6 +8,7 @@ import styled from "styled-components";
 import ContainerHeader from "../components/ContainerHeader";
 import CreateCommentModal from "../components/CreateCommentModal";
 import CommentsCard from "../components/CommentsCard";
+import SideBar from "../components/SideBar";
 
 const { Sider, Content } = Layout;
 function Comments(props) {
@@ -35,6 +36,20 @@ function Comments(props) {
     console.log(comments);
   }, []);
 
+  /* START -- SETUP FOR COMPONENT */
+  const tabData = [
+    {
+      icon: "CommentOutlined",
+      title: "All Posts",
+      path: "/my-circles/replace by id/all-posts",
+    },
+    {
+      icon: "TrophyOutlined",
+      title: "Leaderboard",
+      path: "/my-circles/replace by id/leaderboard",
+    },
+  ];
+
   const headData = {
     breadcrumbData: [
       {
@@ -49,7 +64,9 @@ function Comments(props) {
   };
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
-      {/* <Sider style={{ backgroundColor: "var(--accent-bg)" }}></Sider> */}
+      <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
+        <SideBar tabData={tabData} />
+      </Sider>
       <Content style={{ backgroundColor: "var(--accent-bg)" }}>
         <Row justify="start">
           <Col style={{ marginLeft: 100 }}>
