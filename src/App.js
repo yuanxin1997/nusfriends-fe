@@ -19,88 +19,82 @@ import axios from "axios";
 
 import Comments from "./pages/Comments";
 function App() {
-    const [userId, setUserId] = useState(localStorage.userId);
+  const [userId, setUserId] = useState(localStorage.userId);
 
-    const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
-    useEffect(() => {
-        if (userId !== null) {
-            axios
-                .get(`${Url}/users/${userId}`)
-                .then((res) => {
-                    setCurrentUser(res.data[0]);
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log("Error", error.message);
-                    }
-                    //setPending(false);
-                    console.log(error.config);
-                });
-        } else {
-            setCurrentUser(null);
-        }
-    }, [userId]);
+  useEffect(() => {
+    if (userId !== null) {
+      axios
+        .get(`${Url}/users/${userId}`)
+        .then((res) => {
+          setCurrentUser(res.data[0]);
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+          //setPending(false);
+          console.log(error.config);
+        });
+    } else {
+      setCurrentUser(null);
+    }
+  }, [userId]);
 
-    return (
-        <BrowserRouter>
-            <div className="App">
-                <Navbar currentUser={currentUser} onUpdate={setUserId} />
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route
-                        exact
-                        path="/login"
-                        render={() => {
-                            return <Login onUpdate={setUserId} />;
-                        }}
-                    />
-                    <Route
-                        exact
-                        path="/register"
-                        render={() => {
-                            return <Register onUpdate={setUserId} />;
-                        }}
-                    />
-                    <Route exact path="/user" component={Profile} />
-                    <Route exact path="/explore" component={Explore} />
-                    <Route exact path="/my-circles" component={MyCircles} />
-                    <Route
-                        exact
-                        path="/my-circles/:id/all-posts"
-                        component={AllPosts}
-                    />
-                    <Route
-                        exact
-                        path="/my-circles/:id/leaderboard"
-                        component={Leaderboard}
-                    />
-                    <Route
-                        exact
-                        path="/my-circles/my-discussions"
-                        component={MyDiscussions}
-                    />
-                    <Route
-                        exact
-                        path="/my-circles/my-answers"
-                        component={MyAnswers}
-                    />
-                    <Route exact path="/my-inbox" component={MyInbox} />
-                    <Route
-                        exact
-                        path="/my-inbox/messages"
-                        component={Messages}
-                    />
-                    <Route exact path="/circle/:id" />
-                </Switch>
-            </div>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Navbar currentUser={currentUser} onUpdate={setUserId} />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route
+            exact
+            path="/login"
+            render={() => {
+              return <Login onUpdate={setUserId} />;
+            }}
+          />
+          <Route
+            exact
+            path="/register"
+            render={() => {
+              return <Register onUpdate={setUserId} />;
+            }}
+          />
+          <Route exact path="/user" component={Profile} />
+          <Route exact path="/explore" component={Explore} />
+          <Route exact path="/my-circles" component={MyCircles} />
+          <Route exact path="/my-circles/:id/all-posts" component={AllPosts} />
+          <Route
+            exact
+            path="/my-circles/:id/leaderboard"
+            component={Leaderboard}
+          />
+          <Route
+            exact
+            path="/my-circles/my-discussions"
+            component={MyDiscussions}
+          />
+          <Route exact path="/my-circles/my-answers" component={MyAnswers} />
+          <Route exact path="/my-inbox" component={MyInbox} />
+          <Route exact path="/my-inbox/messages" component={Messages} />
+          <Route exact path="/circle/:id" />
+
+          <Route
+            exact
+            path="/my-circles/:circleId/:postId/comments"
+            component={Comments}
+          />
+        </Switch>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;
