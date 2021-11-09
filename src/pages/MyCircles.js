@@ -8,13 +8,18 @@ import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
 import CircleCard from "../components/CircleCard";
 import CreateCircleModal from "../components/CreateCircleModal";
+
+import axios from "axios";
+import { Url } from "../constants/global";
+
 const { Sider, Content } = Layout;
 
 const MyCircles = () => {
   /* START -- SETUP FOR COMPONENT */
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [avatarData, setAvatarData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [circles, setCircles] = useState([]);
 
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
@@ -49,60 +54,18 @@ const MyCircles = () => {
     ],
   };
 
-  // for avatars
-  // to be replaced by api call fetching users data
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setAvatarData([...avatarData, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+  const loadCirclesData = async () => {
+    await axios.get(`${Url}/circles`).then((res) => {
+      setCircles(res.data);
+    });
+    setLoading(false);
   };
 
   useEffect(() => {
-    loadMoreData();
+    loadCirclesData();
   }, []);
 
   /* END -- SETUP FOR COMPONENT */
-
-  // to be replaced by fetching API
-  const [circles, setCircles] = useState([
-    {
-      id: 1,
-      circleName: "NUS Computing",
-      numMembers: 365,
-    },
-    {
-      id: 2,
-      circleName: "Kayaking at NUS",
-      numMembers: 365,
-    },
-    {
-      id: 3,
-      circleName: "NUS Science",
-      numMembers: 365,
-    },
-    {
-      id: 4,
-      circleName: "NUS Dating",
-      numMembers: 365,
-    },
-    {
-      id: 5,
-      circleName: "Internship",
-      numMembers: 365,
-    },
-  ]);
 
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
@@ -150,9 +113,9 @@ const MyCircles = () => {
                 {circles.map((circle) => (
                   <Col span={8}>
                     <CircleCard
-                      circleName={circle.circleName}
+                      circleName={circle.name}
                       numMembers={circle.numMembers}
-                      circleId={circle.id}
+                      circleId={circle.circleid}
                       avatarData={avatarData}
                     />
                   </Col>

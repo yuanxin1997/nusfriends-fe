@@ -52,17 +52,6 @@ function CreatePostModal({ modalVisible, closeCreateModal }) {
                 <div style={{ alignItems: "center" }}>Discussion</div>
               </div>
             </Radio.Button>
-            <Radio.Button value="questions" style={{ marginRight: "20px" }}>
-              <div
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <CommentOutlined style={{ fontSize: "40px" }} />
-                <div>Questions</div>
-              </div>
-            </Radio.Button>
             <Radio.Button value="poll" style={{ marginRight: "20px" }}>
               <div
                 display="flex"
@@ -84,12 +73,7 @@ function CreatePostModal({ modalVisible, closeCreateModal }) {
         </Form.Item>
 
         <Row gutter={24}>
-          <Col span={8}>
-            <Form.Item label="Circles/Category">
-              <Input placeholder="Search Circles..." />
-            </Form.Item>
-          </Col>
-          <Col span={16}>
+          <Col span={24}>
             <Form.Item label="Tags">
               <Input placeholder="Search Tags..." />
             </Form.Item>

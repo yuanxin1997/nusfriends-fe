@@ -7,6 +7,9 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
 
   const { TextArea } = Input;
 
+  const [name, setName] = useState();
+  const [description, setDescription] = useState();
+
   return (
     <Modal
       title="Create New Circle"
@@ -15,6 +18,7 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
       okText="Create Circle"
       width={850}
+      onOk={() => console.log("description" + description)}
     >
       <Form
         layout={"vertical"}
@@ -24,12 +28,16 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
         }}
       >
         <Form.Item label="Circle Title">
-          <Input placeholder="Type something..." />
+          <Input
+            placeholder="Type something..."
+            onChange={(e) => setName(e.target.value)}
+          />
         </Form.Item>
         <Form.Item label="Circle Description">
           <TextArea
             placeholder="Type something..."
             autoSize={{ minRows: 4, maxRows: 8 }}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </Form.Item>
       </Form>

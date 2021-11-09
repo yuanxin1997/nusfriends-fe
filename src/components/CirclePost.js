@@ -5,6 +5,7 @@ import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
 import "../styles/CirclePost.css";
+import PlaceholderPicture from "./PlaceholderPicture";
 
 function CirclePost({
   circleNameVisible,
@@ -14,11 +15,22 @@ function CirclePost({
   posted,
   numLikes,
   numComments,
+  circleId,
+  postId,
 }) {
   return (
     <div style={{ width: "750px" }}>
       <Link
-        to={"/my-circles/" + 1 + "/" + 1 + "/comments"}
+        to={{
+          pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
+          circleName: circleName,
+          state: {
+            circleName: circleName,
+            circleId: circleId,
+            postTitle: postTitle,
+            postId: postId,
+          },
+        }}
         onClick={() => console.log("clicked")}
       >
         <h3 style={{ textAlign: "left" }}>
@@ -31,21 +43,11 @@ function CirclePost({
               <ProfileCard>
                 {/* Profile and user details*/}
                 {/* temp holder for profile pic */}
-                <div
-                  style={{
-                    display: "flex",
-                    backgroundColor: "var(--accent-lightpink)",
-                    borderRadius: "var(--br-sm)",
-                    height: "40px",
-                    width: "40px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginRight: "16px",
-                  }}
-                  className="profilepicture"
-                >
-                  J
-                </div>
+                <PlaceholderPicture
+                  height={"40px"}
+                  width={"40px"}
+                  name={"john"}
+                />
 
                 {/* to input profile details */}
                 <div

@@ -9,7 +9,11 @@ function CircleCard({ circleName, numMembers, circleId, avatarData }) {
   return (
     <div style={{ width: "300px" }}>
       <Link
-        to={"my-circles/" + circleId + "/all-posts"}
+        to={{
+          pathname: "my-circles/" + circleId + "/all-posts",
+          circleName: circleName,
+          circleId: circleId,
+        }}
         onClick={() => console.log("clicked")}
       >
         <div style={styles.circleCardWrapper}>
