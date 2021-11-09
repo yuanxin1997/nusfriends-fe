@@ -30,7 +30,6 @@ function Navbar(props) {
 
     const onClick = ({ key }) => {
         if (key == 0) {
-            message.info("profile");
             history.push(`/user/${user.userid}`);
         } else if (key == 1) {
             localStorage.clear();

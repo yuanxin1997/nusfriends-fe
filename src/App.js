@@ -28,6 +28,7 @@ function App() {
                 .get(`${Url}/users/${userId}`)
                 .then((res) => {
                     setCurrentUser(res.data[0]);
+                    localStorage.setItem("name", res.data[0].name);
                 })
                 .catch(function (error) {
                     if (error.response) {
@@ -66,7 +67,7 @@ function App() {
                             return <Register onUpdate={setUserId} />;
                         }}
                     />
-                    <Route exact path="/user" component={Profile} />
+                    <Route exact path="/user/:id" component={Profile} />
                     <Route exact path="/explore" component={Explore} />
                     <Route exact path="/my-circles" component={MyCircles} />
                     <Route
