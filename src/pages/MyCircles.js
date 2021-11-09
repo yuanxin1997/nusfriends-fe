@@ -20,6 +20,9 @@ const MyCircles = () => {
   const [avatarData, setAvatarData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [circles, setCircles] = useState([]);
+  const [userId, setUserId] = useState(
+    localStorage.userId ? localStorage.userId : null
+  );
 
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
@@ -55,11 +58,9 @@ const MyCircles = () => {
   };
 
   const loadCirclesData = async () => {
-    await axios
-      .get(`${Url}/circles/userId/${localStorage.userId}`)
-      .then((res) => {
-        setCircles(res.data);
-      });
+    await axios.get(`${Url}/circles/userId/${userId}`).then((res) => {
+      setCircles(res.data);
+    });
     setLoading(false);
   };
 

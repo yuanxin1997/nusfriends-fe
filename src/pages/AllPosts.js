@@ -169,10 +169,13 @@ const AllPosts = () => {
                   postTitle={post.title}
                   postText={post.content}
                   posted={post.createdat}
-                  numLikes={77}
-                  numComments={77}
+                  numLikes={post.likes}
+                  numComments={post.comments}
                   circleId={id}
                   postId={post.postid}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                  postedPhoto={post.photo}
                 />
               ))}
             </div>

@@ -151,7 +151,7 @@ a:hover {
 }
 
 .ant-btn-default:hover {
-    color: var(--accent-darkpink);
+  color: var(--accent-darkpink);
 }
 
 .ant-input-search .ant-input-group .ant-input-affix-wrapper:hover {
@@ -263,19 +263,19 @@ a:hover {
   color: var(--base-100);
 }
 
-.ant-radio-button-wrapper {
-  height: 120px;
-  width: 125px;
-  background-color: #c9cdd1;
+.ant-radio-checked .ant-radio-inner:after {
+  background-color: red;
 }
 
 .ant-radio-button-wrapper > .ant-radio-button {
-  height: 120px;
-  width: 125px;
   background-color: #d13c69;
+  border-color: #ffffff;
 }
 
-
 .ant-badge-count {
-    border-radius: 8px;
+  border-radius: 8px;
+}
+
+.ant-select-selector {
+  border-radius: var(--br-lg);
 }

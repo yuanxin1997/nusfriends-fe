@@ -1,34 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CirclePost from "../components/CirclePost";
 
 import { Layout } from "antd";
 
+import axios from "axios";
+import { Url } from "../constants/global";
 function Home() {
   const userName = "John";
   const { Content } = Layout;
   // dummy data, to be replaced by API call
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      circleName: "Lost And Found",
-      postTitle: "Test Title",
-      postText:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus nulla sagittis sapien et. A vel tortor vestibulum arcu, diam netus consectetur. Et, a interdum adipiscing viverra congue. Purus cursus id aliquam turpis vitae non.",
-      posted: "20h",
-      numLikes: 77,
-      numComments: 123,
-    },
-    {
-      id: 2,
-      circleName: "NUS Computing",
-      postTitle: "Which is the best professor?",
-      postText: "HSIANG HUI OR WEEKEK?",
-      posted: "23h",
-      numLikes: 27,
-      numComments: 153,
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState();
+
+  const fetchHomePosts = async () => {
+    try {
+      await axios
+        .get(`${Url}/posts/home/${localStorage.userId}`)
+        .then((res) => {
+          setPosts(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchHomePosts();
+  }, []);
 
   return (
     <div style={{ justifyContent: "center", alignItems: "center" }}>
@@ -39,7 +39,7 @@ function Home() {
           paddingBottom: 20,
         }}
       >
-        <h1>Welcome Back, {userName}</h1>
+        <h1>Welcome Back, {localStorage.name}</h1>
       </div>
 
       <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
@@ -52,13 +52,17 @@ function Home() {
         >
           {posts.map((post) => (
             <CirclePost
+              circleId={post.circleid}
               circleNameVisible={true}
-              circleName={post.circleName}
-              postTitle={post.postTitle}
-              postText={post.postText}
+              circleName={"need to fetch"}
+              postTitle={post.title}
+              postText={post.content}
+              postId={post.postid}
               posted={post.posted}
-              numLikes={post.numLikes}
-              numComments={post.numComments}
+              numLikes={post.likes}
+              numComments={post.comments}
+              postedName={post.name}
+              postedClassification={post.classification}
             />
           ))}
         </Content>

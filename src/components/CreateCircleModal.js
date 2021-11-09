@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Modal, Input, Form, Radio, Row, Col } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
 
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+import { Url } from "../constants/global";
+
 function CreateCircleModal({ modalVisible, closeCreateModal }) {
   const [form] = Form.useForm();
 
@@ -9,6 +13,27 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
 
   const [name, setName] = useState();
   const [description, setDescription] = useState();
+
+  const history = useHistory();
+
+  const onCreate = async () => {
+    const circle = {
+      name: name,
+      description: description,
+      status: "Open",
+      userId: parseInt(localStorage.userId),
+    };
+
+    try {
+      await axios.post(`${Url}/circles/`, { circle }).then((res) => {});
+    } catch (error) {
+      console.log(error);
+    }
+    // console.log("id");
+    console.log(circle);
+    closeCreateModal();
+    history.go(0);
+  };
 
   return (
     <Modal
@@ -18,7 +43,7 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
       okText="Create Circle"
       width={850}
-      onOk={() => console.log("description" + description)}
+      onOk={() => onCreate()}
     >
       <Form
         layout={"vertical"}

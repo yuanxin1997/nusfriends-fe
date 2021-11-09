@@ -133,6 +133,7 @@ function Comments(props) {
                 <CreateCommentModal
                   modalVisible={modalVisible}
                   closeCreateModal={closeCreateModal}
+                  postId={postId}
                 />
               </div>
             </Row>
@@ -149,14 +150,25 @@ function Comments(props) {
                 type="post"
                 title={post.title}
                 description={post.content}
-                numLikes={post.numLikes}
+                likes={post.likes}
+                comments={post.comments}
+                posted={post.userid}
+                postedName={post.name}
+                postedClassification={post.classification}
+                postedPhoto={post.photo}
+                id={post.postid}
               />
 
               {comments.map((comment) => (
                 <CommentsCard
                   type="comment"
                   description={comment.content}
-                  numLikes={comment.numLikes}
+                  likes={comment.likes}
+                  posted={comment.userid}
+                  postedName={comment.name}
+                  postedClassification={comment.classification}
+                  postedPhoto={comment.photo}
+                  id={comment.commentid}
                 />
               ))}
             </div>

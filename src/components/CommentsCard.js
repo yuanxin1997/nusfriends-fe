@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { HeartFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Tag } from "antd";
 
 import styled from "styled-components";
+import DeleteModal from "./DeleteModal";
+import PlaceholderPicture from "./PlaceholderPicture";
+import EditModal from "./EditModal";
 
-function CommentsCard({ type, title, description, numLikes, tags, posted }) {
+function CommentsCard({
+  type,
+  title,
+  description,
+  likes,
+  comments,
+  tags,
+  posted,
+  id,
+  postedName,
+  postedClassification,
+  postedPhoto,
+}) {
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const openDeleteModal = () => setDeleteModalVisible(true);
+  function closeDeleteModal() {
+    setDeleteModalVisible(false);
+  }
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const openEditModal = () => setEditModalVisible(true);
+  function closeEditModal() {
+    setEditModalVisible(false);
+  }
   return (
     <div style={{ marginBottom: 20 }}>
       <CommentCard>
@@ -17,21 +44,11 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
             <ProfileCard>
               {/* Profile and user details*/}
               {/* temp holder for profile pic */}
-              <div
-                style={{
-                  display: "flex",
-                  backgroundColor: "var(--accent-lightpink)",
-                  borderRadius: "var(--br-sm)",
-                  height: "40px",
-                  width: "40px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginRight: "16px",
-                }}
-                className="profilepicture"
-              >
-                J
-              </div>
+              <PlaceholderPicture
+                height={"40px"}
+                width={"40px"}
+                name={postedName}
+              />
 
               {/* to input profile details */}
               <div
@@ -42,9 +59,9 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
                 }}
                 className="profileitems"
               >
-                <ProfileName className="profilename">John Doe</ProfileName>
+                <ProfileName className="profilename">{postedName}</ProfileName>
                 <ProfileInfo className="profileinfo">
-                  Y3 Information Systems
+                  {postedClassification}
                 </ProfileInfo>
               </div>
             </ProfileCard>
@@ -75,78 +92,106 @@ function CommentsCard({ type, title, description, numLikes, tags, posted }) {
           <div style={styles.bottomRowWrapper}>
             {type === "post" ? (
               <div>
-                <text style={styles.textStyle}>Python</text>
-
-                <text style={styles.textStyle}>Programming</text>
+                <Tag color="blue" style={{ padding: "2px 18px" }}>
+                  python
+                </Tag>
+                <Tag color="blue" style={{ padding: "2px 18px" }}>
+                  programming
+                </Tag>
               </div>
             ) : null}
 
             <div style={{ display: "flex" }}>
               <HeartFilled style={styles.heartStyles} />
-              <text style={styles.textStyle}>{numLikes}</text>
+              <text style={styles.textStyle}>{likes}</text>
             </div>
           </div>
         </div>
 
-        <hr style={{ color: "var(--base-20)", marginTop: 10 }} />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          {/* Bottom Row (Likes and comments) */}
-          <div style={styles.bottomRowWrapper}>
-            {type === "post" ? (
-              <div>
-                <a
-                  style={{
-                    fontWeight: "normal",
-                    color: "var(--base-20)",
-                    marginRight: 15,
-                  }}
-                >
-                  <DeleteOutlined style={{ marginRight: 5 }} />
-                  Delete Post
-                </a>
+        {posted == parseInt(localStorage.userId) ? (
+          <div>
+            <hr style={{ color: "var(--base-20)", marginTop: 10 }} />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              {/* Bottom Row (Likes and comments) */}
+              <div style={styles.bottomRowWrapper}>
+                {type === "post" ? (
+                  <div>
+                    <a
+                      onClick={openDeleteModal}
+                      style={styles.manageCommentText}
+                    >
+                      <DeleteOutlined style={{ marginRight: 5 }} />
+                      Delete Post
+                    </a>
+                    <DeleteModal
+                      modalVisible={deleteModalVisible}
+                      closeDeleteModal={closeDeleteModal}
+                      type="post"
+                      id={id}
+                    />
 
-                <a
-                  style={{
-                    fontWeight: "normal",
-                    color: "var(--base-20)",
-                  }}
-                >
-                  <EditOutlined style={{ marginRight: 5 }} />
-                  Edit Post
-                </a>
-              </div>
-            ) : (
-              <div>
-                <a
-                  style={{
-                    fontWeight: "normal",
-                    color: "var(--base-20)",
-                    marginRight: 15,
-                  }}
-                  hov
-                >
-                  <DeleteOutlined style={{ marginRight: 5 }} />
-                  Delete Comment
-                </a>
+                    <a onClick={openEditModal} style={styles.manageCommentText}>
+                      <EditOutlined style={{ marginRight: 5 }} />
+                      Edit Post
+                    </a>
 
-                <a
-                  style={{
-                    fontWeight: "normal",
-                    color: "var(--base-20)",
-                  }}
-                >
-                  <EditOutlined style={{ marginRight: 5 }} />
-                  Edit Comment
-                </a>
+                    <EditModal
+                      modalVisible={editModalVisible}
+                      closeEditModal={closeEditModal}
+                      type="post"
+                      titlePlaceholder={title}
+                      descriptionPlaceholder={description}
+                      id={id}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <a
+                      onClick={openDeleteModal}
+                      style={{
+                        fontWeight: "normal",
+                        color: "var(--base-20)",
+                        marginRight: 15,
+                      }}
+                    >
+                      <DeleteOutlined style={{ marginRight: 5 }} />
+                      Delete Comment
+                    </a>
+                    <DeleteModal
+                      modalVisible={deleteModalVisible}
+                      closeDeleteModal={closeDeleteModal}
+                      type="comment"
+                      id={id}
+                    />
+
+                    <a
+                      onClick={openEditModal}
+                      style={{
+                        fontWeight: "normal",
+                        color: "var(--base-20)",
+                      }}
+                    >
+                      <EditOutlined style={{ marginRight: 5 }} />
+                      Edit Comment
+                    </a>
+                    <EditModal
+                      modalVisible={editModalVisible}
+                      closeEditModal={closeEditModal}
+                      type="comment"
+                      titlePlaceholder={description}
+                      id={id}
+                    />
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        ) : null}
       </CommentCard>
     </div>
   );
@@ -227,6 +272,11 @@ const styles = {
     color: "#D25864",
     fontSize: "20px",
     paddingRight: "15px",
+  },
+  manageCommentText: {
+    fontWeight: "normal",
+    color: "var(--base-20)",
+    marginRight: 15,
   },
 };
 export default CommentsCard;

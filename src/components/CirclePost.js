@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styled, { StyleSheetManager } from "styled-components";
@@ -17,19 +17,15 @@ function CirclePost({
   numComments,
   circleId,
   postId,
+  postedName,
+  postedClassification,
+  postedPhoto,
 }) {
   return (
     <div style={{ width: "750px" }}>
       <Link
         to={{
           pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
-          circleName: circleName,
-          state: {
-            circleName: circleName,
-            circleId: circleId,
-            postTitle: postTitle,
-            postId: postId,
-          },
         }}
         onClick={() => console.log("clicked")}
       >
@@ -46,7 +42,7 @@ function CirclePost({
                 <PlaceholderPicture
                   height={"40px"}
                   width={"40px"}
-                  name={"john"}
+                  name={postedName}
                 />
 
                 {/* to input profile details */}
@@ -58,9 +54,11 @@ function CirclePost({
                   }}
                   className="profileitems"
                 >
-                  <ProfileName className="profilename">John Doe</ProfileName>
+                  <ProfileName className="profilename">
+                    {postedName}
+                  </ProfileName>
                   <ProfileInfo className="profileinfo">
-                    Y3 Information Systems
+                    {postedClassification}
                   </ProfileInfo>
                 </div>
               </ProfileCard>
@@ -80,7 +78,15 @@ function CirclePost({
           <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
             {postTitle}
           </h4>
-          <p style={{ textAlign: "left", paddingBottom: "10px" }}>{postText}</p>
+          <p
+            style={{
+              textAlign: "left",
+              paddingBottom: "10px",
+              fontWeight: "normal",
+            }}
+          >
+            {postText}
+          </p>
 
           <div
             style={{
