@@ -12,7 +12,6 @@ export default function PlaceholderPicture(props) {
                 width: `${width}`,
                 justifyContent: "center",
                 alignItems: "center",
-                marginRight: "16px",
             }}
             className="profilepicture"
         >

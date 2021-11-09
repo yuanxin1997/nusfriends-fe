@@ -31,7 +31,7 @@ function Navbar(props) {
     const onClick = ({ key }) => {
         if (key == 0) {
             message.info("profile");
-            history.push("/user");
+            history.push(`/user/${user.userid}`);
         } else if (key == 1) {
             localStorage.clear();
             props.onUpdate(null);
@@ -236,21 +236,40 @@ function Navbar(props) {
                                 />
 
                                 {/* to input profile details */}
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        textAlign: "left",
-                                    }}
-                                    className="profileitems"
-                                >
-                                    <ProfileName className="profilename">
-                                        {user.name}
-                                    </ProfileName>
-                                    <ProfileInfo className="profileinfo">
-                                        Y3 Information Systems
-                                    </ProfileInfo>
-                                </div>
+                                {user && user.classification !== "" && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            textAlign: "left",
+                                            marginLeft: "16px",
+                                        }}
+                                        className="profileitems"
+                                    >
+                                        <ProfileName className="profilename">
+                                            {user.name}
+                                        </ProfileName>
+                                        <ProfileInfo className="profileinfo">
+                                            {user.classification}
+                                        </ProfileInfo>
+                                    </div>
+                                )}
+                                {user && user.classification == "" && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            textAlign: "left",
+                                            marginLeft: "16px",
+                                            justifyContent: "center",
+                                        }}
+                                        className="profileitems"
+                                    >
+                                        <ProfileName className="profilename">
+                                            {user.name}
+                                        </ProfileName>
+                                    </div>
+                                )}
                             </ProfileCard>
                         </Dropdown>
                     </Col>
