@@ -35,8 +35,10 @@ const MyInbox = () => {
     }
     try {
       setLoading(true);
-      const { data: results } = await axios.get(`${Url}/messages/users/1`);
-      console.log(data);
+      const { data: results } = await axios.get(
+        `${Url}/messages/user/${localStorage.getItem("userId")}`
+      );
+      console.log(results);
       const cacheInstance = [...results];
       // cacheInstance.splice(0,7); testing UI
 
@@ -136,30 +138,34 @@ const MyInbox = () => {
                         renderItem={(item) => (
                           <List.Item key={item.id}>
                             <List.Item.Meta
-                              // avatar={<Avatar src={item.picture.large} />}
+                              
                               avatar={
-                                <Avatar
-                                  className="avatar-sdn"
-                                  style={{
-                                    color: "#ffffff",
-                                    backgroundColor: `${generateDarkColorHex()}`,
-                                  }}
-                                  size="large"
-                                >
-                                  <span style={{ fontSize: "var(--fs-b1" }}>
-                                    {item.name.charAt(0)}
-                                  </span>
-                                </Avatar>
+                                item.photo ? (
+                                  <Avatar // no photo data yet to test />/ to be replace by {item.photo}
+                                    src={"https://placeimg.com/640/480/any"}
+                                  />
+                                ) : (
+                                  <Avatar
+                                    className="avatar-sdn"
+                                    style={{
+                                      color: "#ffffff",
+                                      backgroundColor: `${generateDarkColorHex()}`,
+                                    }}
+                                    size="large"
+                                  >
+                                    <span style={{ fontSize: "var(--fs-b1" }}>
+                                      {item.name.charAt(0)}
+                                    </span>
+                                  </Avatar>
+                                )
                               }
                               title={
-                                <Link to="/my-inbox/messages">
-                                  {trim(
-                                    item.content
-                                  )}
+                                <Link to={`/my-inbox/messages/${item.messageid}`}>
+                                  {trim(item.content)}
                                 </Link>
                               }
                             />
-                            <div>{moment([2021, 9, 20]).fromNow()}</div>
+                            <div>{moment(item.createdat).fromNow()}</div>
                           </List.Item>
                         )}
                       />

@@ -93,7 +93,7 @@ function App() {
                     <Route exact path="/my-inbox" component={MyInbox} />
                     <Route
                         exact
-                        path="/my-inbox/messages"
+                        path="/my-inbox/messages/:id"
                         component={Messages}
                     />
                     <Route exact path="/circle/:id" />
