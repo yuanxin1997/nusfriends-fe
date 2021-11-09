@@ -4,7 +4,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { List, Col, Row, Skeleton, Divider, Avatar } from "antd";
 import moment from "moment";
 import CircleCard from "../components/CircleCard";
-
+import axios from "axios";
+import { Url } from "../constants/global";
 import styled from "styled-components";
 import { Layout } from "antd";
 import SideBar from "../components/SideBar";
@@ -15,26 +16,25 @@ const MyInbox = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const loadMoreData = () => {
+  const loadData = async () => {
     if (loading) {
       return;
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    try {
+      setLoading(true);
+      const { data: results } = await axios.get(`${Url}/messageId/1`);
+      console.log(data);
+
+      setData(results);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    loadMoreData();
+    // loadMoreData();
+    loadData();
   }, []);
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
