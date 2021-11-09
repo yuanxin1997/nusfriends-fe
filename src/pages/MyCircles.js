@@ -55,9 +55,11 @@ const MyCircles = () => {
   };
 
   const loadCirclesData = async () => {
-    await axios.get(`${Url}/circles`).then((res) => {
-      setCircles(res.data);
-    });
+    await axios
+      .get(`${Url}/circles/userId/${localStorage.userId}`)
+      .then((res) => {
+        setCircles(res.data);
+      });
     setLoading(false);
   };
 
