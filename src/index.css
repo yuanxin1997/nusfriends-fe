@@ -150,6 +150,10 @@ a:hover {
   border-color: var(--accent-redpink);
 }
 
+.ant-btn-default:hover {
+    color: var(--accent-darkpink);
+}
+
 .ant-input-search .ant-input-group .ant-input-affix-wrapper:hover {
   border-color: var(--accent-redpink);
 }
@@ -230,6 +234,15 @@ a:hover {
   font-size: 12px;
 }
 
+.ant-avatar.avatar-sdn .ant-avatar-string {
+  transform: scale(1) translateX(-50%) translateY(0%) !important;
+  font-size: 12px;
+  -webkit-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -moz-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -ms-transform: scale(1) translateX(-50%) translateY(0%) !important;
+  -o-transform: scale(1) translateX(-50%) translateY(0%) !important;
+}
+
 .ant-modal-content {
   border-radius: var(--br-lg);
 }
@@ -260,4 +273,9 @@ a:hover {
   height: 120px;
   width: 125px;
   background-color: #d13c69;
+}
+
+
+.ant-badge-count {
+    border-radius: 8px;
 }

@@ -1,13 +1,31 @@
-import { Col, Row, Menu, Dropdown, message } from "antd";
+import {
+    Col,
+    Row,
+    Menu,
+    Dropdown,
+    message,
+    Badge,
+    Skeleton,
+    Divider,
+    Avatar,
+    List,
+    Button,
+} from "antd";
 import Search from "antd/lib/input/Search";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../resources/Logo.png";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import moment from "moment";
+import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
+import WebSocket from "isomorphic-ws";
+import { Url } from "../constants/global";
+import axios from "axios";
+import PlaceholderPicture from "./PlaceholderPicture";
 
-function Navbar() {
-    const [user, setUser] = useState(null);
+function Navbar(props) {
+    const user = props.currentUser;
     const history = useHistory();
 
     const onClick = ({ key }) => {
@@ -15,8 +33,9 @@ function Navbar() {
             message.info("profile");
             history.push("/user");
         } else if (key == 1) {
-            // TODO: update logout - should remove localstorage deets
-            message.info("logout");
+            localStorage.clear();
+            props.onUpdate(null);
+            message.success("Logged out successfully!");
             history.push("/login");
         }
     };
@@ -33,6 +52,107 @@ function Navbar() {
         </Menu>
     );
 
+    // ########### START #############
+    // ###### for notification #######
+    // ###############################
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+
+    const loadMoreData = () => {
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        fetch(
+            "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
+        )
+            .then((res) => res.json())
+            .then((body) => {
+                setData([...data, ...body.results]);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        loadMoreData();
+    }, []);
+
+    function trim(content) {
+        if (content.length > 30) {
+            return content.slice(0, 30) + "...";
+        } else {
+            return content;
+        }
+    }
+    // web socket START HERE ================
+
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:3030/nus-friends");
+
+        ws.onopen = function open(event) {
+            console.log("connected");
+            ws.send(Date.now());
+        };
+
+        ws.onclose = function close(event) {
+            console.log("disconnected");
+        };
+
+        ws.onmessage = function incoming(event) {
+            console.log(event.data);
+        };
+    }, []);
+
+    // web socket END HERE ================
+    const notificationMenu = (
+        <NotificationCard>
+            <p> Notification</p>
+            <div
+                id="scrollableDiv"
+                style={{
+                    height: "350px",
+                    overflow: "auto",
+                    padding: "0 16px",
+                }}
+            >
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={loadMoreData}
+                    hasMore={data.length < 50}
+                    loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                    endMessage={
+                        <Divider plain>It is all, nothing more 🤐</Divider>
+                    }
+                    scrollableTarget="scrollableDiv"
+                >
+                    <List
+                        dataSource={data}
+                        renderItem={(item) => (
+                            <List.Item key={item.id}>
+                                <List.Item.Meta
+                                    avatar={<Avatar src={item.picture.large} />}
+                                    title={
+                                        <a href="/my-inbox/messages">
+                                            {trim(
+                                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                                            )}
+                                        </a>
+                                    }
+                                />
+                                <div>{moment([2021, 9, 20]).fromNow()}</div>
+                            </List.Item>
+                        )}
+                    />
+                </InfiniteScroll>
+            </div>
+        </NotificationCard>
+    );
+    // ########### END #############
+    // ###### for notification #######
+    // ###############################
     return (
         <Nb>
             <div
@@ -55,56 +175,87 @@ function Navbar() {
                 <Link to="/my-inbox">My Inbox</Link>
             </div>
 
-            <Row align="middle" gutter={[16, 0]}>
-                <Col>
-                    <Search
-                        placeholder="Search"
-                        allowClear
-                        // onSearch={onSearch}
-                        style={{ width: 200 }}
-                    />
-                </Col>
-                <Col>
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                        <ProfileCard>
-                            {/* Right Side */}
-                            {/* temp holder for profile pic */}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    backgroundColor: "var(--accent-lightpink)",
-                                    borderRadius: "var(--br-sm)",
-                                    height: "40px",
-                                    width: "40px",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginRight: "16px",
-                                }}
-                                className="profilepicture"
-                            >
-                                J
-                            </div>
+            {user == null && (
+                <Row gutter={16}>
+                    <Col>
+                        <Button
+                            type="default"
+                            size="large"
+                            style={{ minWidth: "100px" }}
+                            href="/register"
+                        >
+                            Register
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            type="primary"
+                            size="large"
+                            style={{ minWidth: "100px" }}
+                            href="/login"
+                        >
+                            Login
+                        </Button>
+                    </Col>
+                </Row>
+            )}
 
-                            {/* to input profile details */}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    textAlign: "left",
-                                }}
-                                className="profileitems"
-                            >
-                                <ProfileName className="profilename">
-                                    John Doe
-                                </ProfileName>
-                                <ProfileInfo className="profileinfo">
-                                    Y3 Information Systems
-                                </ProfileInfo>
-                            </div>
-                        </ProfileCard>
-                    </Dropdown>
-                </Col>
-            </Row>
+            {user != null && (
+                <Row align="middle" gutter={[16, 0]}>
+                    <Col>
+                        <Dropdown
+                            overlay={notificationMenu}
+                            trigger={["click"]}
+                            placement="bottomCenter"
+                            arrow
+                        >
+                            <Badge dot>
+                                <NotificationWrapper>
+                                    <BellFilled />
+                                </NotificationWrapper>
+                            </Badge>
+                        </Dropdown>
+                    </Col>
+                    <Col>
+                        <Search
+                            placeholder="Search"
+                            allowClear
+                            // onSearch={onSearch}
+                            style={{ width: 200 }}
+                        />
+                    </Col>
+                    <Col>
+                        <Dropdown overlay={menu} trigger={["click"]}>
+                            <ProfileCard>
+                                {/* Right Side */}
+                                {/* temp holder for profile pic */}
+                                <PlaceholderPicture
+                                    height="40px"
+                                    width="40px"
+                                    name={user.name}
+                                />
+
+                                {/* to input profile details */}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        textAlign: "left",
+                                    }}
+                                    className="profileitems"
+                                >
+                                    <ProfileName className="profilename">
+                                        {user.name}
+                                    </ProfileName>
+                                    <ProfileInfo className="profileinfo">
+                                        Y3 Information Systems
+                                    </ProfileInfo>
+                                </div>
+                            </ProfileCard>
+                        </Dropdown>
+                    </Col>
+                </Row>
+            )}
         </Nb>
     );
 }
@@ -147,6 +298,32 @@ const ProfileName = styled.span`
 const ProfileInfo = styled.span`
     font-size: var(--fs-b3);
     color: var(--base-20);
+`;
+
+const NotificationWrapper = styled.div`
+    color: var(--base-20);
+    &:hover {
+        cursor: pointer;
+        color: var(--base-40);
+    }
+    &:active {
+        color: var(--base-100);
+    }
+`;
+
+const NotificationCard = styled.div`
+    background-color: var(--base-0);
+    width: 320px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 10px;
+    p {
+        border-radius: 10px 10px 0 0;
+        background-color: var(--accent-lightpink);
+        color: var(--base-0);
+        padding: 0.2rem 0em;
+        text-align: center;
+        font-weight: 900;
+    }
 `;
 
 export default Navbar;
