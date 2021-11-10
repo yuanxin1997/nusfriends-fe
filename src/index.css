@@ -279,3 +279,11 @@ a:hover {
 .ant-select-selector {
   border-radius: var(--br-lg);
 }
+
+.ant-modal-content {
+    border-radius: var(--br-md);
+}
+
+.ant-modal-header {
+    border-radius: var(--br-md);
+}
