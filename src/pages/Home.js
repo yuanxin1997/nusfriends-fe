@@ -72,6 +72,7 @@ function Home() {
                   posterId={post.userid}
                   currUserLiked={post.curuserliked}
                   postedPhoto={post.photo}
+                  postType={post.posttype}
                 />
               ))}
             </Content>

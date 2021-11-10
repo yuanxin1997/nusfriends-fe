@@ -72,9 +72,6 @@ const MyCircles = () => {
     await axios.get(`${Url}/circles/userId/${userId}`).then((res) => {
       setCircles(res.data);
     });
-    circles.map((circle) => {
-      console.log(circle.circleid);
-    });
     setLoading(false);
   };
 

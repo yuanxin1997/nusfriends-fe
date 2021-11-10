@@ -270,7 +270,6 @@ a:hover {
 
 .ant-radio-button-wrapper > .ant-radio-button {
   background-color: #d13c69;
-  border-color: #ffffff;
 }
 
 .ant-badge-count {
@@ -282,10 +281,25 @@ a:hover {
 }
 
 .ant-modal-content {
-    border-radius: var(--br-md);
+  border-radius: var(--br-md);
 }
 
 .ant-modal-header {
-    border-radius: var(--br-md);
+  border-radius: var(--br-md);
+}
 
+.ant-radio-checked .ant-radio-inner {
+  border-color: var(--accent-darkpink) !important ;
+}
+
+.ant-radio-checked .ant-radio-inner:after {
+  background-color: var(--accent-darkpink);
+}
+
+.ant-radio:hover .ant-radio-inner {
+  border-color: var(--accent-darkpink);
+}
+
+.ant-radio-checked .ant-radio-inner:focus {
+  border-color: var(--accent-darkpink);
 }

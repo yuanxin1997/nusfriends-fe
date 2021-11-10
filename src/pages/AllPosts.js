@@ -199,6 +199,7 @@ const AllPosts = () => {
                   postedClassification={post.classification}
                   postedPhoto={post.photo}
                   posterId={post.userid}
+                  postType={post.posttype}
                 />
               ))}
             </div>

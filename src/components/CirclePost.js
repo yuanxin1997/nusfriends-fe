@@ -4,9 +4,8 @@ import { Link, useHistory } from "react-router-dom";
 import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
-import "../styles/CirclePost.css";
 import PlaceholderPicture from "./PlaceholderPicture";
-import { Avatar } from "antd";
+import { Tag, Avatar, Radio, Input, Space, Button, Progress } from "antd";
 
 function CirclePost({
   circleNameVisible,
@@ -23,12 +22,26 @@ function CirclePost({
   postedPhoto,
   posterId,
   currUserLiked,
+  postType,
 }) {
   const history = useHistory();
 
+  const [value, setValue] = useState();
   function handleLike() {
     console.log("liked");
   }
+
+  const handleVote = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    ev.nativeEvent.stopImmediatePropagation();
+    console.log(value);
+  };
+
+  const onChange = (e) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
 
   return (
     <div style={{ width: "750px" }}>
@@ -93,18 +106,116 @@ function CirclePost({
           }}
           onClick={() => console.log("clicked")}
         >
-          <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
-            {postTitle}
-          </h4>
-          <p
-            style={{
-              textAlign: "left",
-              paddingBottom: "10px",
-              fontWeight: "normal",
-            }}
-          >
-            {postText}
-          </p>
+          <div>
+            <h4 style={{ textAlign: "left", paddingBottom: "2px" }}>
+              {postTitle}
+            </h4>
+            <div
+              style={{
+                alignContent: "left",
+                textAlign: "left",
+                justifyContent: "left",
+                paddingBottom: "15px",
+              }}
+            >
+              <Tag color="var(--accent-lightpink)">
+                {postType === "discussion" ? "disussion" : "poll"}
+              </Tag>
+            </div>
+          </div>
+
+          {postType === "discussion" ? (
+            <div
+              style={{
+                textAlign: "left",
+                paddingBottom: "15px",
+              }}
+            >
+              <p
+                style={{
+                  paddingBottom: "10px",
+                  fontWeight: "normal",
+                }}
+              >
+                {postText}
+              </p>
+            </div>
+          ) : (
+            // <div>
+            //   <div style={{ display: "flex", flexDirection: "row" }}>
+            //     <div style={{ width: "25%", textAlign: "center" }}>
+            //       <p style={{ marginRight: 30, fontWeight: "normal" }}>
+            //         Deck
+            //       </p>
+            //     </div>
+            //     <Progress
+            //       strokeColor="var(--accent-lightpink)"
+            //       percent={30}
+            //     />
+            //   </div>
+            //   <div style={{ display: "flex", flexDirection: "row" }}>
+            //     <div style={{ width: "25%", textAlign: "center" }}>
+            //       <p style={{ marginRight: 30, fontWeight: "normal" }}>
+            //         Techno Edge
+            //       </p>
+            //     </div>
+            //     <Progress
+            //       strokeColor="var(--accent-lightpink)"
+            //       percent={30}
+            //     />
+            //   </div>
+            //   <div style={{ display: "flex", flexDirection: "row" }}>
+            //     <div style={{ width: "25%", textAlign: "center" }}>
+            //       <p
+            //         style={{
+            //           marginRight: 30,
+            //           fontWeight: "bold",
+            //           color: "var(--accent-darkpink)",
+            //         }}
+            //       >
+            //         Fine Food
+            //       </p>
+            //     </div>
+            //     <Progress strokeColor="var(--accent-darkpink)" percent={40} />
+            //   </div>
+            // </div>
+
+            <div
+              style={{
+                textAlign: "left",
+                paddingBottom: "15px",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <div>
+                <Radio.Group value={value} onChange={(e) => onChange(e)}>
+                  <Space direction="vertical">
+                    <Radio value={1} style={{ fontWeight: "normal" }}>
+                      Deck
+                    </Radio>
+                    <Radio value={2} style={{ fontWeight: "normal" }}>
+                      Techno Edge
+                    </Radio>
+                    <Radio value={3} style={{ fontWeight: "normal" }}>
+                      Fine Food
+                    </Radio>
+                  </Space>
+                </Radio.Group>
+              </div>
+
+              <Button
+                style={{ marginTop: 15, marginBottom: 10 }}
+                type="primary"
+                onClick={(e) => {
+                  handleVote(e);
+                }}
+              >
+                Vote
+              </Button>
+            </div>
+          )}
 
           <div
             style={{
