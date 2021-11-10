@@ -75,8 +75,10 @@ function Navbar(props) {
     }
     try {
       setLoading(true);
-      const { data: results } = await axios.get(`${Url}/notifications/userId/1`);
-      console.log(data);
+      const { data: results } = await axios.get(
+        `${Url}/notifications/userId/1`
+      );
+      console.log(results);
       const cacheInstance = [...results];
       // cacheInstance.splice(0,7); testing UI
 
@@ -146,17 +148,14 @@ function Navbar(props) {
             dataSource={data}
             renderItem={(item) => (
               <List.Item key={item.id}>
-                <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={
-                    <a href="/my-inbox/messages">
-                      {trim(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                      )}
-                    </a>
-                  }
-                />
-                <div>{moment([2021, 9, 20]).fromNow()}</div>
+                <Link to={item.link}>
+                  <NotificationItemWrapper>
+                    <div className="notif-content">{trim(item.content)}</div>
+                    <div className="notif-date">
+                      {moment(item.createdat).fromNow()}
+                    </div>
+                  </NotificationItemWrapper>
+                </Link>
               </List.Item>
             )}
           />
@@ -334,4 +333,22 @@ const NotificationCard = styled.div`
   }
 `;
 
+const NotificationItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  .notif-content {
+    font-size: var(--fs-b3);
+  }
+  .notif-date {
+    font-size: var(--fs-b3);
+    color: var(--base-20);
+    font-weight: 100;
+    font-style: italic;
+    content: "→";
+  }
+  .notif-date::after {
+    content: "...";
+  }
+`;
 export default Navbar;
