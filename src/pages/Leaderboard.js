@@ -21,11 +21,11 @@ import {
 } from "@ant-design/icons";
 import CircleCard from "../components/CircleCard";
 import axios from "axios";
+import { Url } from "../constants/global";
 import styled from "styled-components";
 import { Layout } from "antd";
 import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
-import { Url } from "../constants/global";
 import { generateDarkColorHex } from "../helpers/helper";
 const { Header, Footer, Sider, Content } = Layout;
 

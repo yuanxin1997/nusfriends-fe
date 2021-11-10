@@ -20,6 +20,7 @@ code {
   --accent-darkpink: #d13c69;
   --accent-lightpink: #e9afb4;
   --accent-bg: #fbf7f7;
+  --accent-sp: #d1ddef;
 
   --base-100: #031126;
   --base-80: #292032;
@@ -286,4 +287,5 @@ a:hover {
 
 .ant-modal-header {
     border-radius: var(--br-md);
+
 }
