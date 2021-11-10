@@ -152,6 +152,7 @@ const AllPosts = () => {
                 <CreatePostModal
                   modalVisible={modalVisible}
                   closeCreateModal={closeCreateModal}
+                  circleId={id}
                 />
               </div>
             </Row>

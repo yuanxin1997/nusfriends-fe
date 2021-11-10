@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CirclePost from "../components/CirclePost";
 
-import { Layout } from "antd";
+import { Layout, Spin } from "antd";
 
 import axios from "axios";
 import { Url } from "../constants/global";
@@ -16,7 +16,7 @@ function Home() {
   const fetchHomePosts = async () => {
     try {
       await axios
-        .get(`${Url}/posts/home/${localStorage.userId}`)
+        .get(`${Url}/posts/home/${parseInt(localStorage.userId)}`)
         .then((res) => {
           setPosts(res.data);
         });
@@ -31,42 +31,50 @@ function Home() {
   }, []);
 
   return (
-    <div style={{ justifyContent: "center", alignItems: "center" }}>
-      <div
-        style={{
-          backgroundColor: "#FBF7F7",
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
-        <h1>Welcome Back, {localStorage.name}</h1>
-      </div>
+    <div>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <div
+            style={{
+              backgroundColor: "#FBF7F7",
+              paddingTop: 20,
+              paddingBottom: 20,
+            }}
+          >
+            <h1>Welcome Back, {localStorage.name}</h1>
+          </div>
 
-      <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
-        <Content
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {posts.map((post) => (
-            <CirclePost
-              circleId={post.circleid}
-              circleNameVisible={true}
-              circleName={"need to fetch"}
-              postTitle={post.title}
-              postText={post.content}
-              postId={post.postid}
-              posted={post.posted}
-              numLikes={post.likes}
-              numComments={post.comments}
-              postedName={post.name}
-              postedClassification={post.classification}
-            />
-          ))}
-        </Content>
-      </Layout>
+          <Layout
+            style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
+          >
+            <Content
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {posts.map((post) => (
+                <CirclePost
+                  circleId={post.circleid}
+                  circleNameVisible={true}
+                  circleName={"need to fetch"}
+                  postTitle={post.title}
+                  postText={post.content}
+                  postId={post.postid}
+                  posted={post.posted}
+                  numLikes={post.likes}
+                  numComments={post.comments}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                />
+              ))}
+            </Content>
+          </Layout>
+        </div>
+      )}
     </div>
   );
 }

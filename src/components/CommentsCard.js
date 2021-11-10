@@ -13,7 +13,6 @@ function CommentsCard({
   title,
   description,
   likes,
-  comments,
   tags,
   posted,
   id,
