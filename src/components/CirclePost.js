@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
@@ -20,25 +20,22 @@ function CirclePost({
   postedName,
   postedClassification,
   postedPhoto,
+  posterId,
 }) {
+  const history = useHistory();
+
   return (
     <div style={{ width: "750px" }}>
-      <Link
-        to={{
-          pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
-        }}
-        onClick={() => console.log("clicked")}
-      >
-        <h3 style={{ textAlign: "left" }}>
-          {circleNameVisible === true ? circleName : null}
-        </h3>
+      <h3 style={{ textAlign: "left" }}>
+        {circleNameVisible === true ? circleName : null}
+      </h3>
 
-        <CircleCard>
-          <div style={styles.wrapper}>
+      <CircleCard>
+        <div style={styles.wrapper}>
+          <a onClick={() => history.push("/user/" + posterId)}>
             <div style={styles.userWrapper}>
               <ProfileCard>
                 {/* Profile and user details*/}
-                {/* temp holder for profile pic */}
                 <PlaceholderPicture
                   height={"40px"}
                   width={"40px"}
@@ -51,6 +48,7 @@ function CirclePost({
                     display: "flex",
                     flexDirection: "column",
                     textAlign: "left",
+                    marginLeft: 10,
                   }}
                   className="profileitems"
                 >
@@ -63,18 +61,24 @@ function CirclePost({
                 </div>
               </ProfileCard>
             </div>
-            {/* Right side for when Circles post was posted*/}
-            <div
-              style={{
-                flexDirection: "row-reverse",
-                display: "flex",
-                textAlign: "right",
-              }}
-            >
-              {posted}
-            </div>
+          </a>
+          {/* Right side for when Circles post was posted*/}
+          <div
+            style={{
+              flexDirection: "row-reverse",
+              display: "flex",
+              textAlign: "right",
+            }}
+          >
+            {posted}
           </div>
-
+        </div>
+        <Link
+          to={{
+            pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
+          }}
+          onClick={() => console.log("clicked")}
+        >
           <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
             {postTitle}
           </h4>
@@ -104,8 +108,8 @@ function CirclePost({
               <text style={styles.textStyle}>{numComments}</text>
             </div>
           </div>
-        </CircleCard>
-      </Link>
+        </Link>
+      </CircleCard>
     </div>
   );
 }

@@ -69,6 +69,7 @@ function Home() {
                   numComments={post.comments}
                   postedName={post.name}
                   postedClassification={post.classification}
+                  posterId={post.userid}
                 />
               ))}
             </Content>

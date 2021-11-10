@@ -177,6 +177,7 @@ const AllPosts = () => {
                   postedName={post.name}
                   postedClassification={post.classification}
                   postedPhoto={post.photo}
+                  posterId={post.userid}
                 />
               ))}
             </div>

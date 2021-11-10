@@ -157,6 +157,7 @@ function Comments(props) {
                 postedClassification={post.classification}
                 postedPhoto={post.photo}
                 id={post.postid}
+                posterId={post.userid}
               />
 
               {comments.map((comment) => (
@@ -169,6 +170,7 @@ function Comments(props) {
                   postedClassification={comment.classification}
                   postedPhoto={comment.photo}
                   id={comment.commentid}
+                  posterId={comment.userid}
                 />
               ))}
             </div>
