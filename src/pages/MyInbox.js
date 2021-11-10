@@ -23,7 +23,7 @@ const MyInbox = () => {
   const loadCachedata = () => {
     const cacheInstance = cacheData;
     const lengthToRetrieve =
-      cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+      cacheInstance.length >= 6 ? 6 : cacheInstance.length;
     const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
     setData([...data, ...unloadedCacheData]);
     setCacheData(cacheInstance);
@@ -44,7 +44,7 @@ const MyInbox = () => {
 
       setTotalData(cacheInstance.length);
       const lengthToRetrieve =
-        cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+        cacheInstance.length >= 6 ? 6 : cacheInstance.length;
       const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
       setCacheData(cacheInstance);
       setData(unloadedCacheData);
@@ -142,7 +142,7 @@ const MyInbox = () => {
                               avatar={
                                 item.photo ? (
                                   <Avatar // no photo data yet to test />/ to be replace by {item.photo}
-                                    src={"https://placeimg.com/640/480/any"}
+                                    src={item.photo}
                                   />
                                 ) : (
                                   <Avatar

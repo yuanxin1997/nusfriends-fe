@@ -31,7 +31,11 @@ const MyInbox = () => {
       console.log(userId);
       const { data: results } = await axios.get(
         `${Url}/messages/${id}?userId=${userId}`
-      );
+      , {
+        headers: {
+          jwtToken: localStorage.getItem("jwt")
+        }
+       });
       console.log(results);
 
       setData(results);
@@ -109,6 +113,8 @@ const MyInbox = () => {
                           <h5>Message From:</h5>
                           <SenderWrapper>
                             {data.photo ? (
+                              <Avatar src={data.photo} />
+                            ) : (
                               <Avatar
                                 className="avatar-sdn"
                                 style={{
@@ -118,11 +124,9 @@ const MyInbox = () => {
                                 size="large"
                               >
                                 <span style={{ fontSize: "var(--fs-b1" }}>
-                                  {data.name.charAt(0)}
+                                  {(data.name|| "").charAt(0)}
                                 </span>
                               </Avatar>
-                            ) : (
-                              <Avatar src="https://joeschmoe.io/api/v1/random" />
                             )}
                             <Sender>{data.name}</Sender>
                           </SenderWrapper>
