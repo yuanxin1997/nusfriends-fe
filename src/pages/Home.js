@@ -1,49 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CirclePost from "../components/CirclePost";
 
+import { Layout, Spin } from "antd";
+
+import axios from "axios";
+import { Url } from "../constants/global";
 function Home() {
-  // dummy data, have to change by getting data from database
   const userName = "John";
-  const circleName = "Lost and Found";
-  const dummyText =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus nulla sagittis sapien et. A vel tortor vestibulum arcu, diam netus consectetur. Et, a interdum adipiscing viverra congue. Purus cursus id aliquam turpis vitae non.";
-  const posted = "20h";
-  const numLikes = 77;
-  const numComments = 123;
+  const { Content } = Layout;
+  // dummy data, to be replaced by API call
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState();
+
+  const fetchHomePosts = async () => {
+    try {
+      await axios
+        .get(`${Url}/posts/home/${parseInt(localStorage.userId)}`)
+        .then((res) => {
+          setPosts(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchHomePosts();
+  }, []);
 
   return (
-    <div style={{ justifyContent: "center", alignItems: "center" }}>
-      <div
-        style={{
-          backgroundColor: "#FBF7F7",
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
-        <h1>Welcome Back, {userName}</h1>
-      </div>
+    <div>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <div
+            style={{
+              backgroundColor: "#FBF7F7",
+              paddingTop: 20,
+              paddingBottom: 20,
+            }}
+          >
+            <h1>Welcome Back, {localStorage.name}</h1>
+          </div>
 
-      <div
-        style={{
-          backgroundColor: "var(--accent-bg)",
-          position: "fixed",
-          width: "100%",
-          height: "100%",
-          overflowX: "hidden",
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <CirclePost
-          circleName={circleName}
-          postText={dummyText}
-          posted={posted}
-          numLikes={numLikes}
-          numComments={numComments}
-        />
-      </div>
+          <Layout
+            style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
+          >
+            <Content
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {posts.map((post) => (
+                <CirclePost
+                  circleId={post.circleid}
+                  circleNameVisible={true}
+                  circleName={"need to fetch"}
+                  postTitle={post.title}
+                  postText={post.content}
+                  postId={post.postid}
+                  posted={post.posted}
+                  numLikes={post.likes}
+                  numComments={post.comments}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                />
+              ))}
+            </Content>
+          </Layout>
+        </div>
+      )}
     </div>
   );
 }

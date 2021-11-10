@@ -1,16 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { Col, Row } from "antd";
-import CircleCard from "../components/CircleCard";
-
+import { Col, Row, Layout, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { Layout } from "antd";
+
 import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
-const { Header, Footer, Sider, Content } = Layout;
+import CircleCard from "../components/CircleCard";
+import CreateCircleModal from "../components/CreateCircleModal";
+
+import axios from "axios";
+import { Url } from "../constants/global";
+
+const { Sider, Content } = Layout;
 
 const MyCircles = () => {
   /* START -- SETUP FOR COMPONENT */
+  const [loading, setLoading] = useState(true);
+  const [avatarData, setAvatarData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [circles, setCircles] = useState([]);
+  const [userId, setUserId] = useState(
+    localStorage.userId ? localStorage.userId : null
+  );
+
+  const openCreateModal = () => setModalVisible(true);
+  function closeCreateModal() {
+    setModalVisible(false);
+  }
+
   const tabData = [
     {
       icon: "TeamOutlined",
@@ -35,32 +53,22 @@ const MyCircles = () => {
       {
         name: "My Circles",
         path: "/my-circles",
-      }
+      },
     ],
   };
+
+  const loadCirclesData = async () => {
+    await axios.get(`${Url}/circles/userId/${userId}`).then((res) => {
+      setCircles(res.data);
+    });
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCirclesData();
+  }, []);
+
   /* END -- SETUP FOR COMPONENT */
-  const [circles, setCircles] = useState([
-    {
-      circleName: "NUS Computing",
-      numMembers: 365,
-    },
-    {
-      circleName: "Kayaking at NUS",
-      numMembers: 365,
-    },
-    {
-      circleName: "NUS Science",
-      numMembers: 365,
-    },
-    {
-      circleName: "NUS Dating",
-      numMembers: 365,
-    },
-    {
-      circleName: "Internship",
-      numMembers: 365,
-    },
-  ]);
 
   return (
     <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
@@ -73,16 +81,45 @@ const MyCircles = () => {
             <ContainerHeader headData={headData} />
           </Col>
         </Row>
+        <Row
+          justify="start"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "90%",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              marginLeft: "auto",
+            }}
+          >
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={openCreateModal}
+            >
+              Create a New Circle
+            </Button>
+            <CreateCircleModal
+              modalVisible={modalVisible}
+              closeCreateModal={closeCreateModal}
+            />
+          </div>
+        </Row>
         <Row>
           <Col span={24}>
-          {/* conntent starts here */}
+            {/* content starts here */}
             <BoxesWrapper>
               <Row gutter={16}>
                 {circles.map((circle) => (
                   <Col span={8}>
                     <CircleCard
-                      circleName={circle.circleName}
+                      circleName={circle.name}
                       numMembers={circle.numMembers}
+                      circleId={circle.circleid}
+                      avatarData={avatarData}
                     />
                   </Col>
                 ))}
@@ -93,10 +130,10 @@ const MyCircles = () => {
       </Content>
     </Layout>
   );
-}
+};
 const BoxesWrapper = styled.div`
   height: 100%;
-  width: 85%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin-top: 3em;
