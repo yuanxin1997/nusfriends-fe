@@ -1,4 +1,9 @@
-import { MailOutlined } from "@ant-design/icons";
+import {
+    InstagramOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    WhatsAppOutlined,
+} from "@ant-design/icons";
 import {
     Button,
     Col,
@@ -11,6 +16,7 @@ import {
     Input,
     message,
     Select,
+    Space,
 } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -412,7 +418,7 @@ function Profile(props) {
                                 <EditModal />
                             </Row>
                         )}
-                        <Row align="top">
+                        <Row align="middle">
                             <Col span={8}>
                                 <div
                                     style={{
@@ -481,25 +487,78 @@ function Profile(props) {
                                         CONTACT ME
                                     </div>
                                     <Col>
-                                        <Row align="middle" gutter={[16, 16]}>
-                                            <Col>
-                                                <MailOutlined />
-                                            </Col>
-                                            <Col>
-                                                <span>{userProfile.email}</span>
-                                            </Col>
-                                        </Row>
+                                        <Space direction="vertical">
+                                            <Row
+                                                align="middle"
+                                                gutter={[16, 16]}
+                                            >
+                                                <Col>
+                                                    <MailOutlined />
+                                                </Col>
+                                                <Col>
+                                                    <span>
+                                                        {userProfile.email}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+                                            {userProfile && userProfile.phone && (
+                                                <Row
+                                                    align="middle"
+                                                    gutter={[16, 16]}
+                                                >
+                                                    <Col>
+                                                        <PhoneOutlined />
+                                                    </Col>
+                                                    <Col>
+                                                        <span>
+                                                            {userProfile.phone}
+                                                        </span>
+                                                    </Col>
+                                                </Row>
+                                            )}
+                                            {userProfile &&
+                                                userProfile.telegram && (
+                                                    <Row
+                                                        align="middle"
+                                                        gutter={[16, 16]}
+                                                    >
+                                                        <Col>
+                                                            <WhatsAppOutlined />
+                                                        </Col>
+                                                        <Col>
+                                                            <span>
+                                                                {`@${userProfile.telegram}`}
+                                                            </span>
+                                                        </Col>
+                                                    </Row>
+                                                )}
+                                            {userProfile &&
+                                                userProfile.instagram && (
+                                                    <Row
+                                                        align="middle"
+                                                        gutter={[16, 16]}
+                                                    >
+                                                        <Col>
+                                                            <InstagramOutlined />
+                                                        </Col>
+                                                        <Col>
+                                                            <span>
+                                                                {`@${userProfile.instagram}`}
+                                                            </span>
+                                                        </Col>
+                                                    </Row>
+                                                )}
+                                        </Space>
                                     </Col>
                                 </div>
                             </Col>
                             <Col span={1}>
-                                <Divider
+                                {/* <Divider
                                     type="vertical"
                                     style={{
                                         backgroundColor: "var(--base-10)",
-                                        height: "280px",
                                     }}
-                                />
+                                /> */}
                             </Col>
                             <Col span={15}>
                                 <Row
