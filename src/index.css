@@ -264,18 +264,28 @@ a:hover {
   color: var(--base-100);
 }
 
-.ant-radio-button-wrapper {
-  height: 120px;
-  width: 125px;
-  background-color: #c9cdd1;
+.ant-radio-checked .ant-radio-inner:after {
+  background-color: red;
 }
 
 .ant-radio-button-wrapper > .ant-radio-button {
-  height: 120px;
-  width: 125px;
   background-color: #d13c69;
+  border-color: #ffffff;
 }
 
 .ant-badge-count {
   border-radius: 8px;
+}
+
+.ant-select-selector {
+  border-radius: var(--br-lg);
+}
+
+.ant-modal-content {
+    border-radius: var(--br-md);
+}
+
+.ant-modal-header {
+    border-radius: var(--br-md);
+
 }

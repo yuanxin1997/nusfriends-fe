@@ -18,6 +18,7 @@ function Register(props) {
             password: values.password,
             name: values.name,
             description: "",
+            classification: values.level,
         };
 
         setPending(true);
@@ -151,6 +152,26 @@ function Register(props) {
                                 borderRadius: "var(--br-md)",
                             }}
                         ></Password>
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Level"
+                        name="level"
+                        tooltip="Optional"
+                        rules={[
+                            {
+                                max: 20,
+                            },
+                        ]}
+                        style={{ marginBottom: "32px" }}
+                    >
+                        <Input
+                            placeholder="Y3 Information Systems"
+                            style={{
+                                padding: "8px",
+                                borderRadius: "var(--br-md)",
+                            }}
+                        ></Input>
                     </Form.Item>
 
                     <Form.Item justify="center">

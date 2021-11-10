@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Avatar, Col, Row, Tooltip, Layout, Button } from "antd";
+import { Avatar, Col, Row, Tooltip, Layout, Button, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import styled from "styled-components";
@@ -9,40 +9,37 @@ import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
 import CirclePost from "../components/CirclePost";
 import CreatePostModal from "../components/CreatePostModal";
+
+import { useParams } from "react-router-dom";
+
+import axios from "axios";
+import { Url } from "../constants/global";
+
 const { Header, Footer, Sider, Content } = Layout;
 
 const AllPosts = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  // dummy data, to be replaced by API call
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      circleName: "Lost And Found",
-      postTitle: "Test Title",
-      postText:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus nulla sagittis sapien et. A vel tortor vestibulum arcu, diam netus consectetur. Et, a interdum adipiscing viverra congue. Purus cursus id aliquam turpis vitae non.",
-      posted: "20h",
-      numLikes: 77,
-      numComments: 123,
-    },
-    {
-      id: 2,
-      circleName: "NUS Computing",
-      postTitle: "Which is the best professor?",
-      postText: "HSIANG HUI OR WEEKEK?",
-      posted: "23h",
-      numLikes: 27,
-      numComments: 153,
-    },
-  ]);
+  const [circleName, setCircleName] = useState();
 
-  const loadMoreData = () => {
-    if (loading) {
-      return;
+  let { id } = useParams();
+
+  // dummy data, to be replaced by API call
+  const [posts, setPosts] = useState([]);
+
+  const loadMoreData = async () => {
+    try {
+      await axios.get(`${Url}/circles/circleId/${id}`).then((res) => {
+        setCircleName(res.data[0].name);
+      });
+
+      await axios.get(`${Url}/posts/circle/${id}`).then((res) => {
+        setPosts(res.data);
+      });
+    } catch (error) {
+      console.log(error);
     }
-    setLoading(true);
     fetch(
       "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
     )
@@ -56,10 +53,6 @@ const AllPosts = () => {
       });
   };
 
-  useEffect(() => {
-    loadMoreData();
-  }, []);
-
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
     setModalVisible(false);
@@ -70,108 +63,127 @@ const AllPosts = () => {
     {
       icon: "CommentOutlined",
       title: "All Posts",
-      path: "/my-circles/replace by id/all-posts",
+      path: "/my-circles/" + id + "/all-posts",
     },
     {
       icon: "TrophyOutlined",
       title: "Leaderboard",
-      path: "/my-circles/replace by id/leaderboard",
+      path: "/my-circles/" + id + "/leaderboard",
     },
   ];
 
   const headData = {
-    title: "replace by fetched data",
+    title: circleName,
     breadcrumbData: [
       {
         name: "My Circles",
         path: "/my-circles",
       },
       {
-        name: "to be removed, fetch data and push here",
-        path: "this can be empty",
+        name: circleName,
       },
     ],
   };
   /* END -- SETUP FOR COMPONENT */
 
-  return (
-    <Layout style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}>
-      <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
-        <SideBar tabData={tabData} />
-      </Sider>
-      <Content style={{ backgroundColor: "var(--accent-bg)" }}>
-        <Row justify="start">
-          <Col>
-            <ContainerHeader headData={headData} />
-          </Col>
-        </Row>
-        <Row
-          justify="start"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "90%",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <Col>
-              <UserGroupWrapper>
-                <Avatar.Group
-                  maxCount={8}
-                  size="large"
-                  maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-                >
-                  {data.map((item, index) => (
-                    <Avatar key={index} src={item.picture.large} />
-                  ))}
-                  <Tooltip title="Ant User" placement="top"></Tooltip>
-                </Avatar.Group>
-              </UserGroupWrapper>
-            </Col>
-          </div>
-          <div style={{ marginLeft: "20px" }}> 365 members</div>
+  useEffect(() => {
+    loadMoreData();
+  }, []);
 
-          <div
-            style={{
-              marginLeft: "auto",
-            }}
-          >
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={openCreateModal}
-            >
-              Create a New Post
-            </Button>
-            <CreatePostModal
-              modalVisible={modalVisible}
-              closeCreateModal={closeCreateModal}
-            />
-          </div>
-        </Row>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
+  return (
+    <div>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <Layout
+          style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
         >
-          {posts.map((post) => (
-            <CirclePost
-              circleNameVisible={false}
-              circleName={post.circleName}
-              postTitle={post.postTitle}
-              postText={post.postText}
-              posted={post.posted}
-              numLikes={post.numLikes}
-              numComments={post.numComments}
-            />
-          ))}
-        </div>
-      </Content>
-    </Layout>
+          <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
+            <SideBar tabData={tabData} />
+          </Sider>
+          <Content style={{ backgroundColor: "var(--accent-bg)" }}>
+            <Row justify="start">
+              <Col>
+                <ContainerHeader headData={headData} />
+              </Col>
+            </Row>
+            <Row
+              justify="start"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "90%",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <Col>
+                  <UserGroupWrapper>
+                    <Avatar.Group
+                      maxCount={8}
+                      size="large"
+                      maxStyle={{
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf",
+                      }}
+                    >
+                      {data.map((item, index) => (
+                        <Avatar key={index} src={item.picture.large} />
+                      ))}
+                      <Tooltip title="Ant User" placement="top"></Tooltip>
+                    </Avatar.Group>
+                  </UserGroupWrapper>
+                </Col>
+              </div>
+              <div style={{ marginLeft: "20px" }}> 365 members</div>
+
+              <div
+                style={{
+                  marginLeft: "auto",
+                }}
+              >
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={openCreateModal}
+                >
+                  Create a New Post
+                </Button>
+                <CreatePostModal
+                  modalVisible={modalVisible}
+                  closeCreateModal={closeCreateModal}
+                  circleId={id}
+                />
+              </div>
+            </Row>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "20px",
+              }}
+            >
+              {posts.map((post) => (
+                <CirclePost
+                  circleNameVisible={false}
+                  postTitle={post.title}
+                  postText={post.content}
+                  posted={post.createdat}
+                  numLikes={post.likes}
+                  numComments={post.comments}
+                  circleId={id}
+                  postId={post.postid}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                  postedPhoto={post.photo}
+                />
+              ))}
+            </div>
+          </Content>
+        </Layout>
+      )}
+    </div>
   );
 };
 

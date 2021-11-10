@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styled, { StyleSheetManager } from "styled-components";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
 import "../styles/CirclePost.css";
+import PlaceholderPicture from "./PlaceholderPicture";
 
 function CirclePost({
   circleNameVisible,
@@ -14,11 +15,18 @@ function CirclePost({
   posted,
   numLikes,
   numComments,
+  circleId,
+  postId,
+  postedName,
+  postedClassification,
+  postedPhoto,
 }) {
   return (
     <div style={{ width: "750px" }}>
       <Link
-        to={"/my-circles/" + 1 + "/" + 1 + "/comments"}
+        to={{
+          pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
+        }}
         onClick={() => console.log("clicked")}
       >
         <h3 style={{ textAlign: "left" }}>
@@ -31,21 +39,11 @@ function CirclePost({
               <ProfileCard>
                 {/* Profile and user details*/}
                 {/* temp holder for profile pic */}
-                <div
-                  style={{
-                    display: "flex",
-                    backgroundColor: "var(--accent-lightpink)",
-                    borderRadius: "var(--br-sm)",
-                    height: "40px",
-                    width: "40px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginRight: "16px",
-                  }}
-                  className="profilepicture"
-                >
-                  J
-                </div>
+                <PlaceholderPicture
+                  height={"40px"}
+                  width={"40px"}
+                  name={postedName}
+                />
 
                 {/* to input profile details */}
                 <div
@@ -56,9 +54,11 @@ function CirclePost({
                   }}
                   className="profileitems"
                 >
-                  <ProfileName className="profilename">John Doe</ProfileName>
+                  <ProfileName className="profilename">
+                    {postedName}
+                  </ProfileName>
                   <ProfileInfo className="profileinfo">
-                    Y3 Information Systems
+                    {postedClassification}
                   </ProfileInfo>
                 </div>
               </ProfileCard>
@@ -78,7 +78,15 @@ function CirclePost({
           <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
             {postTitle}
           </h4>
-          <p style={{ textAlign: "left", paddingBottom: "10px" }}>{postText}</p>
+          <p
+            style={{
+              textAlign: "left",
+              paddingBottom: "10px",
+              fontWeight: "normal",
+            }}
+          >
+            {postText}
+          </p>
 
           <div
             style={{

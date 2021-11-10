@@ -1,4 +1,5 @@
 export default function PlaceholderPicture(props) {
+
     const height = props.height;
     const width = props.width;
     const initial = props.name[0].toUpperCase();
@@ -12,11 +13,11 @@ export default function PlaceholderPicture(props) {
                 width: `${width}`,
                 justifyContent: "center",
                 alignItems: "center",
-                marginRight: "16px",
             }}
             className="profilepicture"
         >
             {initial}
         </div>
     );
+
 }

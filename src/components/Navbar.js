@@ -28,17 +28,17 @@ function Navbar(props) {
   const user = props.currentUser;
   const history = useHistory();
 
-  const onClick = ({ key }) => {
-    if (key == 0) {
-      message.info("profile");
-      history.push("/user");
-    } else if (key == 1) {
-      localStorage.clear();
-      props.onUpdate(null);
-      message.success("Logged out successfully!");
-      history.push("/login");
-    }
-  };
+
+    const onClick = ({ key }) => {
+        if (key == 0) {
+            history.push(`/user/${user.userid}`);
+        } else if (key == 1) {
+            localStorage.clear();
+            props.onUpdate(null);
+            message.success("Logged out successfully!");
+            history.push("/login");
+        }
+    };
 
   const menu = (
     <Menu onClick={onClick}>
@@ -57,6 +57,7 @@ function Navbar(props) {
   // ###############################
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+
   const [totalData, setTotalData] = useState(0);
   const [cacheData, setCacheData] = useState([]);
 
@@ -248,24 +249,56 @@ function Navbar(props) {
                   name={user.name}
                 />
 
-                {/* to input profile details */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    textAlign: "left",
-                  }}
-                  className="profileitems"
-                >
-                  <ProfileName className="profilename">{user.name}</ProfileName>
-                  <ProfileInfo className="profileinfo">
-                    Y3 Information Systems
-                  </ProfileInfo>
-                </div>
-              </ProfileCard>
-            </Dropdown>
-          </Col>
-        </Row>
+                                {/* to input profile details */}
+                                {user && user.classification && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            textAlign: "left",
+                                            marginLeft: "16px",
+                                        }}
+                                        className="profileitems"
+                                    >
+                                        <ProfileName className="profilename">
+                                            {user.name}
+                                        </ProfileName>
+                                        <ProfileInfo className="profileinfo">
+                                            {user.classification}
+                                        </ProfileInfo>
+                    
+
+
+
+
+
+
+
+
+
+
+</div>
+                                )}
+                                {user && !user.classification && (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            textAlign: "left",
+                                            marginLeft: "16px",
+                                            justifyContent: "center",
+                                        }}
+                                        className="profileitems"
+                                    >
+                                        <ProfileName className="profilename">
+                                            {user.name}
+                                        </ProfileName>
+                                    </div>
+                                )}
+                            </ProfileCard>
+                        </Dropdown>
+                    </Col>
+                </Row>
       )}
     </Nb>
   );
