@@ -89,8 +89,9 @@ function CommentsCard({
           }}
         >
           {/* Bottom Row (Likes and comments) */}
-          <div style={styles.bottomRowWrapper}>
-            {type === "post" ? (
+
+          {type === "post" ? (
+            <div style={styles.bottomRowWrapper}>
               <div>
                 <Tag color="blue" style={{ padding: "2px 18px" }}>
                   python
@@ -99,13 +100,13 @@ function CommentsCard({
                   programming
                 </Tag>
               </div>
-            ) : null}
 
-            <div style={{ display: "flex" }}>
-              <HeartFilled style={styles.heartStyles} />
-              <text style={styles.textStyle}>{likes}</text>
+              <div style={{ display: "flex" }}>
+                <HeartFilled style={styles.heartStyles} />
+                <text style={styles.textStyle}>{likes}</text>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         {posted == parseInt(localStorage.userId) ? (
