@@ -60,6 +60,12 @@ function Navbar(props) {
   const [totalData, setTotalData] = useState(0);
   const [cacheData, setCacheData] = useState([]);
 
+  const navigate = async (url, id) => {
+    await axios.delete(`${Url}/notifications/${id}`);
+    loadData();
+    history.push(url);
+  };
+
   const loadCachedata = () => {
     const cacheInstance = cacheData;
     const lengthToRetrieve =
@@ -148,14 +154,12 @@ function Navbar(props) {
             dataSource={data}
             renderItem={(item) => (
               <List.Item key={item.id}>
-                <Link to={item.link}>
-                  <NotificationItemWrapper>
-                    <div className="notif-content">{trim(item.content)}</div>
-                    <div className="notif-date">
-                      {moment(item.createdat).fromNow()}
-                    </div>
-                  </NotificationItemWrapper>
-                </Link>
+                <NotificationItemWrapper onClick={() => navigate(item.link, item.notifid)}>
+                  <div className="notif-content">{trim(item.content)}</div>
+                  <div className="notif-date">
+                    {moment(item.createdat).fromNow()}
+                  </div>
+                </NotificationItemWrapper>
               </List.Item>
             )}
           />
@@ -334,8 +338,12 @@ const NotificationCard = styled.div`
 `;
 
 const NotificationItemWrapper = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
+  &:hover{
+    color: var(--accent-redpink);
+  }
   gap: 0.5rem;
   .notif-content {
     font-size: var(--fs-b3);
