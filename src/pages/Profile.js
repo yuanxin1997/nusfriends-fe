@@ -1,4 +1,4 @@
-import { MailOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { MailOutlined } from "@ant-design/icons";
 import {
     Button,
     Col,
@@ -9,7 +9,6 @@ import {
     Form,
     Modal,
     Input,
-    Space,
     message,
     Select,
 } from "antd";
@@ -29,10 +28,13 @@ function Profile(props) {
     const [editLoading, setEditLoading] = useState(false);
     const [tagVisible, setTagVisible] = useState(false);
     const [error, setError] = useState(null);
+    const [tags, setTags] = useState([]);
+    const [toAddTags, setToAddTags] = useState(null);
 
     useEffect(() => {
         loadProfileUser();
         loadUserTags();
+        loadDbTags();
     }, [profileId]);
 
     const loadProfileUser = async () => {
@@ -85,6 +87,19 @@ function Profile(props) {
         } else {
             setUserProfile(null);
         }
+    };
+
+    const loadDbTags = async () => {
+        const { Option } = Select;
+        axios.get(`${Url}/tags`).then((res) => {
+            const tags = res.data;
+            const children = [];
+            tags.forEach((tag) => {
+                children.push(<Option key={tag.name}>{tag.name}</Option>);
+            });
+            console.log(children);
+            setTags(children);
+        });
     };
 
     const [form] = Form.useForm();
@@ -264,6 +279,7 @@ function Profile(props) {
     };
 
     const TagModal = () => {
+        var toAdd = [];
         return (
             <Modal
                 visible={tagVisible}
@@ -273,7 +289,8 @@ function Profile(props) {
                     setTagVisible(false);
                 }}
                 onOk={() => {
-                    console.log("ok");
+                    AddUserTag(toAdd);
+                    //console.log(toAdd);
                 }}
                 okButtonProps={{
                     type: "primary",
@@ -281,9 +298,63 @@ function Profile(props) {
                 }}
                 cancelButtonProps={{ type: "default" }}
             >
-                <Select></Select>
+                {userTags && (
+                    <Select
+                        mode="tags"
+                        style={{ width: "100%" }}
+                        placeholder="Search for your interests and add them here!"
+                        defaultValue={userTags.map((tag) => tag.name)}
+                        onChange={(e) => {
+                            toAdd = e;
+                        }}
+                    >
+                        {tags}
+                    </Select>
+                )}
             </Modal>
         );
+    };
+
+    const AddUserTag = async (values) => {
+        const user = {
+            ...userProfile,
+            tags: values,
+        };
+        console.log(user);
+
+        await axios
+            .put(`${Url}/users/${loggedInUser}`, { user })
+            .then((res) => {
+                if (res.status == 200) {
+                    //setEditLoading(false);
+                    setTagVisible(false);
+                    loadProfileUser();
+                    loadUserTags();
+                    loadDbTags();
+                    message.success("Tags added successfully!");
+                } else {
+                    message.error("Error Code: ", res.status);
+                }
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setError(error.response.data);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                    setError(error.request.data);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log("Error", error.message);
+                    setError(error.message);
+                }
+                //setEditLoading(false);
+                setTagVisible(false);
+                console.log(error.config);
+            });
     };
 
     return (
