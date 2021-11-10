@@ -235,7 +235,7 @@ function Navbar(props) {
                                 />
 
                                 {/* to input profile details */}
-                                {user && user.classification !== "" && (
+                                {user && user.classification && (
                                     <div
                                         style={{
                                             display: "flex",
@@ -253,7 +253,7 @@ function Navbar(props) {
                                         </ProfileInfo>
                                     </div>
                                 )}
-                                {user && user.classification == "" && (
+                                {user && !user.classification && (
                                     <div
                                         style={{
                                             display: "flex",

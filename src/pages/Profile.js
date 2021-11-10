@@ -11,6 +11,7 @@ import {
     Input,
     Space,
     message,
+    Select,
 } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -18,21 +19,20 @@ import styled from "styled-components";
 import PlaceholderPicture from "../components/PlaceholderPicture";
 import { Url } from "../constants/global";
 
-function Profile({ match }) {
-    const profileId = match.params.id;
+function Profile(props) {
+    const profileId = props.match.params.id;
     const [userProfile, setUserProfile] = useState(null);
     const [userTags, setUserTags] = useState(null);
     const loggedInUser = localStorage.getItem("userId");
     const [owner, setOwner] = useState(false);
     const [editVisible, setEditVisible] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
+    const [tagVisible, setTagVisible] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         loadProfileUser();
         loadUserTags();
-        console.log(userProfile);
-        console.log(userTags);
     }, [profileId]);
 
     const loadProfileUser = async () => {
@@ -41,6 +41,7 @@ function Profile({ match }) {
                 .get(`${Url}/users/${profileId}`)
                 .then((res) => {
                     setUserProfile(res.data[0]);
+                    console.log(res.data);
                     if (res.data[0].userid == loggedInUser) {
                         setOwner(true);
                     }
@@ -234,6 +235,8 @@ function Profile({ match }) {
                     setEditLoading(false);
                     setEditVisible(false);
                     loadProfileUser();
+                    props.onUpdate(null);
+                    props.onUpdate(loggedInUser);
                     message.success("Profile updated successfully!");
                 } else {
                     message.error("Error Code: ", res.status);
@@ -258,6 +261,29 @@ function Profile({ match }) {
                 setEditVisible(false);
                 console.log(error.config);
             });
+    };
+
+    const TagModal = () => {
+        return (
+            <Modal
+                visible={tagVisible}
+                title="Add your interests"
+                okText="Update"
+                onCancel={() => {
+                    setTagVisible(false);
+                }}
+                onOk={() => {
+                    console.log("ok");
+                }}
+                okButtonProps={{
+                    type: "primary",
+                    //loading: editLoading ? true : false,
+                }}
+                cancelButtonProps={{ type: "default" }}
+            >
+                <Select></Select>
+            </Modal>
+        );
     };
 
     return (
@@ -474,7 +500,14 @@ function Profile({ match }) {
                                                 </Col>
                                             ))}
                                         <Col>
-                                            <AddTag>+ Add</AddTag>
+                                            <AddTag
+                                                onClick={() =>
+                                                    setTagVisible(true)
+                                                }
+                                            >
+                                                + Add
+                                            </AddTag>
+                                            {<TagModal />}
                                         </Col>
                                     </Row>
                                 </div>
@@ -495,8 +528,8 @@ const AddTag = styled.div`
     border-radius: var(--br-sm);
     &:hover {
         box-shadow: var(--shadow);
-        color: var(--base-80);
-        background-color: var(--accent-lightpink);
+        color: var(--base-0);
+        background-color: var(--accent-darkpink);
         cursor: pointer;
     }
 `;

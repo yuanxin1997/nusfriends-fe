@@ -67,7 +67,13 @@ function App() {
                             return <Register onUpdate={setUserId} />;
                         }}
                     />
-                    <Route exact path="/user/:id" component={Profile} />
+                    <Route
+                        exact
+                        path="/user/:id"
+                        render={(props) => {
+                            return <Profile onUpdate={setUserId} {...props} />;
+                        }}
+                    />
                     <Route exact path="/explore" component={Explore} />
                     <Route exact path="/my-circles" component={MyCircles} />
                     <Route
