@@ -20,6 +20,7 @@ code {
   --accent-darkpink: #d13c69;
   --accent-lightpink: #e9afb4;
   --accent-bg: #fbf7f7;
+  --accent-sp: #d1ddef;
 
   --base-100: #031126;
   --base-80: #292032;
@@ -151,7 +152,7 @@ a:hover {
 }
 
 .ant-btn-default:hover {
-    color: var(--accent-darkpink);
+  color: var(--accent-darkpink);
 }
 
 .ant-input-search .ant-input-group .ant-input-affix-wrapper:hover {
@@ -275,7 +276,6 @@ a:hover {
   background-color: #d13c69;
 }
 
-
 .ant-badge-count {
-    border-radius: 8px;
+  border-radius: 8px;
 }

@@ -160,6 +160,11 @@ const MyInbox = () => {
                                 )
                               }
                               title={
+                                <span>
+                                  {trim(item.name)}
+                                </span>
+                              }
+                              description={
                                 <Link to={`/my-inbox/messages/${item.messageid}`}>
                                   {trim(item.content)}
                                 </Link>
