@@ -3,37 +3,59 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import { List, Col, Row, Skeleton, Divider, Avatar } from "antd";
 import CircleCard from "../components/CircleCard";
-import moment from 'moment';
+import moment from "moment";
 import styled from "styled-components";
 import { Layout } from "antd";
 import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
+import axios from "axios";
+import { Url } from "../constants/global";
+import { generateDarkColorHex } from "../helpers/helper";
+import { Link } from "react-router-dom";
 const { Header, Footer, Sider, Content } = Layout;
 
 const MyInbox = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const [totalData, setTotalData] = useState(0);
+  const [cacheData, setCacheData] = useState([]);
 
-  const loadMoreData = () => {
+  const loadCachedata = () => {
+    const cacheInstance = cacheData;
+    const lengthToRetrieve =
+      cacheInstance.length >= 6 ? 6 : cacheInstance.length;
+    const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+    setData([...data, ...unloadedCacheData]);
+    setCacheData(cacheInstance);
+  };
+
+  const loadData = async () => {
     if (loading) {
       return;
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    try {
+      setLoading(true);
+      const { data: results } = await axios.get(
+        `${Url}/messages/user/${localStorage.getItem("userId")}`
+      );
+      console.log(results);
+      const cacheInstance = [...results];
+      // cacheInstance.splice(0,7); testing UI
+
+      setTotalData(cacheInstance.length);
+      const lengthToRetrieve =
+        cacheInstance.length >= 6 ? 6 : cacheInstance.length;
+      const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+      setCacheData(cacheInstance);
+      setData(unloadedCacheData);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    loadMoreData();
+    loadData();
   }, []);
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
@@ -100,9 +122,9 @@ const MyInbox = () => {
                     }}
                   >
                     <InfiniteScroll
-                      dataLength={data.length}
-                      next={loadMoreData}
-                      hasMore={data.length < 50}
+                      dataLength={totalData}
+                      next={loadCachedata}
+                      hasMore={cacheData.length > 0}
                       loader={
                         <Skeleton avatar paragraph={{ rows: 1 }} active />
                       }
@@ -116,16 +138,39 @@ const MyInbox = () => {
                         renderItem={(item) => (
                           <List.Item key={item.id}>
                             <List.Item.Meta
-                              avatar={<Avatar src={item.picture.large} />}
+                              
+                              avatar={
+                                item.photo ? (
+                                  <Avatar // no photo data yet to test />/ to be replace by {item.photo}
+                                    src={item.photo}
+                                  />
+                                ) : (
+                                  <Avatar
+                                    className="avatar-sdn"
+                                    style={{
+                                      color: "#ffffff",
+                                      backgroundColor: `${generateDarkColorHex()}`,
+                                    }}
+                                    size="large"
+                                  >
+                                    <span style={{ fontSize: "var(--fs-b1" }}>
+                                      {item.name.charAt(0)}
+                                    </span>
+                                  </Avatar>
+                                )
+                              }
                               title={
-                                <a href="/my-inbox/messages">
-                                  {trim(
-                                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                                  )}
-                                </a>
+                                <span>
+                                  {trim(item.name)}
+                                </span>
+                              }
+                              description={
+                                <Link to={`/my-inbox/messages/${item.messageid}`}>
+                                  {trim(item.content)}
+                                </Link>
                               }
                             />
-                            <div>{moment([2021, 9, 20]).fromNow()}</div>
+                            <div>{moment(item.createdat).fromNow()}</div>
                           </List.Item>
                         )}
                       />

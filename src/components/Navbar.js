@@ -28,6 +28,7 @@ function Navbar(props) {
   const user = props.currentUser;
   const history = useHistory();
 
+
     const onClick = ({ key }) => {
         if (key == 0) {
             history.push(`/user/${user.userid}`);
@@ -57,26 +58,51 @@ function Navbar(props) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
-  const loadMoreData = () => {
+  const [totalData, setTotalData] = useState(0);
+  const [cacheData, setCacheData] = useState([]);
+
+  const navigate = async (url, id) => {
+    await axios.delete(`${Url}/notifications/${id}`);
+    loadData();
+    history.push(url);
+  };
+
+  const loadCachedata = () => {
+    const cacheInstance = cacheData;
+    const lengthToRetrieve =
+      cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+    const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+    setData([...data, ...unloadedCacheData]);
+    setCacheData(cacheInstance);
+  };
+
+  const loadData = async () => {
     if (loading) {
       return;
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    try {
+      setLoading(true);
+      const { data: results } = await axios.get(
+        `${Url}/notifications/userId/1`
+      );
+      console.log(results);
+      const cacheInstance = [...results];
+      // cacheInstance.splice(0,7); testing UI
+
+      setTotalData(cacheInstance.length);
+      const lengthToRetrieve =
+        cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+      const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+      setCacheData(cacheInstance);
+      setData(unloadedCacheData);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    loadMoreData();
+    loadData();
   }, []);
 
   function trim(content) {
@@ -118,9 +144,9 @@ function Navbar(props) {
         }}
       >
         <InfiniteScroll
-          dataLength={data.length}
-          next={loadMoreData}
-          hasMore={data.length < 50}
+          dataLength={totalData}
+          next={loadCachedata}
+          hasMore={loadCachedata.length > 0}
           loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
           endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
           scrollableTarget="scrollableDiv"
@@ -129,17 +155,12 @@ function Navbar(props) {
             dataSource={data}
             renderItem={(item) => (
               <List.Item key={item.id}>
-                <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={
-                    <a href="/my-inbox/messages">
-                      {trim(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                      )}
-                    </a>
-                  }
-                />
-                <div>{moment([2021, 9, 20]).fromNow()}</div>
+                <NotificationItemWrapper onClick={() => navigate(item.link, item.notifid)}>
+                  <div className="notif-content">{trim(item.content)}</div>
+                  <div className="notif-date">
+                    {moment(item.createdat).fromNow()}
+                  </div>
+                </NotificationItemWrapper>
               </List.Item>
             )}
           />
@@ -245,7 +266,18 @@ function Navbar(props) {
                                         <ProfileInfo className="profileinfo">
                                             {user.classification}
                                         </ProfileInfo>
-                                    </div>
+                    
+
+
+
+
+
+
+
+
+
+
+</div>
                                 )}
                                 {user && !user.classification && (
                                     <div
@@ -267,9 +299,9 @@ function Navbar(props) {
                         </Dropdown>
                     </Col>
                 </Row>
-            )}
-        </Nb>
-    );
+      )}
+    </Nb>
+  );
 }
 
 const Nb = styled.nav`
@@ -338,4 +370,26 @@ const NotificationCard = styled.div`
   }
 `;
 
+const NotificationItemWrapper = styled.div`
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  &:hover{
+    color: var(--accent-redpink);
+  }
+  gap: 0.5rem;
+  .notif-content {
+    font-size: var(--fs-b3);
+  }
+  .notif-date {
+    font-size: var(--fs-b3);
+    color: var(--base-20);
+    font-weight: 100;
+    font-style: italic;
+    content: "→";
+  }
+  .notif-date::after {
+    content: "...";
+  }
+`;
 export default Navbar;
