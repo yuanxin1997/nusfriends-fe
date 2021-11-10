@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import styled, { StyleSheetManager } from "styled-components";
+import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
 import PlaceholderPicture from "./PlaceholderPicture";
-import { Tag, Avatar, Radio, Input, Space, Button, Progress } from "antd";
+
+import axios from "axios";
+import { Url } from "../constants/global";
 
 function CirclePost({
   circleNameVisible,
@@ -23,18 +26,22 @@ function CirclePost({
   posterId,
   currUserLiked,
   postType,
+  polled,
 }) {
   const history = useHistory();
 
   const [value, setValue] = useState();
-  function handleLike() {
-    console.log("liked");
-  }
+  const [poll, setPoll] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // to replicate check from BE if user has polled
+  const [hasPolled, setHasPolled] = useState(false);
+  const [totalPollVote, setTotalPollVote] = useState(0);
 
   const handleVote = (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
     ev.nativeEvent.stopImmediatePropagation();
+    setHasPolled(!hasPolled);
     console.log(value);
   };
 
@@ -43,202 +50,217 @@ function CirclePost({
     setValue(e.target.value);
   };
 
+  const fetchPoll = async () => {
+    try {
+      await axios.get(`${Url}/polls/${postId}`).then((res) => {
+        console.log(JSON.stringify(res.data));
+        handleTotalVote(res.data);
+        setPoll(res.data);
+        console.log(polled);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  async function handleTotalVote(data) {
+    const sum = data
+      .map((item) => item.numvote)
+      .reduce((prev, curr) => prev + curr, 0);
+    setTotalPollVote(sum);
+  }
+
+  useEffect(() => {
+    if (postType == "poll") {
+      fetchPoll();
+      console.log("fetched");
+      console.log("total: " + totalPollVote);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
   return (
-    <div style={{ width: "750px" }}>
-      <h3 style={{ textAlign: "left" }}>
-        {circleNameVisible === true ? circleName : null}
-      </h3>
+    <div>
+      {loading ? (
+        <Spin />
+      ) : (
+        <div style={{ width: "750px" }}>
+          <h3 style={{ textAlign: "left" }}>
+            {circleNameVisible === true ? circleName : null}
+          </h3>
 
-      <CircleCard>
-        <div style={styles.wrapper}>
-          <a onClick={() => history.push("/user/" + posterId)}>
-            <div style={styles.userWrapper}>
-              <ProfileCard>
-                {/* Profile and user details*/}
-                {postedPhoto ? (
-                  <Avatar
-                    src={postedPhoto}
-                    size={40}
-                    style={{ marginRight: 5 }}
-                  />
-                ) : (
-                  <PlaceholderPicture
-                    height={"40px"}
-                    width={"40px"}
-                    name={postedName}
-                  />
-                )}
+          <CircleCard>
+            <div style={styles.wrapper}>
+              <a onClick={() => history.push("/user/" + posterId)}>
+                <div style={styles.userWrapper}>
+                  <ProfileCard>
+                    {/* Profile and user details*/}
+                    {postedPhoto ? (
+                      <Avatar
+                        src={postedPhoto}
+                        size={40}
+                        style={{ marginRight: 5 }}
+                      />
+                    ) : (
+                      <PlaceholderPicture
+                        height={"40px"}
+                        width={"40px"}
+                        name={postedName}
+                      />
+                    )}
 
-                {/* to input profile details */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    textAlign: "left",
-                    marginLeft: 10,
-                  }}
-                  className="profileitems"
-                >
-                  <ProfileName className="profilename">
-                    {postedName}
-                  </ProfileName>
-                  <ProfileInfo className="profileinfo">
-                    {postedClassification}
-                  </ProfileInfo>
+                    {/* to input profile details */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        textAlign: "left",
+                        marginLeft: 10,
+                      }}
+                      className="profileitems"
+                    >
+                      <ProfileName className="profilename">
+                        {postedName}
+                      </ProfileName>
+                      <ProfileInfo className="profileinfo">
+                        {postedClassification}
+                      </ProfileInfo>
+                    </div>
+                  </ProfileCard>
                 </div>
-              </ProfileCard>
-            </div>
-          </a>
-          {/* Right side for when Circles post was posted*/}
-          <div
-            style={{
-              flexDirection: "row-reverse",
-              display: "flex",
-              textAlign: "right",
-            }}
-          >
-            {posted}
-          </div>
-        </div>
-        <Link
-          to={{
-            pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
-          }}
-          onClick={() => console.log("clicked")}
-        >
-          <div>
-            <h4 style={{ textAlign: "left", paddingBottom: "2px" }}>
-              {postTitle}
-            </h4>
-            <div
-              style={{
-                alignContent: "left",
-                textAlign: "left",
-                justifyContent: "left",
-                paddingBottom: "15px",
-              }}
-            >
-              <Tag color="var(--accent-lightpink)">
-                {postType === "discussion" ? "disussion" : "poll"}
-              </Tag>
-            </div>
-          </div>
-
-          {postType === "discussion" ? (
-            <div
-              style={{
-                textAlign: "left",
-                paddingBottom: "15px",
-              }}
-            >
-              <p
+              </a>
+              {/* Right side for when Circles post was posted*/}
+              <div
                 style={{
-                  paddingBottom: "10px",
-                  fontWeight: "normal",
+                  flexDirection: "row-reverse",
+                  display: "flex",
+                  textAlign: "right",
                 }}
               >
-                {postText}
-              </p>
+                {posted}
+              </div>
             </div>
-          ) : (
-            // <div>
-            //   <div style={{ display: "flex", flexDirection: "row" }}>
-            //     <div style={{ width: "25%", textAlign: "center" }}>
-            //       <p style={{ marginRight: 30, fontWeight: "normal" }}>
-            //         Deck
-            //       </p>
-            //     </div>
-            //     <Progress
-            //       strokeColor="var(--accent-lightpink)"
-            //       percent={30}
-            //     />
-            //   </div>
-            //   <div style={{ display: "flex", flexDirection: "row" }}>
-            //     <div style={{ width: "25%", textAlign: "center" }}>
-            //       <p style={{ marginRight: 30, fontWeight: "normal" }}>
-            //         Techno Edge
-            //       </p>
-            //     </div>
-            //     <Progress
-            //       strokeColor="var(--accent-lightpink)"
-            //       percent={30}
-            //     />
-            //   </div>
-            //   <div style={{ display: "flex", flexDirection: "row" }}>
-            //     <div style={{ width: "25%", textAlign: "center" }}>
-            //       <p
-            //         style={{
-            //           marginRight: 30,
-            //           fontWeight: "bold",
-            //           color: "var(--accent-darkpink)",
-            //         }}
-            //       >
-            //         Fine Food
-            //       </p>
-            //     </div>
-            //     <Progress strokeColor="var(--accent-darkpink)" percent={40} />
-            //   </div>
-            // </div>
-
-            <div
-              style={{
-                textAlign: "left",
-                paddingBottom: "15px",
+            <Link
+              to={{
+                pathname:
+                  "/my-circles/" + circleId + "/" + postId + "/comments",
               }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+              onClick={() => console.log("clicked")}
             >
               <div>
-                <Radio.Group value={value} onChange={(e) => onChange(e)}>
-                  <Space direction="vertical">
-                    <Radio value={1} style={{ fontWeight: "normal" }}>
-                      Deck
-                    </Radio>
-                    <Radio value={2} style={{ fontWeight: "normal" }}>
-                      Techno Edge
-                    </Radio>
-                    <Radio value={3} style={{ fontWeight: "normal" }}>
-                      Fine Food
-                    </Radio>
-                  </Space>
-                </Radio.Group>
+                <h4 style={{ textAlign: "left", paddingBottom: "2px" }}>
+                  {postTitle}
+                </h4>
+                <div
+                  style={{
+                    alignContent: "left",
+                    textAlign: "left",
+                    justifyContent: "left",
+                    paddingBottom: "15px",
+                  }}
+                >
+                  <Tag color="var(--accent-lightpink)">
+                    {postType === "discussion" ? "disussion" : "poll"}
+                  </Tag>
+                </div>
               </div>
 
-              <Button
-                style={{ marginTop: 15, marginBottom: 10 }}
-                type="primary"
-                onClick={(e) => {
-                  handleVote(e);
+              {postType === "discussion" ? (
+                <div
+                  style={{
+                    textAlign: "left",
+                    paddingBottom: "15px",
+                  }}
+                >
+                  <p
+                    style={{
+                      paddingBottom: "10px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {postText}
+                  </p>
+                </div>
+              ) : hasPolled === false ? (
+                <div
+                  style={{
+                    textAlign: "left",
+                    paddingBottom: "15px",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <div>
+                    <Radio.Group value={value} onChange={(e) => onChange(e)}>
+                      <Space direction="vertical">
+                        {poll.map((pollOption, index) => (
+                          <Radio
+                            value={index + 1}
+                            style={{ fontWeight: "normal" }}
+                          >
+                            {pollOption.optioncontent}
+                          </Radio>
+                        ))}
+                      </Space>
+                    </Radio.Group>
+                  </div>
+
+                  <Button
+                    style={{ marginTop: 15, marginBottom: 10 }}
+                    type="primary"
+                    onClick={(e) => {
+                      handleVote(e);
+                    }}
+                  >
+                    Vote
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  {poll.map((pollOption) => (
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <div style={{ width: "25%", textAlign: "center" }}>
+                        <p style={{ marginRight: 30, fontWeight: "normal" }}>
+                          {pollOption.optioncontent}
+                        </p>
+                      </div>
+                      <Progress
+                        strokeColor="var(--accent-lightpink)"
+                        percent={Math.round((pollOption.numvote / totalPollVote) * 100)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
                 }}
               >
-                Vote
-              </Button>
-            </div>
-          )}
+                {/* Bottom Row (Likes and comments) */}
+                <div style={styles.bottomRowWrapper}>
+                  <HeartFilled
+                    style={
+                      currUserLiked ? styles.likedStyles : styles.unlikedStyles
+                    }
+                  />
+                  <text style={styles.textStyle}>{numLikes}</text>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            {/* Bottom Row (Likes and comments) */}
-            <div style={styles.bottomRowWrapper}>
-              <HeartFilled
-                style={
-                  currUserLiked ? styles.likedStyles : styles.unlikedStyles
-                }
-              />
-              <text style={styles.textStyle}>{numLikes}</text>
+                  <CommentOutlined style={styles.commentStyle} />
 
-              <CommentOutlined style={styles.commentStyle} />
-
-              <text style={styles.textStyle}>{numComments}</text>
-            </div>
-          </div>
-        </Link>
-      </CircleCard>
+                  <text style={styles.textStyle}>{numComments}</text>
+                </div>
+              </div>
+            </Link>
+          </CircleCard>
+        </div>
+      )}
     </div>
   );
 }

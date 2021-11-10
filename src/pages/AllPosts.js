@@ -12,7 +12,6 @@ import {
   notification,
 } from "antd";
 import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
-
 import styled from "styled-components";
 
 import SideBar from "../components/SideBar";
@@ -200,6 +199,7 @@ const AllPosts = () => {
                   postedPhoto={post.photo}
                   posterId={post.userid}
                   postType={post.posttype}
+                  polled={false}
                 />
               ))}
             </div>
