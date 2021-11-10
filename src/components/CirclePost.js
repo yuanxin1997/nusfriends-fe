@@ -6,6 +6,7 @@ import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
 import "../styles/CirclePost.css";
 import PlaceholderPicture from "./PlaceholderPicture";
+import { Avatar } from "antd";
 
 function CirclePost({
   circleNameVisible,
@@ -21,8 +22,13 @@ function CirclePost({
   postedClassification,
   postedPhoto,
   posterId,
+  currUserLiked,
 }) {
   const history = useHistory();
+
+  function handleLike() {
+    console.log("liked");
+  }
 
   return (
     <div style={{ width: "750px" }}>
@@ -36,11 +42,19 @@ function CirclePost({
             <div style={styles.userWrapper}>
               <ProfileCard>
                 {/* Profile and user details*/}
-                <PlaceholderPicture
-                  height={"40px"}
-                  width={"40px"}
-                  name={postedName}
-                />
+                {postedPhoto ? (
+                  <Avatar
+                    src={postedPhoto}
+                    size={40}
+                    style={{ marginRight: 5 }}
+                  />
+                ) : (
+                  <PlaceholderPicture
+                    height={"40px"}
+                    width={"40px"}
+                    name={postedName}
+                  />
+                )}
 
                 {/* to input profile details */}
                 <div
@@ -100,7 +114,11 @@ function CirclePost({
           >
             {/* Bottom Row (Likes and comments) */}
             <div style={styles.bottomRowWrapper}>
-              <HeartFilled style={styles.heartStyles} />
+              <HeartFilled
+                style={
+                  currUserLiked ? styles.likedStyles : styles.unlikedStyles
+                }
+              />
               <text style={styles.textStyle}>{numLikes}</text>
 
               <CommentOutlined style={styles.commentStyle} />
@@ -173,7 +191,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  heartStyles: {
+  likedStyles: {
     color: "#D25864",
     fontSize: "20px",
     paddingRight: "10px",
@@ -187,6 +205,11 @@ const styles = {
     color: "#D25864",
     fontSize: "20px",
     paddingRight: "15px",
+  },
+  unlikedStyles: {
+    color: "var(--base-20)",
+    fontSize: "20px",
+    paddingRight: "10px",
   },
 };
 export default CirclePost;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { HeartFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Tag } from "antd";
+import { Tag, Avatar } from "antd";
 
 import styled from "styled-components";
 import DeleteModal from "./DeleteModal";
@@ -46,11 +46,19 @@ function CommentsCard({
               <ProfileCard>
                 {/* Profile and user details*/}
 
-                <PlaceholderPicture
-                  height={"40px"}
-                  width={"40px"}
-                  name={postedName}
-                />
+                {postedPhoto ? (
+                  <Avatar
+                    src={postedPhoto}
+                    size={40}
+                    style={{ marginRight: 5 }}
+                  />
+                ) : (
+                  <PlaceholderPicture
+                    height={"40px"}
+                    width={"40px"}
+                    name={postedName}
+                  />
+                )}
 
                 {/* to input profile details */}
                 <div

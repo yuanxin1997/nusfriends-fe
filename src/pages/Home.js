@@ -60,16 +60,18 @@ function Home() {
                 <CirclePost
                   circleId={post.circleid}
                   circleNameVisible={true}
-                  circleName={"need to fetch"}
+                  circleName={post.name}
                   postTitle={post.title}
                   postText={post.content}
                   postId={post.postid}
                   posted={post.posted}
                   numLikes={post.likes}
                   numComments={post.comments}
-                  postedName={post.name}
+                  postedName={post.postername}
                   postedClassification={post.classification}
                   posterId={post.userid}
+                  currUserLiked={post.curuserliked}
+                  postedPhoto={post.photo}
                 />
               ))}
             </Content>

@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 
-import { Avatar, Col, Row, Tooltip, Layout, Button, Spin } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Col,
+  Row,
+  Tooltip,
+  Layout,
+  Button,
+  Spin,
+  notification,
+} from "antd";
+import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 
 import styled from "styled-components";
 
@@ -9,8 +19,6 @@ import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
 import CirclePost from "../components/CirclePost";
 import CreatePostModal from "../components/CreatePostModal";
-
-import { useParams } from "react-router-dom";
 
 import axios from "axios";
 import { Url } from "../constants/global";
@@ -22,7 +30,7 @@ const AllPosts = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [circleName, setCircleName] = useState();
-
+  const history = useHistory();
   let { id } = useParams();
 
   // dummy data, to be replaced by API call
@@ -58,6 +66,17 @@ const AllPosts = () => {
     setModalVisible(false);
   }
 
+  const rerouteToLogin = () => {
+    history.push("/login");
+    notification.open({
+      message: "Error Adding a Comment.",
+      description: "Please login with an account before adding a comment.",
+      icon: <WarningOutlined />,
+      onClick: () => {
+        console.log("Notification Clicked!");
+      },
+    });
+  };
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
     {
@@ -145,7 +164,9 @@ const AllPosts = () => {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  onClick={openCreateModal}
+                  onClick={
+                    localStorage.userId ? openCreateModal : rerouteToLogin
+                  }
                 >
                   Create a New Post
                 </Button>
