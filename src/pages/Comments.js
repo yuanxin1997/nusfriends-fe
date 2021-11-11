@@ -111,7 +111,7 @@ function Comments(props) {
           </Sider>
           <Content style={{ backgroundColor: "var(--accent-bg)" }}>
             <Row justify="start">
-              <Col style={{ marginLeft: 100 }}>
+              <Col>
                 <ContainerHeader headData={headData} />
               </Col>
             </Row>
@@ -180,6 +180,7 @@ function Comments(props) {
                   postedPhoto={comment.photo}
                   id={comment.commentid}
                   posterId={comment.userid}
+                  postedDate={comment.createdat}
                 />
               ))}
             </div>

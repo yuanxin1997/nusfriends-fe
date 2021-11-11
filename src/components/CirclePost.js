@@ -9,6 +9,7 @@ import PlaceholderPicture from "./PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
+import moment from "moment";
 
 function CirclePost({
   circleNameVisible,
@@ -37,6 +38,7 @@ function CirclePost({
   const [hasPolled, setHasPolled] = useState(false);
   const [totalPollVote, setTotalPollVote] = useState(0);
   const [currPollOptions, setCurrPollOptions] = useState([]);
+
   const handleVote = async (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -158,7 +160,7 @@ function CirclePost({
                   textAlign: "right",
                 }}
               >
-                {posted}
+                {moment(posted).fromNow()}
               </div>
             </div>
             <Link

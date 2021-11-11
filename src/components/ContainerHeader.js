@@ -6,8 +6,8 @@ const ContainerHeader = ({ headData }) => {
   const { title, breadcrumbData } = headData;
   return (
     <HeadWrapper>
-      <h1>{title}</h1>
-      <BreadcrumbWrapper breadcrumbData={breadcrumbData}/>
+      <BreadcrumbWrapper breadcrumbData={breadcrumbData} />
+      <h1 style={{ marginTop: 20 }}>{title}</h1>
     </HeadWrapper>
   );
 };
@@ -16,7 +16,7 @@ const HeadWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 1em;
+  margin-top: 0.5em;
 `;
 
 export default ContainerHeader;
