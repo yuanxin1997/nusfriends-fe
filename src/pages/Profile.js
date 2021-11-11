@@ -689,25 +689,26 @@ function Profile(props) {
         );
     };
 
-    function getBase64(img, callback) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
-    const [imageUrl, setImageUrl] = useState(null);
-
     const handleSubmit = (info) => {
         let formData = new FormData();
         // add one or more of your files in FormData
         // again, the original file is located at the `originFileObj` key
-        formData.append("file", info.originFileObj);
-        formData.append("request", JSON.stringify(userProfile));
+        formData.append(
+            "file",
+            info.fileList[info.fileList.length - 1].originFileObj
+        );
+        formData.append(
+            "request",
+            JSON.stringify({ user: { ...userProfile, tags: { userTags } } })
+        );
         console.log(JSON.stringify(userProfile));
+        console.log(info.fileList[info.fileList.length - 1]);
         axios
             .put(`${Url}/users/${loggedInUser}`, formData)
             .then((res) => {
-                console.log("res", res);
+                loadProfileUser();
+                props.onUpdate(null);
+                props.onUpdate(loggedInUser);
             })
             .catch((err) => {
                 console.log("err", err);
@@ -780,7 +781,7 @@ function Profile(props) {
                                         alignItems: "center",
                                     }}
                                 >
-                                    {
+                                    {owner && (
                                         <Upload
                                             showUploadList={false}
                                             onChange={handleSubmit}
@@ -793,7 +794,7 @@ function Profile(props) {
                                                 Upload Profile Picture
                                             </Button>
                                         </Upload>
-                                    }
+                                    )}
                                     {userProfile.photo ? (
                                         <Avatar
                                             style={{
