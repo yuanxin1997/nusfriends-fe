@@ -83,7 +83,7 @@ function Navbar(props) {
     try {
       setLoading(true);
       const { data: results } = await axios.get(
-        `${Url}/notifications/userId/1`
+        `${Url}/notifications/userId/${localStorage.getItem('userId')}`
       );
       console.log(results);
       const cacheInstance = [...results];
