@@ -38,7 +38,7 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
         });
     } else if (type === "poll") {
       await axios
-        .delete(`${Url}/poll/${id}`, { data: user })
+        .delete(`${Url}/polls/${id}`)
         .then((res) => {
           history.push("/");
           closeDeleteModal();
