@@ -62,6 +62,19 @@ const AllPosts = () => {
     }
   };
 
+  const fetchSubscribers = async () => {
+    try {
+      await axios.get(`${Url}/circles/subscribers/${id}`).then((res) => {
+        setSubscribers(res.data);
+        setSubCount(res.data.length);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const rerouteToLogin = () => {
     history.push("/login");
     notification.open({
@@ -103,6 +116,7 @@ const AllPosts = () => {
 
   useEffect(() => {
     loadMoreData();
+    fetchSubscribers();
   }, [id]);
 
   return (
