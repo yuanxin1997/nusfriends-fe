@@ -33,7 +33,7 @@ const MyInbox = () => {
         `${Url}/messages/${id}?userId=${userId}`
       , {
         headers: {
-          jwtToken: localStorage.getItem("jwt")
+          authorization: localStorage.getItem("jwt")
         }
        });
       console.log(results);
@@ -48,7 +48,7 @@ const MyInbox = () => {
   useEffect(() => {
     // loadMoreData();
     loadData();
-  }, []);
+  }, [id]);
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
     {
