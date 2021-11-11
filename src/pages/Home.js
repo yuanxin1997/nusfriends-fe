@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import CirclePost from "../components/CirclePost";
 
-import { Layout, Spin } from "antd";
+import { Layout, Spin, List, Skeleton, Divider } from "antd";
 
 import axios from "axios";
 import { Url } from "../constants/global";
@@ -11,13 +12,30 @@ function Home() {
   // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState();
+  const [cacheData, setCacheData] = useState([]);
+
+  const loadCachedata = () => {
+    const cacheInstance = cacheData;
+    const lengthToRetrieve =
+      cacheInstance.length >= 4 ? 4 : cacheInstance.length;
+    const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+    setPosts([...posts, ...unloadedCacheData]);
+    setCacheData([...cacheInstance]);
+  };
 
   const fetchHomePosts = async () => {
     try {
       await axios
         .get(`${Url}/posts/home/${parseInt(localStorage.userId)}`)
         .then((res) => {
-          setPosts(res.data);
+          console.log("data:", res.data);
+          const cacheInstance = [...res.data];
+          // cacheInstance.splice(0,7); testing UI
+          const lengthToRetrieve =
+            cacheInstance.length >= 4 ? 4 : cacheInstance.length;
+          const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
+          setCacheData(cacheInstance);
+          setPosts(unloadedCacheData);
         });
     } catch (error) {
       console.log(error);
@@ -25,6 +43,7 @@ function Home() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchHomePosts();
   }, []);
@@ -59,25 +78,38 @@ function Home() {
                 alignItems: "center",
               }}
             >
-              {posts.map((post) => (
-                <CirclePost
-                  circleId={post.circleid}
-                  circleNameVisible={true}
-                  circleName={post.name}
-                  postTitle={post.title}
-                  postText={post.content}
-                  postId={post.postid}
-                  posted={post.createdat}
-                  numLikes={post.likes}
-                  numComments={post.comments}
-                  postedName={post.postername}
-                  postedClassification={post.classification}
-                  posterId={post.userid}
-                  currUserLiked={post.curuserliked}
-                  postedPhoto={post.photo}
-                  postType={post.posttype}
+              <InfiniteScroll
+                dataLength={posts.length}
+                next={loadCachedata}
+                hasMore={cacheData.length > 0}
+                loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                scrollableTarget="scrollableDiv"
+              >
+                <List
+                  dataSource={posts}
+                  renderItem={(post, index) => (
+                    <CirclePost
+                      key={index}
+                      circleId={post.circleid}
+                      circleNameVisible={true}
+                      circleName={post.name}
+                      postTitle={post.title}
+                      postText={post.content}
+                      postId={post.postid}
+                      posted={post.createdat}
+                      numLikes={post.likes}
+                      numComments={post.comments}
+                      postedName={post.postername}
+                      postedClassification={post.classification}
+                      posterId={post.userid}
+                      currUserLiked={post.curuserliked}
+                      postedPhoto={post.photo}
+                      postType={post.posttype}
+                    />
+                  )}
                 />
-              ))}
+              </InfiniteScroll>
             </Content>
           </Layout>
         </div>

@@ -24,6 +24,7 @@ import moment from "moment";
 import { UserOutlined, LogoutOutlined, BellFilled } from "@ant-design/icons";
 import WebSocket from "isomorphic-ws";
 import { Url } from "../constants/global";
+import { generateDarkColorHex } from "../helpers/helper";
 import axios from "axios";
 import PlaceholderPicture from "./PlaceholderPicture";
 import { useDebouncedCallback } from "use-debounce";
@@ -386,11 +387,23 @@ function Navbar(props) {
               <ProfileCard>
                 {/* Right Side */}
                 {/* temp holder for profile pic */}
-                <PlaceholderPicture
-                  height="40px"
-                  width="40px"
-                  name={user.name}
-                />
+                {user.photo ? (
+                        <Avatar style={{marginLeft: "2rem"}} src={user.photo} size="large"/>
+                      ) : (
+                        <Avatar
+                          className="avatar-sdn"
+                          style={{
+                            marginLeft: "2rem",
+                            color: "#ffffff",
+                            backgroundColor: `${generateDarkColorHex()}`,
+                          }}
+                          size="large"
+                        >
+                          <span style={{ fontSize: "var(--fs-b1" }}>
+                            {(user.name || "").charAt(0)}
+                          </span>
+                        </Avatar>
+                      )}
 
                 {/* to input profile details */}
                 {user && user.classification && (
@@ -461,6 +474,7 @@ const ProfileCard = styled.div`
       color: var(--accent-lightpink);
     }
     .profilepicture {
+      margin-left: 2rem;
       box-shadow: var(--shadow);
     }
   }
