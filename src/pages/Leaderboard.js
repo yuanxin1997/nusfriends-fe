@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams, useHistory, Link } from "react-router-dom";
+import AOS from 'aos';
 
 import {
   List,
@@ -161,7 +162,7 @@ const Leaderboard = () => {
             <Wrapper>
               <LadderWrapper>
                 {ladder[1] && (
-                  <SilverCardWrapper>
+                  <SilverCardWrapper data-aos="zoom-out-right">
                     <div>
                       <TrophyOutlined />
                     </div>
@@ -192,7 +193,7 @@ const Leaderboard = () => {
                   </SilverCardWrapper>
                 )}
                 {ladder[0] && (
-                  <GoldCardWrapper>
+                  <GoldCardWrapper data-aos="zoom-out-down">
                     <div>
                       <TrophyOutlined />
                     </div>
@@ -224,7 +225,7 @@ const Leaderboard = () => {
                   </GoldCardWrapper>
                 )}
                 {ladder[2] && (
-                  <BronzeCardWrapper>
+                  <BronzeCardWrapper data-aos="zoom-out-left">
                     <div>
                       <TrophyOutlined />
                     </div>
@@ -255,7 +256,7 @@ const Leaderboard = () => {
                   </BronzeCardWrapper>
                 )}
               </LadderWrapper>
-              <ListWrapper>
+              <ListWrapper data-aos="fade-left">
                 <div
                   id="scrollableDiv"
                   style={{
