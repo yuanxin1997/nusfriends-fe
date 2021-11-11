@@ -83,9 +83,8 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -105,9 +104,8 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -128,9 +126,8 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -326,15 +323,6 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                   >
                     {tags}
                   </Select>
-
-                  {/* <Select
-                    mode="tags"
-                    style={{ width: "100%", borderRadius: "var(--br-lg)" }}
-                    placeholder="Tags Mode"
-                    onChange={handleChange}
-                  >
-                    {children}
-                  </Select> */}
                 </Form.Item>
 
                 {/* <Input placeholder="Search Tags..." /> */}

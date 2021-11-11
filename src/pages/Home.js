@@ -7,7 +7,6 @@ import { Layout, Spin } from "antd";
 import axios from "axios";
 import { Url } from "../constants/global";
 function Home() {
-  const userName = "John";
   const { Content } = Layout;
   // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
@@ -64,7 +63,7 @@ function Home() {
                   postTitle={post.title}
                   postText={post.content}
                   postId={post.postid}
-                  posted={post.posted}
+                  posted={post.createdat}
                   numLikes={post.likes}
                   numComments={post.comments}
                   postedName={post.postername}
