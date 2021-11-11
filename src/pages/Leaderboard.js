@@ -34,6 +34,7 @@ const Leaderboard = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [ladder, setLadder] = useState([]);
+  const [circleName, setCircleName] = useState("");
   const [cacheData, setCacheData] = useState([]);
   let { id } = useParams();
 
@@ -69,30 +70,22 @@ const Leaderboard = () => {
     }
   };
 
-  const loadMoreData = () => {
-    if (loading) {
-      return;
+  const loadBreadcrumbData = async () => {
+    try {
+      const { data: circleData } = await axios.get(
+        `${Url}/circles/circleId/${id}`
+      );
+      setCircleName(circleData[0].name);
+      console.log(circleData);
+    } catch (error) {
+      console.log(error);
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        console.log("hey", ...data);
-        console.log("heee", body.results);
-        console.log("soread", ...body.results);
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
   };
 
   useEffect(() => {
     // loadMoreData();
     loadData();
+    loadBreadcrumbData();
   }, []);
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
@@ -109,37 +102,23 @@ const Leaderboard = () => {
   ];
 
   const headData = {
-    title: "replace by fetched data",
+    title: circleName,
     breadcrumbData: [
       {
         name: "My Circles",
         path: "/my-circles",
       },
       {
-        name: "to be removed, fetch data and push here",
+        name: circleName,
+        path: "/my-circles/" + id + "/all-posts",
+      },
+      {
+        name: "Leaderboard",
         path: "this can be empty",
       },
     ],
   };
   /* END -- SETUP FOR COMPONENT */
-
-  const leaderBoardData = [
-    {
-      photoUrl: "url",
-      name: "CommentOutlined",
-      likes: 5,
-    },
-    {
-      photoUrl: "url",
-      name: "CommentOutlined",
-      likes: 5,
-    },
-    {
-      photoUrl: "url",
-      name: "CommentOutlined",
-      likes: 5,
-    },
-  ];
 
   return (
     <Layout

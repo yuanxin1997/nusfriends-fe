@@ -46,7 +46,11 @@ function Home() {
           </div>
 
           <Layout
-            style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
+            style={{
+              height: "100%",
+              minHeight: "100vp",
+              backgroundColor: "var(--accent-bg)",
+            }}
           >
             <Content
               style={{
