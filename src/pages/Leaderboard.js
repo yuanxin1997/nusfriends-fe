@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-
+import { useParams, useHistory } from "react-router-dom";
 import {
   List,
   Avatar,
@@ -35,6 +35,7 @@ const Leaderboard = () => {
   const [ladder, setLadder] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [cacheData, setCacheData] = useState([]);
+  let { id } = useParams();
 
   const loadCachedata = () => {
     const cacheInstance = cacheData;
@@ -46,13 +47,12 @@ const Leaderboard = () => {
   };
 
   const loadData = async () => {
-    if (loading) {
-      return;
-    }
     try {
       setLoading(true);
-      const { data: results } = await axios.get(`${Url}/users/leaderboard`);
-      console.log(data);
+      const { data: results } = await axios.get(
+        `${Url}/users/leaderboard/circle/1`
+      );
+      console.log("data:", results);
       const cacheInstance = [...results];
       // cacheInstance.splice(0,7); testing UI
 
@@ -100,12 +100,12 @@ const Leaderboard = () => {
     {
       icon: "CommentOutlined",
       title: "All Posts",
-      path: "/my-circles/replace by id/all-posts",
+      path: "/my-circles/" + id + "/all-posts",
     },
     {
       icon: "TrophyOutlined",
       title: "Leaderboard",
-      path: "/my-circles/replace by id/circles",
+      path: "/my-circles/" + id + "/leaderboard",
     },
   ];
 
@@ -188,26 +188,22 @@ const Leaderboard = () => {
                       <TrophyOutlined />
                     </div>
                     <Badge count={2} color="var(--accent-redpink)">
-                      {/* <Avatar
-                      src={
-                        <Image
-                          src="https://joeschmoe.io/api/v1/random"
-                          style={{ width: 32 }}
-                        />
-                      }
-                    /> */}
-                      <Avatar
-                        className="avatar-sdn"
-                        style={{
-                          color: "#ffffff",
-                          backgroundColor: `${generateDarkColorHex()}`,
-                        }}
-                        size="large"
-                      >
-                        <span style={{ fontSize: "var(--fs-b1" }}>
-                          {ladder[1].name.charAt(0)}
-                        </span>
-                      </Avatar>
+                      {ladder[1].photo ? (
+                        <Avatar src={ladder[1].photo} />
+                      ) : (
+                        <Avatar
+                          className="avatar-sdn"
+                          style={{
+                            color: "#ffffff",
+                            backgroundColor: `${generateDarkColorHex()}`,
+                          }}
+                          size="large"
+                        >
+                          <span style={{ fontSize: "var(--fs-b1" }}>
+                            {(ladder[1].name || "").charAt(0)}
+                          </span>
+                        </Avatar>
+                      )}
                     </Badge>
                     <h5>{ladder[1].name}</h5>
                     <p>{ladder[1].no_likes} likes</p>
@@ -220,26 +216,22 @@ const Leaderboard = () => {
                     </div>
 
                     <Badge count={1} color="var(--accent-redpink)">
-                      {/* <Avatar
-                      src={
-                        <Image
-                          src="https://joeschmoe.io/api/v1/random"
-                          style={{ width: 32 }}
-                        />
-                      }
-                    /> */}
-                      <Avatar
-                        className="avatar-sdn"
-                        style={{
-                          color: "#ffffff",
-                          backgroundColor: `${generateDarkColorHex()}`,
-                        }}
-                        size="large"
-                      >
-                        <span style={{ fontSize: "var(--fs-b1" }}>
-                          {ladder[0].name.charAt(0)}
-                        </span>
-                      </Avatar>
+                      {ladder[0].photo ? (
+                        <Avatar src={ladder[0].photo} />
+                      ) : (
+                        <Avatar
+                          className="avatar-sdn"
+                          style={{
+                            color: "#ffffff",
+                            backgroundColor: `${generateDarkColorHex()}`,
+                          }}
+                          size="large"
+                        >
+                          <span style={{ fontSize: "var(--fs-b1" }}>
+                            {(ladder[0].name || "").charAt(0)}
+                          </span>
+                        </Avatar>
+                      )}
                     </Badge>
                     <h5>{ladder[0].name}</h5>
                     <p>{ladder[0].no_likes} likes</p>
@@ -251,26 +243,22 @@ const Leaderboard = () => {
                       <TrophyOutlined />
                     </div>
                     <Badge count={3} color="var(--accent-redpink)">
-                      {/* <Avatar
-                      src={
-                        <Image
-                          src="https://joeschmoe.io/api/v1/random"
-                          style={{ width: 32 }}
-                        />
-                      }
-                    /> */}
-                      <Avatar
-                        className="avatar-sdn"
-                        style={{
-                          color: "#ffffff",
-                          backgroundColor: `${generateDarkColorHex()}`,
-                        }}
-                        size="large"
-                      >
-                        <span style={{ fontSize: "var(--fs-b1" }}>
-                          {ladder[2].name.charAt(0)}
-                        </span>
-                      </Avatar>
+                      {ladder[2].photo ? (
+                        <Avatar src={ladder[2].photo} />
+                      ) : (
+                        <Avatar
+                          className="avatar-sdn"
+                          style={{
+                            color: "#ffffff",
+                            backgroundColor: `${generateDarkColorHex()}`,
+                          }}
+                          size="large"
+                        >
+                          <span style={{ fontSize: "var(--fs-b1" }}>
+                            {(ladder[2].name || "").charAt(0)}
+                          </span>
+                        </Avatar>
+                      )}
                     </Badge>
                     <h5>{ladder[2].name}</h5>
                     <p>{ladder[2].no_likes} likes</p>
@@ -306,19 +294,22 @@ const Leaderboard = () => {
                                 count={index + 4}
                                 color="var(--accent-redpink)"
                               >
-                                {/* <Avatar src={item.picture.large} /> */}
-                                <Avatar
-                                  className="avatar-sdn"
-                                  style={{
-                                    color: "#ffffff",
-                                    backgroundColor: `${generateDarkColorHex()}`,
-                                  }}
-                                  size="large"
-                                >
-                                  <span style={{ fontSize: "var(--fs-b1" }}>
-                                    {item.name.charAt(0)}
-                                  </span>
-                                </Avatar>
+                                {item.photo ? (
+                                  <Avatar src={item.photo} />
+                                ) : (
+                                  <Avatar
+                                    className="avatar-sdn"
+                                    style={{
+                                      color: "#ffffff",
+                                      backgroundColor: `${generateDarkColorHex()}`,
+                                    }}
+                                    size="large"
+                                  >
+                                    <span style={{ fontSize: "var(--fs-b1" }}>
+                                      {(item.name || "").charAt(0)}
+                                    </span>
+                                  </Avatar>
+                                )}
                               </Badge>
                             }
                             title={<a href="https://ant.design">{item.name}</a>}

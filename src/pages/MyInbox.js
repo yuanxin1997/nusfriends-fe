@@ -36,7 +36,12 @@ const MyInbox = () => {
     try {
       setLoading(true);
       const { data: results } = await axios.get(
-        `${Url}/messages/user/${localStorage.getItem("userId")}`
+        `${Url}/messages/user/${localStorage.getItem("userId")}`,
+        {
+          headers: {
+            authorization: localStorage.getItem("jwt"),
+          },
+        }
       );
       console.log(results);
       const cacheInstance = [...results];
@@ -138,7 +143,6 @@ const MyInbox = () => {
                         renderItem={(item) => (
                           <List.Item key={item.id}>
                             <List.Item.Meta
-                              
                               avatar={
                                 item.photo ? (
                                   <Avatar // no photo data yet to test />/ to be replace by {item.photo}
@@ -159,13 +163,11 @@ const MyInbox = () => {
                                   </Avatar>
                                 )
                               }
-                              title={
-                                <span>
-                                  {trim(item.name)}
-                                </span>
-                              }
+                              title={<span>{trim(item.name)}</span>}
                               description={
-                                <Link to={`/my-inbox/messages/${item.messageid}`}>
+                                <Link
+                                  to={`/my-inbox/messages/${item.messageid}`}
+                                >
                                   {trim(item.content)}
                                 </Link>
                               }
