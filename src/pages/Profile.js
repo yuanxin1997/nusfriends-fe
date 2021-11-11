@@ -29,7 +29,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import PlaceholderPicture from "../components/PlaceholderPicture";
 import { Url } from "../constants/global";
 import { generateDarkColorHex } from "../helpers/helper";
 
@@ -159,25 +158,6 @@ function Profile(props) {
         });
     };
 
-    function getBase64(img, callback) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
-    function beforeUpload(file) {
-        const isJpgOrPng =
-            file.type === "image/jpeg" || file.type === "image/png";
-        if (!isJpgOrPng) {
-            message.error("You can only upload JPG/PNG file!");
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error("Image must smaller than 2MB!");
-        }
-        return isJpgOrPng && isLt2M;
-    }
-
     const EditModal = () => {
         return (
             <Modal
@@ -207,14 +187,6 @@ function Profile(props) {
             >
                 <Form form={form} layout="vertical" name="edit_form">
                     <h5 style={{ marginBottom: "16px" }}>ABOUT</h5>
-                    {/* <Form.Item>
-                        <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={false}
-                        ></Upload>
-                    </Form.Item> */}
                     <Form.Item
                         name="name"
                         label="Name"
@@ -311,11 +283,19 @@ function Profile(props) {
             telegram: values.telegram ? values.telegram : "",
             instagram: values.instagram ? values.instagram : "",
             phone: values.phone ? values.phone : "",
-            tags: "",
         };
 
+        let formData = new FormData();
+        // add one or more of your files in FormData
+        // again, the original file is located at the `originFileObj` key
+        formData.append("file", null);
+        formData.append(
+            "request",
+            JSON.stringify({ user: { ...user, tags: { userTags } } })
+        );
+
         await axios
-            .put(`${Url}/users/${loggedInUser}`, { user })
+            .put(`${Url}/users/${loggedInUser}`, formData)
             .then((res) => {
                 if (res.status == 200) {
                     setEditLoading(false);
@@ -391,10 +371,13 @@ function Profile(props) {
             ...userProfile,
             tags: values,
         };
-        console.log(user);
-
+        let formData = new FormData();
+        // add one or more of your files in FormData
+        // again, the original file is located at the `originFileObj` key
+        formData.append("file", null);
+        formData.append("request", JSON.stringify({ user: { ...user } }));
         await axios
-            .put(`${Url}/users/${loggedInUser}`, { user })
+            .put(`${Url}/users/${loggedInUser}`, formData)
             .then((res) => {
                 if (res.status == 200) {
                     //setEditLoading(false);
