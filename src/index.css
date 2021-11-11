@@ -303,3 +303,7 @@ a:hover {
 .ant-radio-checked .ant-radio-inner:focus {
   border-color: var(--accent-darkpink);
 }
+
+.hoverable:hover {
+  opacity: 0.7;
+}

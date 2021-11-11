@@ -37,6 +37,23 @@ function CirclePost({
   const [hasPolled, setHasPolled] = useState(false);
   const [totalPollVote, setTotalPollVote] = useState(0);
   const [currPollOptions, setCurrPollOptions] = useState([]);
+
+  const handleLike = async (ev) => {
+    // alert("hey");
+    ev.preventDefault();
+    // ev.stopPropagation();
+    // ev.nativeEvent.stopImmediatePropagation();
+    // const optionId = currPollOptions[value - 1].optionid;
+    // const updateOption = {
+    //   user: { userId: parseInt(localStorage.userId) },
+    //   options: [{ optionId: optionId }],
+    // };
+    // console.log(updateOption);
+    // console.log(value);
+    // await axios.post(`${Url}/options/submit`, updateOption);
+  };
+
+
   const handleVote = async (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -266,6 +283,10 @@ function CirclePost({
                 {/* Bottom Row (Likes and comments) */}
                 <div style={styles.bottomRowWrapper}>
                   <HeartFilled
+                    className="hoverable"
+                    onClick={(e) => {
+                      handleLike(e);
+                    }}
                     style={
                       currUserLiked ? styles.likedStyles : styles.unlikedStyles
                     }
