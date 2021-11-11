@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { List, Col, Row, Skeleton, Divider, Avatar } from "antd";
 import moment from "moment";
 import CircleCard from "../components/CircleCard";
@@ -30,12 +30,13 @@ const MyInbox = () => {
       var userId = jwt_decode(jwtToken).user.userId;
       console.log(userId);
       const { data: results } = await axios.get(
-        `${Url}/messages/${id}?userId=${userId}`
-      , {
-        headers: {
-          authorization: localStorage.getItem("jwt")
+        `${Url}/messages/${id}?userId=${userId}`,
+        {
+          headers: {
+            authorization: localStorage.getItem("jwt"),
+          },
         }
-       });
+      );
       console.log(results);
 
       setData(results);
@@ -124,11 +125,15 @@ const MyInbox = () => {
                                 size="large"
                               >
                                 <span style={{ fontSize: "var(--fs-b1" }}>
-                                  {(data.name|| "").charAt(0)}
+                                  {(data.name || "").charAt(0)}
                                 </span>
                               </Avatar>
                             )}
-                            <Sender>{data.name}</Sender>
+                            <Sender>
+                              <Link to={`/user/${data.userid}`}>
+                                {data.name}
+                              </Link>
+                            </Sender>
                           </SenderWrapper>
                           <p>{data.content}</p>
                           <p>{moment(data.createdat).fromNow()}</p>
