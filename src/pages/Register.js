@@ -18,7 +18,7 @@ function Register(props) {
             password: values.password,
             name: values.name,
             description: "",
-            classification: values.level,
+            classification: values.level ? values.level : "",
         };
 
         setPending(true);
