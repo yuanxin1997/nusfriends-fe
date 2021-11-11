@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import styled, { StyleSheetManager } from "styled-components";
+import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
 
-import "../styles/CirclePost.css";
 import PlaceholderPicture from "./PlaceholderPicture";
+
+import axios from "axios";
+import { Url } from "../constants/global";
 
 function CirclePost({
   circleNameVisible,
@@ -20,92 +23,244 @@ function CirclePost({
   postedName,
   postedClassification,
   postedPhoto,
+  posterId,
+  currUserLiked,
+  postType,
+  polled,
 }) {
+  const history = useHistory();
+
+  const [value, setValue] = useState();
+  const [poll, setPoll] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // to replicate check from BE if user has polled
+  const [hasPolled, setHasPolled] = useState(false);
+  const [totalPollVote, setTotalPollVote] = useState(0);
+
+  const handleVote = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    ev.nativeEvent.stopImmediatePropagation();
+    setHasPolled(!hasPolled);
+    console.log(value);
+  };
+
+  const onChange = (e) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
+
+  const fetchPoll = async () => {
+    try {
+      await axios.get(`${Url}/polls/${postId}`).then((res) => {
+        console.log(JSON.stringify(res.data));
+        handleTotalVote(res.data);
+        setPoll(res.data);
+        console.log(polled);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  async function handleTotalVote(data) {
+    const sum = data
+      .map((item) => item.numvote)
+      .reduce((prev, curr) => prev + curr, 0);
+    setTotalPollVote(sum);
+  }
+
+  useEffect(() => {
+    if (postType == "poll") {
+      fetchPoll();
+      console.log("fetched");
+      console.log("total: " + totalPollVote);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
   return (
-    <div style={{ width: "750px" }}>
-      <Link
-        to={{
-          pathname: "/my-circles/" + circleId + "/" + postId + "/comments",
-        }}
-        onClick={() => console.log("clicked")}
-      >
-        <h3 style={{ textAlign: "left" }}>
-          {circleNameVisible === true ? circleName : null}
-        </h3>
+    <div>
+      {loading ? (
+        <Spin />
+      ) : (
+        <div style={{ width: "750px" }}>
+          <h3 style={{ textAlign: "left" }}>
+            {circleNameVisible === true ? circleName : null}
+          </h3>
 
-        <CircleCard>
-          <div style={styles.wrapper}>
-            <div style={styles.userWrapper}>
-              <ProfileCard>
-                {/* Profile and user details*/}
-                {/* temp holder for profile pic */}
-                <PlaceholderPicture
-                  height={"40px"}
-                  width={"40px"}
-                  name={postedName}
-                />
+          <CircleCard>
+            <div style={styles.wrapper}>
+              <a onClick={() => history.push("/user/" + posterId)}>
+                <div style={styles.userWrapper}>
+                  <ProfileCard>
+                    {/* Profile and user details*/}
+                    {postedPhoto ? (
+                      <Avatar
+                        src={postedPhoto}
+                        size={40}
+                        style={{ marginRight: 5 }}
+                      />
+                    ) : (
+                      <PlaceholderPicture
+                        height={"40px"}
+                        width={"40px"}
+                        name={postedName}
+                      />
+                    )}
 
-                {/* to input profile details */}
+                    {/* to input profile details */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        textAlign: "left",
+                        marginLeft: 10,
+                      }}
+                      className="profileitems"
+                    >
+                      <ProfileName className="profilename">
+                        {postedName}
+                      </ProfileName>
+                      <ProfileInfo className="profileinfo">
+                        {postedClassification}
+                      </ProfileInfo>
+                    </div>
+                  </ProfileCard>
+                </div>
+              </a>
+              {/* Right side for when Circles post was posted*/}
+              <div
+                style={{
+                  flexDirection: "row-reverse",
+                  display: "flex",
+                  textAlign: "right",
+                }}
+              >
+                {posted}
+              </div>
+            </div>
+            <Link
+              to={{
+                pathname:
+                  "/my-circles/" + circleId + "/" + postId + "/comments",
+              }}
+              onClick={() => console.log("clicked")}
+            >
+              <div>
+                <h4 style={{ textAlign: "left", paddingBottom: "2px" }}>
+                  {postTitle}
+                </h4>
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
+                    alignContent: "left",
                     textAlign: "left",
+                    justifyContent: "left",
+                    paddingBottom: "15px",
                   }}
-                  className="profileitems"
                 >
-                  <ProfileName className="profilename">
-                    {postedName}
-                  </ProfileName>
-                  <ProfileInfo className="profileinfo">
-                    {postedClassification}
-                  </ProfileInfo>
+                  <Tag color="var(--accent-lightpink)">
+                    {postType === "discussion" ? "disussion" : "poll"}
+                  </Tag>
                 </div>
-              </ProfileCard>
-            </div>
-            {/* Right side for when Circles post was posted*/}
-            <div
-              style={{
-                flexDirection: "row-reverse",
-                display: "flex",
-                textAlign: "right",
-              }}
-            >
-              {posted}
-            </div>
-          </div>
+              </div>
 
-          <h4 style={{ textAlign: "left", paddingBottom: "15px" }}>
-            {postTitle}
-          </h4>
-          <p
-            style={{
-              textAlign: "left",
-              paddingBottom: "10px",
-              fontWeight: "normal",
-            }}
-          >
-            {postText}
-          </p>
+              {postType === "discussion" ? (
+                <div
+                  style={{
+                    textAlign: "left",
+                    paddingBottom: "15px",
+                  }}
+                >
+                  <p
+                    style={{
+                      paddingBottom: "10px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {postText}
+                  </p>
+                </div>
+              ) : hasPolled === false ? (
+                <div
+                  style={{
+                    textAlign: "left",
+                    paddingBottom: "15px",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <div>
+                    <Radio.Group value={value} onChange={(e) => onChange(e)}>
+                      <Space direction="vertical">
+                        {poll.map((pollOption, index) => (
+                          <Radio
+                            value={index + 1}
+                            style={{ fontWeight: "normal" }}
+                          >
+                            {pollOption.optioncontent}
+                          </Radio>
+                        ))}
+                      </Space>
+                    </Radio.Group>
+                  </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            {/* Bottom Row (Likes and comments) */}
-            <div style={styles.bottomRowWrapper}>
-              <HeartFilled style={styles.heartStyles} />
-              <text style={styles.textStyle}>{numLikes}</text>
+                  <Button
+                    style={{ marginTop: 15, marginBottom: 10 }}
+                    type="primary"
+                    onClick={(e) => {
+                      handleVote(e);
+                    }}
+                  >
+                    Vote
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  {poll.map((pollOption) => (
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <div style={{ width: "25%", textAlign: "center" }}>
+                        <p style={{ marginRight: 30, fontWeight: "normal" }}>
+                          {pollOption.optioncontent}
+                        </p>
+                      </div>
+                      <Progress
+                        strokeColor="var(--accent-lightpink)"
+                        percent={Math.round((pollOption.numvote / totalPollVote) * 100)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
 
-              <CommentOutlined style={styles.commentStyle} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                {/* Bottom Row (Likes and comments) */}
+                <div style={styles.bottomRowWrapper}>
+                  <HeartFilled
+                    style={
+                      currUserLiked ? styles.likedStyles : styles.unlikedStyles
+                    }
+                  />
+                  <text style={styles.textStyle}>{numLikes}</text>
 
-              <text style={styles.textStyle}>{numComments}</text>
-            </div>
-          </div>
-        </CircleCard>
-      </Link>
+                  <CommentOutlined style={styles.commentStyle} />
+
+                  <text style={styles.textStyle}>{numComments}</text>
+                </div>
+              </div>
+            </Link>
+          </CircleCard>
+        </div>
+      )}
     </div>
   );
 }
@@ -169,7 +324,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  heartStyles: {
+  likedStyles: {
     color: "#D25864",
     fontSize: "20px",
     paddingRight: "10px",
@@ -183,6 +338,11 @@ const styles = {
     color: "#D25864",
     fontSize: "20px",
     paddingRight: "15px",
+  },
+  unlikedStyles: {
+    color: "var(--base-20)",
+    fontSize: "20px",
+    paddingRight: "10px",
   },
 };
 export default CirclePost;

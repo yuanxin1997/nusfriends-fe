@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 
-import { Col, Row, Layout, Button, Spin } from "antd";
-import {
-  PlusOutlined,
-  HeartFilled,
-  ConsoleSqlOutlined,
-} from "@ant-design/icons";
+import { Col, Row, Layout, Button, Spin, notification } from "antd";
+import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 
 import styled from "styled-components";
 
@@ -20,6 +16,7 @@ import { Url } from "../constants/global";
 
 function Comments(props) {
   const { Sider, Content } = Layout;
+  const history = useHistory();
 
   let { circleId } = useParams();
   let { postId } = useParams();
@@ -36,7 +33,17 @@ function Comments(props) {
   function closeCreateModal() {
     setModalVisible(false);
   }
-
+  const rerouteToLogin = () => {
+    history.push("/login");
+    notification.open({
+      message: "Error Adding a Comment.",
+      description: "Please login with an account before adding a comment.",
+      icon: <WarningOutlined />,
+      onClick: () => {
+        console.log("Notification Clicked!");
+      },
+    });
+  };
   const loadPageData = async () => {
     try {
       await axios.get(`${Url}/circles/circleId/${circleId}`).then((res) => {
@@ -126,9 +133,11 @@ function Comments(props) {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  onClick={openCreateModal}
+                  onClick={
+                    localStorage.userId ? openCreateModal : rerouteToLogin
+                  }
                 >
-                  Comment
+                  Add Comment
                 </Button>
                 <CreateCommentModal
                   modalVisible={modalVisible}
@@ -157,6 +166,7 @@ function Comments(props) {
                 postedClassification={post.classification}
                 postedPhoto={post.photo}
                 id={post.postid}
+                posterId={post.userid}
               />
 
               {comments.map((comment) => (
@@ -169,6 +179,7 @@ function Comments(props) {
                   postedClassification={comment.classification}
                   postedPhoto={comment.photo}
                   id={comment.commentid}
+                  posterId={comment.userid}
                 />
               ))}
             </div>

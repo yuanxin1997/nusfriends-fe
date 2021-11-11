@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
-import { Col, Row, Layout, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Col, Row, Layout, Button, notification } from "antd";
+import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import SideBar from "../components/SideBar";
@@ -24,10 +25,25 @@ const MyCircles = () => {
     localStorage.userId ? localStorage.userId : null
   );
 
-  const openCreateModal = () => setModalVisible(true);
+  const openCreateModal = () => {
+    setModalVisible(true);
+  };
   function closeCreateModal() {
     setModalVisible(false);
   }
+  const rerouteToLogin = () => {
+    history.push("/login");
+    notification.open({
+      message: "Error Creating Post.",
+      description: "Please login with an account before creating a Circle.",
+      icon: <WarningOutlined />,
+      onClick: () => {
+        console.log("Notification Clicked!");
+      },
+    });
+  };
+
+  const history = useHistory();
 
   const tabData = [
     {
@@ -39,11 +55,6 @@ const MyCircles = () => {
       icon: "CommentOutlined",
       title: "My Discussions",
       path: "/my-circles/my-discussions",
-    },
-    {
-      icon: "BulbOutlined",
-      title: "My Answers",
-      path: "/my-circles/my-answers",
     },
   ];
 
@@ -98,7 +109,7 @@ const MyCircles = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={openCreateModal}
+              onClick={localStorage.userId ? openCreateModal : rerouteToLogin}
             >
               Create a New Circle
             </Button>

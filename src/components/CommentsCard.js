@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
+import { useHistory } from "react-router-dom";
 import { HeartFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Tag } from "antd";
+import { Tag, Avatar } from "antd";
 
 import styled from "styled-components";
 import DeleteModal from "./DeleteModal";
@@ -19,7 +19,9 @@ function CommentsCard({
   postedName,
   postedClassification,
   postedPhoto,
+  posterId,
 }) {
+  const history = useHistory();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const openDeleteModal = () => setDeleteModalVisible(true);
   function closeDeleteModal() {
@@ -39,32 +41,46 @@ function CommentsCard({
         ) : null}
 
         <div style={styles.wrapper}>
-          <div style={styles.userWrapper}>
-            <ProfileCard>
-              {/* Profile and user details*/}
-              {/* temp holder for profile pic */}
-              <PlaceholderPicture
-                height={"40px"}
-                width={"40px"}
-                name={postedName}
-              />
+          <a onClick={() => history.push("/user/" + posterId)}>
+            <div style={styles.userWrapper}>
+              <ProfileCard>
+                {/* Profile and user details*/}
 
-              {/* to input profile details */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "left",
-                }}
-                className="profileitems"
-              >
-                <ProfileName className="profilename">{postedName}</ProfileName>
-                <ProfileInfo className="profileinfo">
-                  {postedClassification}
-                </ProfileInfo>
-              </div>
-            </ProfileCard>
-          </div>
+                {postedPhoto ? (
+                  <Avatar
+                    src={postedPhoto}
+                    size={40}
+                    style={{ marginRight: 5 }}
+                  />
+                ) : (
+                  <PlaceholderPicture
+                    height={"40px"}
+                    width={"40px"}
+                    name={postedName}
+                  />
+                )}
+
+                {/* to input profile details */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    textAlign: "left",
+                    marginLeft: 10,
+                  }}
+                  className="profileitems"
+                >
+                  <ProfileName className="profilename">
+                    {postedName}
+                  </ProfileName>
+                  <ProfileInfo className="profileinfo">
+                    {postedClassification}
+                  </ProfileInfo>
+                </div>
+              </ProfileCard>
+            </div>
+          </a>
+
           {/* Right side for when Circles post was posted*/}
           <div
             style={{

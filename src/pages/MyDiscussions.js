@@ -73,7 +73,7 @@ const MyDiscussions = () => {
         </Row>
         <Row>
           {(data || []).map((item, index) => {
-            return <CirclePost key={index} circleName={item.title}/>;
+            return <CirclePost key={index} circleName={item.title} />;
           })}
         </Row>
       </Content>
