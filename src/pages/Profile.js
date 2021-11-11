@@ -247,6 +247,7 @@ function Profile(props) {
             telegram: values.telegram ? values.telegram : "",
             instagram: values.instagram ? values.instagram : "",
             phone: values.phone ? values.phone : "",
+            tags: "",
         };
 
         await axios
