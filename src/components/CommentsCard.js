@@ -91,7 +91,7 @@ function CommentsCard({
               textAlign: "right",
             }}
           >
-            {moment(posted).fromNow()}
+            {moment(postedDate).fromNow()}
           </div>
         </div>
 
@@ -110,12 +110,11 @@ function CommentsCard({
           {type === "post" ? (
             <div style={styles.bottomRowWrapper}>
               <div>
-                <Tag color="blue" style={{ padding: "2px 18px" }}>
-                  python
-                </Tag>
-                <Tag color="blue" style={{ padding: "2px 18px" }}>
-                  programming
-                </Tag>
+                {tags.map((tag) => (
+                  <Tag color="blue" style={{ padding: "2px 18px" }}>
+                    {tag.name}
+                  </Tag>
+                ))}
               </div>
 
               <div style={{ display: "flex" }}>

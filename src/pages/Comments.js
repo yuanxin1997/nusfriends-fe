@@ -51,8 +51,8 @@ function Comments(props) {
         headData.breadcrumbData[1].name = res.data[0].name;
       });
       await axios.get(`${Url}/posts/${postId}`).then((res) => {
-        setPost(res.data[0]);
-        headData.breadcrumbData[2].name = res.data[0].title;
+        setPost(res.data);
+        headData.breadcrumbData[2].name = res.data.title;
       });
       await axios.get(`${Url}/comments/post/${postId}`).then((res) => {
         setComments(res.data);
@@ -167,6 +167,7 @@ function Comments(props) {
                 postedPhoto={post.photo}
                 id={post.postid}
                 posterId={post.userid}
+                tags={post.tags}
               />
 
               {comments.map((comment) => (

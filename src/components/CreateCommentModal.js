@@ -17,7 +17,7 @@ function CreateCommentModal({ modalVisible, closeCreateModal, postId }) {
 
   const handleCreate = async () => {
     const comment = {
-      user: { userId: localStorage.userId },
+      user: { userId: parseInt(localStorage.userId) },
       comment: { content: content },
     };
     console.log(comment);
