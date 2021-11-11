@@ -17,7 +17,7 @@ const { Header, Footer, Sider, Content } = Layout;
 const MyInbox = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [totalData, setTotalData] = useState(0);
+  const [totalData, setTotalData] = useState(null);
   const [cacheData, setCacheData] = useState([]);
 
   const loadCachedata = () => {
@@ -26,7 +26,7 @@ const MyInbox = () => {
       cacheInstance.length >= 6 ? 6 : cacheInstance.length;
     const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
     setData([...data, ...unloadedCacheData]);
-    setCacheData(cacheInstance);
+    setCacheData([...cacheInstance]);
   };
 
   const loadData = async () => {
@@ -44,10 +44,9 @@ const MyInbox = () => {
         }
       );
       console.log(results);
+      setTotalData(results.length);
       const cacheInstance = [...results];
       // cacheInstance.splice(0,7); testing UI
-
-      setTotalData(cacheInstance.length);
       const lengthToRetrieve =
         cacheInstance.length >= 6 ? 6 : cacheInstance.length;
       const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
@@ -115,7 +114,7 @@ const MyInbox = () => {
             <Col span={24}>
               <CotainerWrapper>
                 <InfoWrapper>
-                  <p>You have {data.length} messages</p>
+                  <p>You have {totalData || 0} messages</p>
                 </InfoWrapper>
                 <CardWrapper>
                   <div
@@ -127,7 +126,7 @@ const MyInbox = () => {
                     }}
                   >
                     <InfiniteScroll
-                      dataLength={totalData}
+                      dataLength={data.length}
                       next={loadCachedata}
                       hasMore={cacheData.length > 0}
                       loader={
@@ -163,7 +162,13 @@ const MyInbox = () => {
                                   </Avatar>
                                 )
                               }
-                              title={<span>{trim(item.name)}</span>}
+                              title={
+                                <span>
+                                  <Link to={`/user/${item.userid}`}>
+                                    {trim(item.name)}
+                                  </Link>
+                                </span>
+                              }
                               description={
                                 <Link
                                   to={`/my-inbox/messages/${item.messageid}`}

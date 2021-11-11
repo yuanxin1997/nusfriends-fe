@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
+
 import {
   List,
   Avatar,
@@ -33,7 +34,6 @@ const Leaderboard = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [ladder, setLadder] = useState([]);
-  const [totalData, setTotalData] = useState(0);
   const [cacheData, setCacheData] = useState([]);
   let { id } = useParams();
 
@@ -43,7 +43,7 @@ const Leaderboard = () => {
       cacheInstance.length >= 8 ? 8 : cacheInstance.length;
     const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
     setData([...data, ...unloadedCacheData]);
-    setCacheData(cacheInstance);
+    setCacheData([...cacheInstance]);
   };
 
   const loadData = async () => {
@@ -58,7 +58,6 @@ const Leaderboard = () => {
 
       const ladderData = cacheInstance.splice(0, 3);
       setLadder(ladderData);
-      setTotalData(cacheInstance.length);
       const lengthToRetrieve =
         cacheInstance.length >= 8 ? 8 : cacheInstance.length;
       const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
@@ -205,7 +204,11 @@ const Leaderboard = () => {
                         </Avatar>
                       )}
                     </Badge>
-                    <h5>{ladder[1].name}</h5>
+                    <h5>
+                      <Link to={`/user/${ladder[1].userid}`}>
+                        {ladder[1].name}
+                      </Link>
+                    </h5>
                     <p>{ladder[1].no_likes} likes</p>
                   </SilverCardWrapper>
                 )}
@@ -233,7 +236,11 @@ const Leaderboard = () => {
                         </Avatar>
                       )}
                     </Badge>
-                    <h5>{ladder[0].name}</h5>
+                    <h5>
+                      <Link to={`/user/${ladder[0].userid}`}>
+                        {ladder[0].name}
+                      </Link>
+                    </h5>
                     <p>{ladder[0].no_likes} likes</p>
                   </GoldCardWrapper>
                 )}
@@ -260,7 +267,11 @@ const Leaderboard = () => {
                         </Avatar>
                       )}
                     </Badge>
-                    <h5>{ladder[2].name}</h5>
+                    <h5>
+                      <Link to={`/user/${ladder[2].userid}`}>
+                        {ladder[2].name}
+                      </Link>
+                    </h5>
                     <p>{ladder[2].no_likes} likes</p>
                   </BronzeCardWrapper>
                 )}
@@ -275,7 +286,7 @@ const Leaderboard = () => {
                   }}
                 >
                   <InfiniteScroll
-                    dataLength={totalData}
+                    dataLength={data.length}
                     next={loadCachedata}
                     hasMore={cacheData.length > 0}
                     loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
@@ -312,9 +323,13 @@ const Leaderboard = () => {
                                 )}
                               </Badge>
                             }
-                            title={<a href="https://ant.design">{item.name}</a>}
+                            title={
+                              <Link to={`/user/${item.userid}`}>
+                                {item.name}
+                              </Link>
+                            }
                           />
-                          <div>{item.no_likes}</div>
+                          <div>{item.no_likes} likes</div>
                         </List.Item>
                       )}
                     />
