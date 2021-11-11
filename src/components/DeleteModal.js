@@ -4,7 +4,7 @@ import { Modal, notification } from "antd";
 import axios from "axios";
 import { Url } from "../constants/global";
 
-import { WarningOutlined } from "@ant-design/icons";
+import { WarningOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
   const history = useHistory();
