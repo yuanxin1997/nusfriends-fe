@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Input, Form, Radio, Row, Col } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
-
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Url } from "../constants/global";

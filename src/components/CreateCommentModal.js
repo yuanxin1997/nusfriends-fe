@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Modal, Input, Form, Radio, Row, Col } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
-
+import FroalaEditorComponent from "react-froala-wysiwyg";
 import axios from "axios";
 import { Url } from "../constants/global";
 
@@ -49,10 +49,14 @@ function CreateCommentModal({ modalVisible, closeCreateModal, postId }) {
         }}
       >
         <Form.Item label="Comment">
-          <TextArea
-            placeholder="What are your thoughts?"
-            autoSize={{ minRows: 4, maxRows: 8 }}
-            onChange={(e) => setContent(e.target.value)}
+          <FroalaEditorComponent
+            config={{
+              placeholderText: "Type something...",
+            }}
+            onModelChange={(value) => {
+              setContent(value);
+            }}
+            tag="textarea"
           />
         </Form.Item>
       </Form>

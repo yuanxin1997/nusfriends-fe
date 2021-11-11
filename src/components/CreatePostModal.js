@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Radio, Row, Col, Select, Spin } from "antd";
 
 import { useHistory } from "react-router-dom";
-
+import FroalaEditorComponent from "react-froala-wysiwyg";
 import axios from "axios";
 import { Url } from "../constants/global";
 
@@ -226,12 +226,14 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                 ]}
                 name="body"
               >
-                <TextArea
-                  placeholder="Type something..."
-                  autoSize={{ minRows: 4, maxRows: 8 }}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
+                <FroalaEditorComponent
+                  config={{
+                    placeholderText: "Edit Your Content Here!",
                   }}
+                  onModelChange={(value) => {
+                    setDescription(value);
+                  }}
+                  tag="textarea"
                 />
               </Form.Item>
             ) : (

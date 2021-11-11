@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import styled, { StyleSheetManager } from "styled-components";
 import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
 import {
@@ -29,9 +28,9 @@ function CirclePost({
   postedClassification,
   postedPhoto,
   posterId,
-  currUserLiked,
   postType,
   polled,
+  curUserLiked,
 }) {
   const history = useHistory();
 
@@ -44,20 +43,26 @@ function CirclePost({
   const [currPollOptions, setCurrPollOptions] = useState([]);
   const [refreshComponent, setRefreshComponent] = useState(false);
   const isMounted = useRef(false);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   const handleLike = async (ev) => {
     // alert("hey");
     ev.preventDefault();
-    // ev.stopPropagation();
-    // ev.nativeEvent.stopImmediatePropagation();
-    // const optionId = currPollOptions[value - 1].optionid;
-    // const updateOption = {
-    //   user: { userId: parseInt(localStorage.userId) },
-    //   options: [{ optionId: optionId }],
-    // };
-    // console.log(updateOption);
-    // console.log(value);
-    // await axios.post(`${Url}/options/submit`, updateOption);
+
+    const updateOption = {
+      user: { userId: parseInt(localStorage.userId) },
+    };
+
+    if (!hasLiked) {
+      await axios.post(`${Url}/posts/like/${postId}`, updateOption);
+      setHasLiked(true);
+      setTotalLikes((prev) => parseInt(prev) + parseInt(1));
+    } else {
+      await axios.post(`${Url}/posts/unlike/${postId}`, updateOption);
+      setHasLiked(false);
+      setTotalLikes((prev) => parseInt(prev) - parseInt(1));
+    }
   };
 
   const handleVote = async (ev) => {
@@ -132,6 +137,10 @@ function CirclePost({
 
   useEffect(() => {
     if (postType === "poll") {
+    setHasLiked(curUserLiked);
+    setTotalLikes(numLikes);
+    // set
+    if (postType == "poll") {
       fetchPoll();
       console.log("total: " + totalPollVote);
       console.log("hasPolled: " + hasPolled);
@@ -239,7 +248,9 @@ function CirclePost({
                       fontWeight: "normal",
                     }}
                   >
-                    {postText}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: `${postText}` }}
+                    ></div>
                   </p>
                 </div>
               ) : hasPolled === false ? (
@@ -310,15 +321,16 @@ function CirclePost({
                     onClick={(e) => {
                       handleLike(e);
                     }}
-                    style={
-                      currUserLiked ? styles.likedStyles : styles.unlikedStyles
-                    }
+                    style={hasLiked ? styles.likedStyles : styles.unlikedStyles}
                   />
-                  <text style={styles.textStyle}>{numLikes}</text>
+                  <text style={styles.textStyle}>{totalLikes}</text>
 
-                  <CommentOutlined style={styles.commentStyle} />
+                  <CommentOutlined
+                    className="hoverable"
+                    style={styles.commentStyle}
+                  />
 
-                  <text style={styles.textStyle}>{numComments}</text>
+                   <text style={styles.textStyle}>{numComments}</text>
                 </div>
               </div>
             </Link>
