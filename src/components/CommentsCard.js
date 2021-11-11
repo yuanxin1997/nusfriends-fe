@@ -23,6 +23,7 @@ function CommentsCard({
   posterId,
   postedDate,
   postType,
+  comments,
 }) {
   const history = useHistory();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -158,6 +159,7 @@ function CommentsCard({
                       closeDeleteModal={closeDeleteModal}
                       type="post"
                       id={id}
+                      data={comments}
                     />
 
                     <a onClick={openEditModal} style={styles.manageCommentText}>

@@ -1,12 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Modal, notification } from "antd";
+import { Modal, notification, message } from "antd";
 import axios from "axios";
 import { Url } from "../constants/global";
 
-import { WarningOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { WarningOutlined } from "@ant-design/icons";
 
-function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
+function DeleteModal({ modalVisible, closeDeleteModal, type, id, data }) {
   const history = useHistory();
 
   async function handleConfirmDelete() {
@@ -16,49 +16,47 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
       },
     };
     if (type === "circle") {
-      await axios.delete(`${Url}/posts/${id}`);
-      history.go(0);
+      if (data.length > 0) {
+        notification["warning"]({
+          message: "Unable to delete",
+          description: "You cannot delete a circle with existing posts",
+        });
+      } else {
+        await axios.delete(`${Url}/circles/${id}`);
+        history.push("/my-circles");
+        message.success("Sucessfully deleted a circle");
+      }
       closeDeleteModal();
     } else if (type === "post") {
-      await axios
-        .delete(`${Url}/posts/${id}`, { data: user })
-        .then((res) => {
-          history.push("/");
-          closeDeleteModal();
-        })
-        .catch((error) => {
-          notification.open({
-            message: "Error deleting Post.",
-            description: "Posts with existing comments cannot be deleted.",
-            icon: <WarningOutlined />,
-            onClick: () => {
-              console.log("Notification Clicked!");
-            },
-          });
+      if (data.length > 0) {
+        notification["warning"]({
+          message: "Unable to delete",
+          description: "You cannot delete a post with existing comments",
         });
+      } else {
+        await axios.delete(`${Url}/posts/${id}`);
+        history.push("/");
+        message.success("Sucessfully deleted a post");
+      }
+      closeDeleteModal();
     } else if (type === "poll") {
-      await axios
-        .delete(`${Url}/polls/${id}`)
-        .then((res) => {
-          history.push("/");
-          closeDeleteModal();
-        })
-        .catch((error) => {
-          notification.open({
-            message: "Error deleting Post.",
-            description: "Posts with existing comments cannot be deleted.",
-            icon: <WarningOutlined />,
-            onClick: () => {
-              console.log("Notification Clicked!");
-            },
-          });
+      if (data.length > 0) {
+        notification["warning"]({
+          message: "Unable to delete",
+          description: "You cannot delete a post with existing comments",
         });
+      } else {
+        await axios.delete(`${Url}/polls/${id}`);
+        history.push("/");
+        message.success("Sucessfully deleted a post");
+      }
+      closeDeleteModal();
     } else {
       await axios
         .delete(`${Url}/comments/${id}`, { data: user })
         .then((res) => {
           history.go(0);
-          closeDeleteModal();
+          message.success("Sucessfully deleted a comment");
         });
     }
   }

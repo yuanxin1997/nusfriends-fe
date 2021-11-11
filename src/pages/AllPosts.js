@@ -31,6 +31,7 @@ import PlaceholderPicture from "../components/PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
+import DeleteModal from "../components/DeleteModal";
 
 const { Sider, Content } = Layout;
 
@@ -51,6 +52,12 @@ const AllPosts = () => {
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
     setModalVisible(false);
+  }
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const openDeleteModal = () => setDeleteModalVisible(true);
+
+  function closeDeleteModal() {
+    setDeleteModalVisible(false);
   }
 
   const loadCachedata = () => {
@@ -108,19 +115,6 @@ const AllPosts = () => {
       console.log(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (posts.length > 0) {
-      notification["warning"]({
-        message: "Unable to delete",
-        description: "You cannot delete a circle with existing posts",
-      });
-    } else {
-      await axios.delete(`${Url}/circles/${id}`);
-      history.push("/my-circles");
-      message.success("Sucessfully deleted a circle");
     }
   };
 
@@ -233,10 +227,19 @@ const AllPosts = () => {
                 <Button
                   type="primary"
                   icon={<DeleteFilled />}
-                  onClick={localStorage.userId ? handleDelete : rerouteToLogin}
+                  onClick={
+                    localStorage.userId ? openDeleteModal : rerouteToLogin
+                  }
                 >
                   Delete This Circle
                 </Button>
+                <DeleteModal
+                  modalVisible={deleteModalVisible}
+                  closeDeleteModal={closeDeleteModal}
+                  type="circle"
+                  id={id}
+                  data={posts}
+                />
                 <Button
                   type="primary"
                   icon={<EditFilled />}
