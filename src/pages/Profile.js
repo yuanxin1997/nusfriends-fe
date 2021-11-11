@@ -3,6 +3,7 @@ import {
     MailOutlined,
     MessageOutlined,
     PhoneOutlined,
+    UploadOutlined,
     UserAddOutlined,
     UserDeleteOutlined,
     WhatsAppOutlined,
@@ -22,6 +23,7 @@ import {
     Space,
     Avatar,
     Empty,
+    Upload,
 } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -157,6 +159,25 @@ function Profile(props) {
         });
     };
 
+    function getBase64(img, callback) {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => callback(reader.result));
+        reader.readAsDataURL(img);
+    }
+
+    function beforeUpload(file) {
+        const isJpgOrPng =
+            file.type === "image/jpeg" || file.type === "image/png";
+        if (!isJpgOrPng) {
+            message.error("You can only upload JPG/PNG file!");
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error("Image must smaller than 2MB!");
+        }
+        return isJpgOrPng && isLt2M;
+    }
+
     const EditModal = () => {
         return (
             <Modal
@@ -186,6 +207,14 @@ function Profile(props) {
             >
                 <Form form={form} layout="vertical" name="edit_form">
                     <h5 style={{ marginBottom: "16px" }}>ABOUT</h5>
+                    {/* <Form.Item>
+                        <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                        ></Upload>
+                    </Form.Item> */}
                     <Form.Item
                         name="name"
                         label="Name"
@@ -660,6 +689,31 @@ function Profile(props) {
         );
     };
 
+    function getBase64(img, callback) {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => callback(reader.result));
+        reader.readAsDataURL(img);
+    }
+
+    const [imageUrl, setImageUrl] = useState(null);
+
+    const handleSubmit = (info) => {
+        let formData = new FormData();
+        // add one or more of your files in FormData
+        // again, the original file is located at the `originFileObj` key
+        formData.append("file", info.originFileObj);
+        formData.append("request", JSON.stringify(userProfile));
+        console.log(JSON.stringify(userProfile));
+        axios
+            .put(`${Url}/users/${loggedInUser}`, formData)
+            .then((res) => {
+                console.log("res", res);
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
+    };
+
     return (
         <div
             style={{
@@ -722,8 +776,24 @@ function Profile(props) {
                                         display: "flex",
                                         justifyContent: "center",
                                         marginBottom: "8px",
+                                        flexDirection: "column",
+                                        alignItems: "center",
                                     }}
                                 >
+                                    {
+                                        <Upload
+                                            showUploadList={false}
+                                            onChange={handleSubmit}
+                                            beforeUpload={() => false}
+                                        >
+                                            <Button
+                                                icon={<UploadOutlined />}
+                                                style={{ marginBottom: "16px" }}
+                                            >
+                                                Upload Profile Picture
+                                            </Button>
+                                        </Upload>
+                                    }
                                     {userProfile.photo ? (
                                         <Avatar
                                             style={{
@@ -738,12 +808,13 @@ function Profile(props) {
                                             style={{
                                                 color: "#ffffff",
                                                 backgroundColor: `${generateDarkColorHex()}`,
+                                                height: "5rem",
+                                                width: "5rem",
                                             }}
-                                            size="large"
                                         >
                                             <span
                                                 style={{
-                                                    fontSize: "var(--fs-b1",
+                                                    fontSize: "var(--fs-b1)",
                                                 }}
                                             >
                                                 {(
@@ -799,6 +870,7 @@ function Profile(props) {
                                             >
                                                 Message!
                                             </Button>
+                                            {MessageModal()}
                                         </Space>
                                     )}
                                     <div
