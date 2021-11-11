@@ -27,7 +27,6 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const AllPosts = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [circleName, setCircleName] = useState();
   const history = useHistory();
@@ -58,18 +57,9 @@ const AllPosts = () => {
         });
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
   };
 
   const fetchSubscribers = async () => {
