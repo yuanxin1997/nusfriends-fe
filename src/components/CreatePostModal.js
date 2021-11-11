@@ -114,7 +114,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
       user: {
         userId: localStorage.userId,
       },
-      post: {
+      poll: {
         title: title,
         circleId: circleId,
         options: [
