@@ -29,6 +29,7 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import PlaceholderPicture from "../components/PlaceholderPicture";
 import { Url } from "../constants/global";
+import { generateDarkColorHex } from "../helpers/helper";
 
 function Profile(props) {
     const profileId = props.match.params.id;
@@ -465,7 +466,6 @@ function Profile(props) {
                 userId: parseInt(loggedInUser),
             },
         };
-
         console.log(data);
 
         await axios
@@ -724,11 +724,34 @@ function Profile(props) {
                                         marginBottom: "8px",
                                     }}
                                 >
-                                    <PlaceholderPicture
-                                        height="60px"
-                                        width="60px"
-                                        name="test"
-                                    />
+                                    {userProfile.photo ? (
+                                        <Avatar
+                                            style={{
+                                                height: "5rem",
+                                                width: "5rem",
+                                            }}
+                                            src={userProfile.photo}
+                                        />
+                                    ) : (
+                                        <Avatar
+                                            className="avatar-sdn"
+                                            style={{
+                                                color: "#ffffff",
+                                                backgroundColor: `${generateDarkColorHex()}`,
+                                            }}
+                                            size="large"
+                                        >
+                                            <span
+                                                style={{
+                                                    fontSize: "var(--fs-b1",
+                                                }}
+                                            >
+                                                {(
+                                                    userProfile.name || ""
+                                                ).charAt(0)}
+                                            </span>
+                                        </Avatar>
+                                    )}
                                 </div>
                                 <h5>{userProfile.name}</h5>
                                 {userProfile.classification && (
@@ -751,43 +774,15 @@ function Profile(props) {
                                                 marginBottom: "8px",
                                             }}
                                         >
-                                            <Space>
-                                                {!following && (
-                                                    <Button
-                                                        type="primary"
-                                                        icon={
-                                                            <UserAddOutlined />
-                                                        }
-                                                        onClick={() =>
-                                                            followUser()
-                                                        }
-                                                    >
-                                                        Follow
-                                                    </Button>
-                                                )}
-                                                {following && (
-                                                    <Button
-                                                        type="default"
-                                                        icon={
-                                                            <UserDeleteOutlined />
-                                                        }
-                                                        onClick={() =>
-                                                            unfollowUser()
-                                                        }
-                                                    >
-                                                        Unfollow
-                                                    </Button>
-                                                )}
-                                                <Button
-                                                    type="primary"
-                                                    icon={<MessageOutlined />}
-                                                    onClick={() =>
-                                                        setMessageVisible(true)
-                                                    }
-                                                >
-                                                    Message!
-                                                </Button>
-                                            </Space>
+                                            <Button
+                                                type="primary"
+                                                icon={<MessageOutlined />}
+                                                onClick={() =>
+                                                    setMessageVisible(true)
+                                                }
+                                            >
+                                                Message!
+                                            </Button>
                                             {MessageModal()}
                                         </div>
                                     )}
@@ -871,9 +866,7 @@ function Profile(props) {
                                                             <WhatsAppOutlined />
                                                         </Col>
                                                         <Col>
-                                                            <span>
-                                                                {`@${userProfile.telegram}`}
-                                                            </span>
+                                                            <span>{`@${userProfile.telegram}`}</span>
                                                         </Col>
                                                     </Row>
                                                 )}
@@ -887,9 +880,7 @@ function Profile(props) {
                                                             <InstagramOutlined />
                                                         </Col>
                                                         <Col>
-                                                            <span>
-                                                                {`@${userProfile.instagram}`}
-                                                            </span>
+                                                            <span>{`@${userProfile.instagram}`}</span>
                                                         </Col>
                                                     </Row>
                                                 )}
@@ -912,14 +903,7 @@ function Profile(props) {
                                         style={{ marginBottom: "36px" }}
                                     >
                                         <Col>
-                                            <span
-                                                style={{
-                                                    fontSize: "48px",
-                                                    fontWeight: 700,
-                                                }}
-                                            >
-                                                {userStats.no_posts}
-                                            </span>
+                                            <h1>{userStats.no_posts}</h1>
                                             <div
                                                 style={{
                                                     color: "var(--base-20)",
@@ -929,14 +913,7 @@ function Profile(props) {
                                             </div>
                                         </Col>
                                         <Col>
-                                            <span
-                                                style={{
-                                                    fontSize: "48px",
-                                                    fontWeight: 700,
-                                                }}
-                                            >
-                                                {userStats.no_likes}
-                                            </span>
+                                            <h1>{userStats.no_likes}</h1>
                                             <div
                                                 style={{
                                                     color: "var(--base-20)",
@@ -945,58 +922,16 @@ function Profile(props) {
                                                 LIKES
                                             </div>
                                         </Col>
-                                        <FollowerCard>
-                                            <Col
-                                                onClick={() => {
-                                                    setFollowingVisible(true);
+                                        <Col>
+                                            <h1>{userStats.no_followers}</h1>
+                                            <div
+                                                style={{
+                                                    color: "var(--base-20)",
                                                 }}
                                             >
-                                                <span
-                                                    style={{
-                                                        fontSize: "48px",
-                                                        fontWeight: 700,
-                                                    }}
-                                                >
-                                                    {userProfile.followinglist
-                                                        ? userProfile
-                                                              .followinglist
-                                                              .length
-                                                        : 0}
-                                                </span>
-                                                <div
-                                                    style={{
-                                                        color: "var(--base-20)",
-                                                    }}
-                                                >
-                                                    FOLLOWING
-                                                </div>
-                                            </Col>
-                                        </FollowerCard>
-                                        <FollowerCard>
-                                            <Col
-                                                onClick={() => {
-                                                    setFollowerVisible(true);
-                                                }}
-                                            >
-                                                <span
-                                                    style={{
-                                                        fontSize: "48px",
-                                                        fontWeight: 700,
-                                                    }}
-                                                >
-                                                    {userStats.no_followers}
-                                                </span>
-                                                <div
-                                                    style={{
-                                                        color: "var(--base-20)",
-                                                    }}
-                                                >
-                                                    FOLLOWERS
-                                                </div>
-                                            </Col>
-                                        </FollowerCard>
-                                        {FollowingModal()}
-                                        {FollowerModal()}
+                                                FOLLOWERS
+                                            </div>
+                                        </Col>
                                     </Row>
                                 )}
                                 {/* tags */}

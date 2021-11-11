@@ -167,7 +167,16 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
               layout: "vertical",
             }}
           >
-            <Form.Item label="Post Type" name="layout">
+            <Form.Item
+              label="Post Type"
+              name="layout"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input title of post!",
+                },
+              ]}
+            >
               <Radio.Group value={"discussion"}>
                 <Radio.Button
                   value="discussion"
