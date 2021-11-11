@@ -320,12 +320,3 @@ a:hover {
 .hoverable:active {
   opacity: 1;
 }
-
-.nav-sdn.active {
-  color: var(--accent-darkpink);
-  border-bottom: 2px solid var(--accent-darkpink);
-}
-
-.nav-sdn {
-  border-bottom: 2px solid var(--base-0);
-}
