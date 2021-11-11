@@ -119,7 +119,7 @@ const AllPosts = () => {
       });
     } else {
       await axios.delete(`${Url}/circles/${id}`);
-      history.push("/");
+      history.push("/my-circles");
       message.success("Sucessfully deleted a circle");
     }
   };
