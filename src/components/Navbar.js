@@ -178,9 +178,9 @@ function Navbar(props) {
         <Link to="/">
           <img src={logo} alt="logo" style={{ marginRight: "16px" }} />
         </Link>
-        <Link to="/explore">Explore</Link>
-        <Link to="/my-circles">My Circles</Link>
-        <Link to="/my-inbox">My Inbox</Link>
+        <Link className="nav-sdn active" to="/">Home</Link>
+        <Link className="nav-sdn" to="/my-circles">My Circles</Link>
+        <Link className="nav-sdn" to="/my-inbox">My Inbox</Link>
       </div>
 
       {user == null && (

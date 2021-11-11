@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "./index.css";
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import axios from "axios";

@@ -135,7 +135,11 @@ const AllPosts = () => {
         <Spin size="large" />
       ) : (
         <Layout
-          style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
+          style={{
+            height: "100%",
+            minHeight: "100vp",
+            backgroundColor: "var(--accent-bg)",
+          }}
         >
           <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
             <SideBar tabData={tabData} />

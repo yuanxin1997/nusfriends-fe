@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import styled, { StyleSheetManager } from "styled-components";
 import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
 import { HeartFilled, CommentOutlined } from "@ant-design/icons";
@@ -40,7 +39,6 @@ function CirclePost({
   const [currPollOptions, setCurrPollOptions] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
-
 
   const handleLike = async (ev) => {
     // alert("hey");
@@ -226,7 +224,9 @@ function CirclePost({
                       fontWeight: "normal",
                     }}
                   >
-                    {postText}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: `${postText}` }}
+                    ></div>
                   </p>
                 </div>
               ) : hasPolled === false ? (
