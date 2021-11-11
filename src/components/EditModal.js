@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Modal, Input, Form } from "antd";
-
+import FroalaEditorComponent from "react-froala-wysiwyg";
 import axios from "axios";
 import { Url } from "../constants/global";
 
@@ -115,9 +115,15 @@ function EditModal({
             ]}
             onChange={(e) => setDescription(e.target.value)}
           >
-            <TextArea
-              placeholder="Type something..."
-              defaultValue={descriptionPlaceholder}
+            <FroalaEditorComponent
+              model={descriptionPlaceholder}
+              config={{
+                placeholderText: "Edit Your Content Here!",
+              }}
+              onModelChange={(value) => {
+                setDescription(value);
+              }}
+              tag="textarea"
             />
           </Form.Item>
         ) : null}

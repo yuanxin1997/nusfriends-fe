@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Input, Form, Radio, Row, Col, Select, Spin } from "antd";
 
 import { useHistory } from "react-router-dom";
-
+import FroalaEditorComponent from "react-froala-wysiwyg";
 import axios from "axios";
 import { Url } from "../constants/global";
 
@@ -80,11 +80,11 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         title: title,
         circleId: circleId,
         options: [{ optionContent: option1 }, { optionContent: option2 }],
+        tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -101,11 +101,11 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
           { optionContent: option2 },
           { optionContent: option3 },
         ],
+        tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -123,11 +123,11 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
           { optionContent: option3 },
           { optionContent: option4 },
         ],
+        tags: toAdd,
       },
     };
-
-    await axios.post(`${Url}/polls`, poll);
     closeCreateModal();
+    await axios.post(`${Url}/polls`, poll);
     history.go(0);
     form.resetFields();
   };
@@ -226,12 +226,14 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                 ]}
                 name="body"
               >
-                <TextArea
-                  placeholder="Type something..."
-                  autoSize={{ minRows: 4, maxRows: 8 }}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
+                <FroalaEditorComponent
+                  config={{
+                    placeholderText: "Edit Your Content Here!",
                   }}
+                  onModelChange={(value) => {
+                    setDescription(value);
+                  }}
+                  tag="textarea"
                 />
               </Form.Item>
             ) : (
@@ -323,15 +325,6 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                   >
                     {tags}
                   </Select>
-
-                  {/* <Select
-                    mode="tags"
-                    style={{ width: "100%", borderRadius: "var(--br-lg)" }}
-                    placeholder="Tags Mode"
-                    onChange={handleChange}
-                  >
-                    {children}
-                  </Select> */}
                 </Form.Item>
 
                 {/* <Input placeholder="Search Tags..." /> */}

@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
-
 import styled, { StyleSheetManager } from "styled-components";
 import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
-import { HeartFilled, CommentOutlined } from "@ant-design/icons";
+import {
+  HeartFilled,
+  CommentOutlined,
+  ConsoleSqlOutlined,
+} from "@ant-design/icons";
 
 import PlaceholderPicture from "./PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
+import moment from "moment";
 
 function CirclePost({
   circleNameVisible,
@@ -24,9 +28,9 @@ function CirclePost({
   postedClassification,
   postedPhoto,
   posterId,
-  currUserLiked,
   postType,
   polled,
+  curUserLiked,
 }) {
   const history = useHistory();
 
@@ -37,6 +41,30 @@ function CirclePost({
   const [hasPolled, setHasPolled] = useState(false);
   const [totalPollVote, setTotalPollVote] = useState(0);
   const [currPollOptions, setCurrPollOptions] = useState([]);
+  const [refreshComponent, setRefreshComponent] = useState(false);
+  const isMounted = useRef(false);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(0);
+
+  const handleLike = async (ev) => {
+    // alert("hey");
+    ev.preventDefault();
+
+    const updateOption = {
+      user: { userId: parseInt(localStorage.userId) },
+    };
+
+    if (!hasLiked) {
+      await axios.post(`${Url}/posts/like/${postId}`, updateOption);
+      setHasLiked(true);
+      setTotalLikes((prev) => parseInt(prev) + parseInt(1));
+    } else {
+      await axios.post(`${Url}/posts/unlike/${postId}`, updateOption);
+      setHasLiked(false);
+      setTotalLikes((prev) => parseInt(prev) - parseInt(1));
+    }
+  };
+
   const handleVote = async (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -44,11 +72,12 @@ function CirclePost({
     const optionId = currPollOptions[value - 1].optionid;
     const updateOption = {
       user: { userId: parseInt(localStorage.userId) },
-      options: [{ optionId: optionId }],
+      options: [{ optionId: parseInt(optionId) }],
     };
     console.log(updateOption);
     console.log(value);
     await axios.post(`${Url}/options/submit`, updateOption);
+    setRefreshComponent(!refreshComponent);
   };
 
   const onChange = (e) => {
@@ -58,14 +87,16 @@ function CirclePost({
 
   const fetchPoll = async () => {
     try {
-      await axios.get(`${Url}/polls/${postId}`).then((res) => {
-        console.log(JSON.stringify(res.data));
-        setCurrPollOptions(res.data.options);
-        handleTotalVote(res.data.options);
-        setPoll(res.data);
-        checkHasPolled(res.data.options);
-        console.log(polled);
-      });
+      await axios
+        .get(`${Url}/polls/${postId}?userId=${parseInt(localStorage.userId)}`)
+        .then((res) => {
+          console.log(JSON.stringify(res.data));
+          setCurrPollOptions(res.data.options);
+          handleTotalVote(res.data.options);
+          setPoll(res.data);
+          checkHasPolled(res.data.options);
+          console.log(polled);
+        });
     } catch (error) {
       console.log(error);
     } finally {
@@ -75,24 +106,40 @@ function CirclePost({
 
   function checkHasPolled(data) {
     for (let i = 0; i < data.length; i++) {
-      if (data[i].currUserLiked === true) {
+      console.log(data[i]);
+      console.log("curr: " + data[i].curuservoted);
+      if (data[i].curuservoted === true) {
         setHasPolled(true);
         break;
       }
     }
   }
 
+  let total = 0;
   async function handleTotalVote(data) {
-    const sum = data
-      .map((item) => item.numvote)
-      .reduce((prev, curr) => prev + curr, 0);
-    setTotalPollVote(sum);
+    for (let i = 0; i < data.length; i++) {
+      console.log(data[i].numvote);
+      console.log("curr num vote: " + data[i].numvote);
+      total += parseInt(data[i].numvote);
+      console.log("total: " + total);
+    }
+    console.log("end");
+    setTotalPollVote(total);
   }
 
   useEffect(() => {
-    if (postType == "poll") {
+    if (isMounted.current) {
       fetchPoll();
-      console.log("fetched");
+    } else {
+      isMounted.current = true;
+    }
+  }, [refreshComponent]);
+
+  useEffect(() => {
+    if (postType === "poll") {
+      setHasLiked(curUserLiked);
+      setTotalLikes(numLikes);
+      fetchPoll();
       console.log("total: " + totalPollVote);
       console.log("hasPolled: " + hasPolled);
     } else {
@@ -158,7 +205,7 @@ function CirclePost({
                   textAlign: "right",
                 }}
               >
-                {posted}
+                {moment(posted).fromNow()}
               </div>
             </div>
             <Link
@@ -199,7 +246,9 @@ function CirclePost({
                       fontWeight: "normal",
                     }}
                   >
-                    {postText}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: `${postText}` }}
+                    ></div>
                   </p>
                 </div>
               ) : hasPolled === false ? (
@@ -249,7 +298,7 @@ function CirclePost({
                       <Progress
                         strokeColor="var(--accent-lightpink)"
                         percent={Math.round(
-                          (pollOption.numvote / totalPollVote) * 100
+                          (parseInt(pollOption.numvote) / totalPollVote) * 100
                         )}
                       />
                     </div>
@@ -266,13 +315,18 @@ function CirclePost({
                 {/* Bottom Row (Likes and comments) */}
                 <div style={styles.bottomRowWrapper}>
                   <HeartFilled
-                    style={
-                      currUserLiked ? styles.likedStyles : styles.unlikedStyles
-                    }
+                    className="hoverable"
+                    onClick={(e) => {
+                      handleLike(e);
+                    }}
+                    style={hasLiked ? styles.likedStyles : styles.unlikedStyles}
                   />
-                  <text style={styles.textStyle}>{numLikes}</text>
+                  <text style={styles.textStyle}>{totalLikes}</text>
 
-                  <CommentOutlined style={styles.commentStyle} />
+                  <CommentOutlined
+                    className="hoverable"
+                    style={styles.commentStyle}
+                  />
 
                   <text style={styles.textStyle}>{numComments}</text>
                 </div>

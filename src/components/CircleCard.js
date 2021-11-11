@@ -30,7 +30,6 @@ function CircleCard({ circleName, numMembers, circleId, avatarData }) {
 
   useEffect(() => {
     fetchSubscribers();
-    console.log("members: " + subCount);
   }, []);
   return (
     <div>
@@ -76,10 +75,6 @@ function CircleCard({ circleName, numMembers, circleId, avatarData }) {
                           />
                         )
                       )}
-                      {/* {avatarData.map((item, index) => (
-                        <Avatar key={index} src={item.picture.large} />
-                      ))} */}
-                      <Tooltip title="Ant User" placement="top"></Tooltip>
                     </Avatar.Group>
                   </UserGroupWrapper>
                 </Col>

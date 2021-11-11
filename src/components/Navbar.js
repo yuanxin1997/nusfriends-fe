@@ -17,7 +17,7 @@ import {
 import Search from "antd/lib/input/Search";
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../resources/Logo.png";
 import moment from "moment";
@@ -30,6 +30,8 @@ import { useDebouncedCallback } from "use-debounce";
 
 function Navbar(props) {
     const [user, setUser] = useState(null);
+    const [curRoute, setCurRoute] = useState("/");
+    const location = useLocation();
     const history = useHistory();
 
     const onClick = ({ key }) => {
@@ -94,6 +96,11 @@ function Navbar(props) {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const onNavigate = async (url) => {
+        setCurRoute(url);
+        history.push(url);
     };
 
     useEffect(() => {
@@ -209,7 +216,9 @@ function Navbar(props) {
                     display: "flex",
                     justifyContent: "space-between",
                 }}
-                onClick={() => history.push(`/circle/${circleid}`)}
+                onClick={() =>
+                    history.push(`/my-circles/${circleid}/all-posts`)
+                }
             >
                 {title}
             </div>
@@ -294,9 +303,25 @@ function Navbar(props) {
                         style={{ marginRight: "16px" }}
                     />
                 </Link>
-                <Link to="/explore">Explore</Link>
-                <Link to="/my-circles">My Circles</Link>
-                <Link to="/my-inbox">My Inbox</Link>
+                <NavItem
+                    className={curRoute === "/" ? "active" : ""}
+                    onClick={() => onNavigate("/")}
+                >
+                    Home
+                </NavItem>
+                <NavItem
+                    className={curRoute === "/my-circles" ? "active" : ""}
+                    to="/my-circles"
+                    onClick={() => onNavigate("/my-circles")}
+                >
+                    My Circles
+                </NavItem>
+                <NavItem
+                    className={curRoute === "/my-inbox" ? "active" : ""}
+                    onClick={() => onNavigate("/my-inbox")}
+                >
+                    My Inbox
+                </NavItem>
             </div>
 
             {user == null && (
@@ -509,6 +534,18 @@ const NotificationItemWrapper = styled.div`
     }
     .notif-date::after {
         content: "...";
+    }
+`;
+
+const NavItem = styled.div`
+    cursor: pointer;
+    border-bottom: 2px solid var(--base-0);
+    &.active {
+        color: var(--accent-darkpink);
+        border-bottom: 2px solid var(--accent-darkpink);
+    }
+    &:hover {
+        color: var(--accent-darkpink);
     }
 `;
 export default Navbar;

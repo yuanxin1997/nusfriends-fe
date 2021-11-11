@@ -329,7 +329,7 @@ const Leaderboard = () => {
                               </Link>
                             }
                           />
-                          <div>{item.no_likes}</div>
+                          <div>{item.no_likes} likes</div>
                         </List.Item>
                       )}
                     />
