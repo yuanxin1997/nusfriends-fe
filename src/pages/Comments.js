@@ -194,7 +194,7 @@ function Comments(props) {
                 />
               )}
 
-              {comments.map((comment) => (
+              {comments.reverse().map((comment) => (
                 <CommentsCard
                   type="comment"
                   description={comment.content}

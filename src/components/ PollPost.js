@@ -45,6 +45,7 @@ function PollPost({
   const [hasLiked, setHasLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
   const [pollTags, setPollTags] = useState([]);
+  const [currUserVote, setCurrUserVote] = useState();
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const openDeleteModal = () => setDeleteModalVisible(true);
@@ -119,6 +120,7 @@ function PollPost({
       console.log(data[i]);
       console.log("curr: " + data[i].curuservoted);
       if (data[i].curuservoted === true) {
+        setCurrUserVote(data[i].optioncontent);
         setHasPolled(true);
         break;
       }
@@ -276,6 +278,21 @@ function PollPost({
                       />
                     </div>
                   ))}
+
+                  <div style={{ marginTop: 5 }}>
+                    <p style={{ fontWeight: "normal" }}>
+                      Total Votes:&nbsp;
+                      <span style={{ color: "var(--accent-darkpink)" }}>
+                        {totalPollVote}
+                      </span>
+                    </p>
+                    <p style={{ fontWeight: "normal" }}>
+                      Your Vote: &nbsp;
+                      <span style={{ color: "var(--accent-darkpink)" }}>
+                        {currUserVote}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               )}
 
