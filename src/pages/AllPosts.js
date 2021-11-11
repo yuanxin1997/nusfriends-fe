@@ -18,6 +18,7 @@ import SideBar from "../components/SideBar";
 import ContainerHeader from "../components/ContainerHeader";
 import CirclePost from "../components/CirclePost";
 import CreatePostModal from "../components/CreatePostModal";
+import PlaceholderPicture from "../components/PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
@@ -31,9 +32,15 @@ const AllPosts = () => {
   const [circleName, setCircleName] = useState();
   const history = useHistory();
   let { id } = useParams();
+  const [subscribers, setSubscribers] = useState([]);
+  const [subCount, setSubCount] = useState();
 
   // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
+  const openCreateModal = () => setModalVisible(true);
+  function closeCreateModal() {
+    setModalVisible(false);
+  }
 
   const loadMoreData = async () => {
     try {
@@ -60,10 +67,18 @@ const AllPosts = () => {
       });
   };
 
-  const openCreateModal = () => setModalVisible(true);
-  function closeCreateModal() {
-    setModalVisible(false);
-  }
+  const fetchSubscribers = async () => {
+    try {
+      await axios.get(`${Url}/circles/subscribers/${id}`).then((res) => {
+        setSubscribers(res.data);
+        setSubCount(res.data.length);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const rerouteToLogin = () => {
     history.push("/login");
@@ -106,6 +121,7 @@ const AllPosts = () => {
 
   useEffect(() => {
     loadMoreData();
+    fetchSubscribers();
   }, []);
 
   return (
@@ -138,22 +154,32 @@ const AllPosts = () => {
                 <Col>
                   <UserGroupWrapper>
                     <Avatar.Group
-                      maxCount={8}
+                      maxCount={5}
                       size="large"
                       maxStyle={{
                         color: "#f56a00",
                         backgroundColor: "#fde3cf",
                       }}
                     >
-                      {data.map((item, index) => (
-                        <Avatar key={index} src={item.picture.large} />
-                      ))}
-                      <Tooltip title="Ant User" placement="top"></Tooltip>
+                      {subscribers.map((subscriber) =>
+                        subscriber.photo ? (
+                          <Avatar
+                            key={subscriber.userid}
+                            src={subscriber.photo}
+                          />
+                        ) : (
+                          <PlaceholderPicture
+                            height={"40px"}
+                            width={"40px"}
+                            name={subscriber.name}
+                          />
+                        )
+                      )}
                     </Avatar.Group>
                   </UserGroupWrapper>
                 </Col>
               </div>
-              <div style={{ marginLeft: "20px" }}> 365 members</div>
+              <div style={{ marginLeft: "20px" }}> {subCount} members</div>
 
               <div
                 style={{
