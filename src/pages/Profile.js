@@ -3,6 +3,8 @@ import {
     MailOutlined,
     MessageOutlined,
     PhoneOutlined,
+    UserAddOutlined,
+    UserDeleteOutlined,
     WhatsAppOutlined,
 } from "@ant-design/icons";
 import {
@@ -18,15 +20,19 @@ import {
     message,
     Select,
     Space,
+    Avatar,
+    Empty,
 } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import PlaceholderPicture from "../components/PlaceholderPicture";
 import { Url } from "../constants/global";
 
 function Profile(props) {
     const profileId = props.match.params.id;
+    const history = useHistory();
     const [userProfile, setUserProfile] = useState(null);
     const [userStats, setUserStats] = useState(null);
     const [userTags, setUserTags] = useState(null);
@@ -37,8 +43,10 @@ function Profile(props) {
     const [tagVisible, setTagVisible] = useState(false);
     const [error, setError] = useState(null);
     const [tags, setTags] = useState([]);
-    const [toAddTags, setToAddTags] = useState(null);
+    const [following, setFollowing] = useState(false);
     const [messageVisible, setMessageVisible] = useState(false);
+    const [followingVisible, setFollowingVisible] = useState(false);
+    const [followerVisible, setFollowerVisible] = useState(false);
 
     useEffect(() => {
         loadProfileUser();
@@ -49,11 +57,19 @@ function Profile(props) {
     const loadProfileUser = async () => {
         if (profileId !== null) {
             axios
-                .get(`${Url}/users/${profileId}`)
+                .get(`${Url}/users/profile/${profileId}/${loggedInUser}`)
                 .then((res) => {
                     setUserProfile(res.data[0]);
+                    console.log(res.data[0]);
                     if (res.data[0].userid == loggedInUser) {
                         setOwner(true);
+                    } else {
+                        setOwner(false);
+                    }
+                    if (res.data[0].isfollowing == "1") {
+                        setFollowing(true);
+                    } else {
+                        setFollowing(false);
                     }
                 })
                 .catch(function (error) {
@@ -490,6 +506,160 @@ function Profile(props) {
             });
     };
 
+    const followUser = async () => {
+        const data = {
+            userId: profileId,
+            curUserId: loggedInUser,
+        };
+        console.log(data);
+        await axios.post(`${Url}/users/follow`, { ...data }).then((res) => {
+            if (res) {
+                loadProfileUser();
+                message.success("Following!");
+            }
+        });
+    };
+
+    const unfollowUser = async () => {
+        const data = {
+            userId: profileId,
+            curUserId: loggedInUser,
+        };
+        console.log(data);
+        await axios.post(`${Url}/users/unfollow`, { ...data }).then((res) => {
+            if (res) {
+                loadProfileUser();
+                message.success("Unfollowed!");
+            }
+        });
+    };
+
+    const FollowingModal = () => {
+        return (
+            <Modal
+                visible={followingVisible}
+                title={`Following`}
+                footer={null}
+                onCancel={() => setFollowingVisible(false)}
+            >
+                {!userProfile.followinglist && (
+                    <Empty description="Not following anyone yet"></Empty>
+                )}
+                {userProfile.followinglist &&
+                    userProfile.followinglist.map((user) => {
+                        return (
+                            <>
+                                <FollowerCard
+                                    onClick={() => {
+                                        setFollowingVisible(false);
+                                        history.push(`/user/${user.userid}`);
+                                    }}
+                                >
+                                    <div style={{ display: "flex" }}>
+                                        <Avatar
+                                            src={user.photo}
+                                            size={50}
+                                            style={{ marginRight: 16 }}
+                                        />
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <span style={{ fontSize: "16px" }}>
+                                                {user.name}
+                                            </span>
+                                            <span
+                                                style={{
+                                                    color: "var(--base-40)",
+                                                }}
+                                            >
+                                                {user.classification}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </FollowerCard>
+                                <Divider style={{ margin: "12px 0px" }} />
+                            </>
+                        );
+                    })}
+            </Modal>
+        );
+    };
+
+    const FollowerModal = () => {
+        return (
+            <Modal
+                visible={followerVisible}
+                title={`Following`}
+                footer={null}
+                onCancel={() => setFollowerVisible(false)}
+            >
+                {!userProfile.followerlist && (
+                    <Empty description="No followers yet"></Empty>
+                )}
+                {userProfile.followerlist &&
+                    userProfile.followerlist.map((user) => {
+                        return (
+                            <>
+                                <FollowerCard
+                                    onClick={() => {
+                                        setFollowerVisible(false);
+                                        history.push(`/user/${user.userid}`);
+                                    }}
+                                >
+                                    <div style={{ display: "flex" }}>
+                                        {user.photo ? (
+                                            <Avatar
+                                                src={user.photo}
+                                                size={50}
+                                                style={{ marginRight: 16 }}
+                                            />
+                                        ) : (
+                                            <Avatar
+                                                className="avatar-sdn-2"
+                                                size={50}
+                                                style={{
+                                                    marginRight: 16,
+                                                    backgroundColor:
+                                                        "var(--accent-lightpink)",
+                                                    verticalAlign: "middle",
+                                                    color: "var(--base-80)",
+                                                }}
+                                            >
+                                                {user.name[0].toUpperCase()}
+                                            </Avatar>
+                                        )}
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <span style={{ fontSize: "16px" }}>
+                                                {user.name}
+                                            </span>
+                                            <span
+                                                style={{
+                                                    color: "var(--base-40)",
+                                                }}
+                                            >
+                                                {user.classification}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </FollowerCard>
+                                <Divider style={{ margin: "12px 0px" }} />
+                            </>
+                        );
+                    })}
+            </Modal>
+        );
+    };
+
     return (
         <div
             style={{
@@ -581,15 +751,43 @@ function Profile(props) {
                                                 marginBottom: "8px",
                                             }}
                                         >
-                                            <Button
-                                                type="primary"
-                                                icon={<MessageOutlined />}
-                                                onClick={() =>
-                                                    setMessageVisible(true)
-                                                }
-                                            >
-                                                Message!
-                                            </Button>
+                                            <Space>
+                                                {!following && (
+                                                    <Button
+                                                        type="primary"
+                                                        icon={
+                                                            <UserAddOutlined />
+                                                        }
+                                                        onClick={() =>
+                                                            followUser()
+                                                        }
+                                                    >
+                                                        Follow
+                                                    </Button>
+                                                )}
+                                                {following && (
+                                                    <Button
+                                                        type="default"
+                                                        icon={
+                                                            <UserDeleteOutlined />
+                                                        }
+                                                        onClick={() =>
+                                                            unfollowUser()
+                                                        }
+                                                    >
+                                                        Unfollow
+                                                    </Button>
+                                                )}
+                                                <Button
+                                                    type="primary"
+                                                    icon={<MessageOutlined />}
+                                                    onClick={() =>
+                                                        setMessageVisible(true)
+                                                    }
+                                                >
+                                                    Message!
+                                                </Button>
+                                            </Space>
                                             {MessageModal()}
                                         </div>
                                     )}
@@ -714,7 +912,14 @@ function Profile(props) {
                                         style={{ marginBottom: "36px" }}
                                     >
                                         <Col>
-                                            <h1>{userStats.no_posts}</h1>
+                                            <span
+                                                style={{
+                                                    fontSize: "48px",
+                                                    fontWeight: 700,
+                                                }}
+                                            >
+                                                {userStats.no_posts}
+                                            </span>
                                             <div
                                                 style={{
                                                     color: "var(--base-20)",
@@ -724,7 +929,14 @@ function Profile(props) {
                                             </div>
                                         </Col>
                                         <Col>
-                                            <h1>{userStats.no_likes}</h1>
+                                            <span
+                                                style={{
+                                                    fontSize: "48px",
+                                                    fontWeight: 700,
+                                                }}
+                                            >
+                                                {userStats.no_likes}
+                                            </span>
                                             <div
                                                 style={{
                                                     color: "var(--base-20)",
@@ -733,16 +945,58 @@ function Profile(props) {
                                                 LIKES
                                             </div>
                                         </Col>
-                                        <Col>
-                                            <h1>{userStats.no_followers}</h1>
-                                            <div
-                                                style={{
-                                                    color: "var(--base-20)",
+                                        <FollowerCard>
+                                            <Col
+                                                onClick={() => {
+                                                    setFollowingVisible(true);
                                                 }}
                                             >
-                                                FOLLOWERS
-                                            </div>
-                                        </Col>
+                                                <span
+                                                    style={{
+                                                        fontSize: "48px",
+                                                        fontWeight: 700,
+                                                    }}
+                                                >
+                                                    {userProfile.followinglist
+                                                        ? userProfile
+                                                              .followinglist
+                                                              .length
+                                                        : 0}
+                                                </span>
+                                                <div
+                                                    style={{
+                                                        color: "var(--base-20)",
+                                                    }}
+                                                >
+                                                    FOLLOWING
+                                                </div>
+                                            </Col>
+                                        </FollowerCard>
+                                        <FollowerCard>
+                                            <Col
+                                                onClick={() => {
+                                                    setFollowerVisible(true);
+                                                }}
+                                            >
+                                                <span
+                                                    style={{
+                                                        fontSize: "48px",
+                                                        fontWeight: 700,
+                                                    }}
+                                                >
+                                                    {userStats.no_followers}
+                                                </span>
+                                                <div
+                                                    style={{
+                                                        color: "var(--base-20)",
+                                                    }}
+                                                >
+                                                    FOLLOWERS
+                                                </div>
+                                            </Col>
+                                        </FollowerCard>
+                                        {FollowingModal()}
+                                        {FollowerModal()}
                                     </Row>
                                 )}
                                 {/* tags */}
@@ -817,6 +1071,14 @@ const AddTag = styled.div`
         box-shadow: var(--shadow);
         color: var(--base-0);
         background-color: var(--accent-darkpink);
+        cursor: pointer;
+    }
+`;
+
+const FollowerCard = styled.div`
+    transition: var(--transition);
+    &:hover {
+        color: var(--accent-redpink) !important;
         cursor: pointer;
     }
 `;
