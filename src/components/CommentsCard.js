@@ -22,6 +22,7 @@ function CommentsCard({
   postedPhoto,
   posterId,
   postedDate,
+  postType,
 }) {
   const history = useHistory();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -37,7 +38,9 @@ function CommentsCard({
   }
   const [postTags, setPostTags] = useState([]);
   useEffect(() => {
-    tags.map((tag) => postTags.push(tag.name));
+    if (type === "post") {
+      tags.map((tag) => postTags.push(tag.name));
+    }
   }, []);
   return (
     <div style={{ marginBottom: 20 }}>

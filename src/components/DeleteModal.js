@@ -4,7 +4,7 @@ import { Modal, notification } from "antd";
 import axios from "axios";
 import { Url } from "../constants/global";
 
-import { WarningOutlined } from "@ant-design/icons";
+import { WarningOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
   const history = useHistory();
@@ -36,6 +36,23 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
             },
           });
         });
+    } else if (type === "poll") {
+      await axios
+        .delete(`${Url}/polls/${id}`)
+        .then((res) => {
+          history.push("/");
+          closeDeleteModal();
+        })
+        .catch((error) => {
+          notification.open({
+            message: "Error deleting Post.",
+            description: "Posts with existing comments cannot be deleted.",
+            icon: <WarningOutlined />,
+            onClick: () => {
+              console.log("Notification Clicked!");
+            },
+          });
+        });
     } else {
       await axios
         .delete(`${Url}/comments/${id}`, { data: user })
@@ -53,6 +70,8 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
           ? "Delete Circle"
           : type === "post"
           ? "Delete Post"
+          : type === "poll"
+          ? "Delete Poll"
           : "Delete Comment"
       }
       visible={modalVisible}

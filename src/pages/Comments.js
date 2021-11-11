@@ -10,6 +10,8 @@ import ContainerHeader from "../components/ContainerHeader";
 import CreateCommentModal from "../components/CreateCommentModal";
 import CommentsCard from "../components/CommentsCard";
 import SideBar from "../components/SideBar";
+import CirclePost from "../components/CirclePost";
+import PollPost from "../components/ PollPost";
 
 import axios from "axios";
 import { Url } from "../constants/global";
@@ -155,20 +157,42 @@ function Comments(props) {
                 marginTop: "20px",
               }}
             >
-              <CommentsCard
-                type="post"
-                title={post.title}
-                description={post.content}
-                likes={post.likes}
-                comments={post.comments}
-                posted={post.userid}
-                postedName={post.name}
-                postedClassification={post.classification}
-                postedPhoto={post.photo}
-                id={post.postid}
-                posterId={post.userid}
-                tags={post.tags}
-              />
+              {post.posttype === "discussion" ? (
+                <CommentsCard
+                  type="post"
+                  title={post.title}
+                  description={post.content}
+                  likes={post.likes}
+                  comments={post.comments}
+                  posted={post.userid}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                  postedPhoto={post.photo}
+                  id={post.postid}
+                  posterId={post.userid}
+                  tags={post.tags}
+                  postType={post.posttype}
+                />
+              ) : (
+                <PollPost
+                  circleNameVisible={false}
+                  postTitle={post.title}
+                  postText={post.content}
+                  posted={post.createdat}
+                  numLikes={post.likes}
+                  numComments={post.comments}
+                  postId={post.postid}
+                  postedName={post.name}
+                  postedClassification={post.classification}
+                  postedPhoto={post.photo}
+                  posterId={post.userid}
+                  postType={post.posttype}
+                  polled={false}
+                  curUserLiked={post.curuserliked}
+                  postTags={post.tags}
+                  isComment={true}
+                />
+              )}
 
               {comments.map((comment) => (
                 <CommentsCard
