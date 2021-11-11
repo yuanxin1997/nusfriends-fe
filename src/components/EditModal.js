@@ -54,6 +54,20 @@ function EditModal({
     history.go(0);
   };
 
+  const editPoll = async () => {
+    const poll = {
+      user: { userId: parseInt(localStorage.userId) },
+      poll: {
+        title: title,
+        tags: toAdd.length === 0 ? tags : toAdd,
+      },
+    };
+    console.log(poll.poll.tags);
+    await axios.put(`${Url}/polls/${id}`, poll);
+    closeEditModal();
+    history.go(0);
+  };
+
   const fetchDbTags = async () => {
     try {
       await axios.get(`${Url}/tags`).then((res) => {
@@ -86,6 +100,8 @@ function EditModal({
               ? "Edit circle"
               : type === "post"
               ? "Edit Post"
+              : type === "poll"
+              ? "Edit Poll"
               : "Edit Comment"
           }
           visible={modalVisible}
@@ -96,6 +112,8 @@ function EditModal({
               ? "Edit circle"
               : type === "post"
               ? "Edit Post"
+              : type === "poll"
+              ? "Edit Poll"
               : "Edit Comment"
           }
           onOk={
@@ -103,6 +121,8 @@ function EditModal({
               ? editCircle
               : type === "post"
               ? editPost
+              : type === "poll"
+              ? editPoll
               : editComment
           }
           width={850}
@@ -121,6 +141,8 @@ function EditModal({
                   ? "Circle Title"
                   : type === "post"
                   ? "Post Title"
+                  : type === "poll"
+                  ? "Poll Title"
                   : "Comment Description"
               }
               name="title"

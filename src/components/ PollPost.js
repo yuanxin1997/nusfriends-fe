@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
-import styled, { StyleSheetManager } from "styled-components";
-import { Tag, Avatar, Radio, Input, Space, Button, Progress, Spin } from "antd";
+import styled from "styled-components";
+import { Tag, Avatar, Radio, Space, Button, Progress, Spin } from "antd";
 import {
   HeartFilled,
   CommentOutlined,
-  ConsoleSqlOutlined,
+  DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 import PlaceholderPicture from "./PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
 import moment from "moment";
 
-function CirclePost({
-  circleNameVisible,
-  circleName,
+function PollPost({
   postTitle,
-  postText,
   posted,
   numLikes,
-  numComments,
-  circleId,
   postId,
   postedName,
   postedClassification,
@@ -31,6 +29,7 @@ function CirclePost({
   postType,
   polled,
   curUserLiked,
+  postTags,
 }) {
   const history = useHistory();
 
@@ -45,6 +44,18 @@ function CirclePost({
   const isMounted = useRef(false);
   const [hasLiked, setHasLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
+  const [pollTags, setPollTags] = useState([]);
+
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const openDeleteModal = () => setDeleteModalVisible(true);
+  function closeDeleteModal() {
+    setDeleteModalVisible(false);
+  }
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const openEditModal = () => setEditModalVisible(true);
+  function closeEditModal() {
+    setEditModalVisible(false);
+  }
 
   const handleLike = async (ev) => {
     // alert("hey");
@@ -95,7 +106,6 @@ function CirclePost({
           handleTotalVote(res.data.options);
           setPoll(res.data);
           checkHasPolled(res.data.options);
-          console.log(polled);
         });
     } catch (error) {
       console.log(error);
@@ -142,21 +152,17 @@ function CirclePost({
       fetchPoll();
       console.log("total: " + totalPollVote);
       console.log("hasPolled: " + hasPolled);
+      postTags.map((tag) => pollTags.push(tag.name));
     } else {
       setLoading(false);
     }
   }, []);
-
   return (
     <div>
       {loading ? (
         <Spin />
       ) : (
-        <div style={{ width: "750px" }}>
-          <h3 style={{ textAlign: "left" }}>
-            {circleNameVisible === true ? circleName : null}
-          </h3>
-
+        <div style={{ width: "1000px" }}>
           <CircleCard>
             <div style={styles.wrapper}>
               <a onClick={() => history.push("/user/" + posterId)}>
@@ -209,57 +215,23 @@ function CirclePost({
               </div>
             </div>
 
-            <Link
-              to={{
-                pathname:
-                  "/my-circles/" + circleId + "/" + postId + "/comments",
-              }}
-              onClick={() => console.log("clicked")}
-            >
+            <div>
               <div>
-                <h4 style={{ textAlign: "left", paddingBottom: "2px" }}>
-                  {postTitle}
-                </h4>
-                <div
+                <h3
                   style={{
-                    alignContent: "left",
                     textAlign: "left",
-                    justifyContent: "left",
-                    paddingBottom: "15px",
+                    paddingBottom: "10px",
                   }}
                 >
-                  <Tag color="var(--accent-lightpink)">
-                    {postType === "discussion" ? "disussion" : "poll"}
-                  </Tag>
-                </div>
+                  {postTitle}
+                </h3>
               </div>
 
-              {postType === "discussion" ? (
+              {hasPolled === false ? (
                 <div
                   style={{
                     textAlign: "left",
                     paddingBottom: "15px",
-                  }}
-                >
-                  <p
-                    style={{
-                      paddingBottom: "10px",
-                      fontWeight: "normal",
-                    }}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{ __html: `${postText}` }}
-                    ></div>
-                  </p>
-                </div>
-              ) : hasPolled === false ? (
-                <div
-                  style={{
-                    textAlign: "left",
-                    paddingBottom: "15px",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
                   }}
                 >
                   <div>
@@ -311,39 +283,77 @@ function CirclePost({
                 style={{
                   display: "flex",
                   flexDirection: "row",
+                  marginTop: 10,
                 }}
               >
-                {/* Bottom Row (Likes and comments) */}
                 <div style={styles.bottomRowWrapper}>
-                  <HeartFilled
-                    className="hoverable"
-                    onClick={(e) => {
-                      handleLike(e);
-                    }}
-                    style={hasLiked ? styles.likedStyles : styles.unlikedStyles}
-                  />
-                  <text style={styles.textStyle}>{totalLikes}</text>
+                  <div>
+                    {postTags.map((tag) => (
+                      <Tag color="blue" style={{ padding: "2px 18px" }}>
+                        {tag.name}
+                      </Tag>
+                    ))}
+                  </div>
 
-                  <CommentOutlined
-                    className="hoverable"
-                    style={styles.commentStyle}
-                  />
-
-                  <text style={styles.textStyle}>{numComments}</text>
+                  <div style={{ display: "flex" }}>
+                    <HeartFilled style={styles.heartStyles} />
+                    <text style={styles.textStyle}>{numLikes}</text>
+                  </div>
                 </div>
               </div>
-            </Link>
+            </div>
+
+            {posterId === parseInt(localStorage.userId) ? (
+              <div>
+                <hr style={{ color: "var(--base-20)", marginTop: 10 }} />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <div>
+                    <a
+                      onClick={openDeleteModal}
+                      style={styles.manageCommentText}
+                    >
+                      <DeleteOutlined style={{ marginRight: 5 }} />
+                      Delete Poll
+                    </a>
+                    <DeleteModal
+                      modalVisible={deleteModalVisible}
+                      closeDeleteModal={closeDeleteModal}
+                      type="poll"
+                      id={postId}
+                    />
+
+                    <a onClick={openEditModal} style={styles.manageCommentText}>
+                      <EditOutlined style={{ marginRight: 5 }} />
+                      Edit Poll
+                    </a>
+
+                    <EditModal
+                      modalVisible={editModalVisible}
+                      closeEditModal={closeEditModal}
+                      type="poll"
+                      titlePlaceholder={postTitle}
+                      id={postId}
+                      tags={pollTags}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </CircleCard>
         </div>
       )}
     </div>
   );
 }
-
 const CircleCard = styled.div`
   background-color: var(--base-0);
   border-radius: var(--br-lg);
-  width: 750px;
+
   box-shadow: var(--shadow);
   margin-bottom: 36px;
   padding: 16px;
@@ -419,5 +429,22 @@ const styles = {
     fontSize: "20px",
     paddingRight: "10px",
   },
+  bottomRowWrapper: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingRight: "10px",
+    display: "flex",
+    alignItems: "center",
+  },
+  manageCommentText: {
+    fontWeight: "normal",
+    color: "var(--base-20)",
+    marginRight: 15,
+  },
+  heartStyles: {
+    color: "#D25864",
+    fontSize: "20px",
+    paddingRight: "10px",
+  },
 };
-export default CirclePost;
+export default PollPost;

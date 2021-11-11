@@ -36,6 +36,23 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
             },
           });
         });
+    } else if (type === "poll") {
+      await axios
+        .delete(`${Url}/poll/${id}`, { data: user })
+        .then((res) => {
+          history.push("/");
+          closeDeleteModal();
+        })
+        .catch((error) => {
+          notification.open({
+            message: "Error deleting Post.",
+            description: "Posts with existing comments cannot be deleted.",
+            icon: <WarningOutlined />,
+            onClick: () => {
+              console.log("Notification Clicked!");
+            },
+          });
+        });
     } else {
       await axios
         .delete(`${Url}/comments/${id}`, { data: user })
@@ -53,6 +70,8 @@ function DeleteModal({ modalVisible, closeDeleteModal, type, id }) {
           ? "Delete Circle"
           : type === "post"
           ? "Delete Post"
+          : type === "poll"
+          ? "Delete Poll"
           : "Delete Comment"
       }
       visible={modalVisible}
