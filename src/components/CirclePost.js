@@ -41,8 +41,6 @@ function CirclePost({
   const handleLike = async (ev) => {
     // alert("hey");
     ev.preventDefault();
-    // ev.stopPropagation();
-    // ev.nativeEvent.stopImmediatePropagation();
     // const optionId = currPollOptions[value - 1].optionid;
     // const updateOption = {
     //   user: { userId: parseInt(localStorage.userId) },
@@ -293,7 +291,7 @@ function CirclePost({
                   />
                   <text style={styles.textStyle}>{numLikes}</text>
 
-                  <CommentOutlined style={styles.commentStyle} />
+                  <CommentOutlined className="hoverable" style={styles.commentStyle} />
 
                   <text style={styles.textStyle}>{numComments}</text>
                 </div>

@@ -307,3 +307,7 @@ a:hover {
 .hoverable:hover {
   opacity: 0.7;
 }
+
+.hoverable:active {
+  opacity: 1;
+}
