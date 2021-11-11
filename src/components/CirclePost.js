@@ -137,10 +137,8 @@ function CirclePost({
 
   useEffect(() => {
     if (postType === "poll") {
-    setHasLiked(curUserLiked);
-    setTotalLikes(numLikes);
-    // set
-    if (postType == "poll") {
+      setHasLiked(curUserLiked);
+      setTotalLikes(numLikes);
       fetchPoll();
       console.log("total: " + totalPollVote);
       console.log("hasPolled: " + hasPolled);
@@ -330,7 +328,7 @@ function CirclePost({
                     style={styles.commentStyle}
                   />
 
-                   <text style={styles.textStyle}>{numComments}</text>
+                  <text style={styles.textStyle}>{numComments}</text>
                 </div>
               </div>
             </Link>
