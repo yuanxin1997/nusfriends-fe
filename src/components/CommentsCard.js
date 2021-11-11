@@ -7,6 +7,7 @@ import styled from "styled-components";
 import DeleteModal from "./DeleteModal";
 import PlaceholderPicture from "./PlaceholderPicture";
 import EditModal from "./EditModal";
+import moment from "moment";
 
 function CommentsCard({
   type,
@@ -20,6 +21,7 @@ function CommentsCard({
   postedClassification,
   postedPhoto,
   posterId,
+  postedDate,
 }) {
   const history = useHistory();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -89,7 +91,7 @@ function CommentsCard({
               textAlign: "right",
             }}
           >
-            20h
+            {moment(postedDate).fromNow()}
           </div>
         </div>
 
@@ -108,12 +110,11 @@ function CommentsCard({
           {type === "post" ? (
             <div style={styles.bottomRowWrapper}>
               <div>
-                <Tag color="blue" style={{ padding: "2px 18px" }}>
-                  python
-                </Tag>
-                <Tag color="blue" style={{ padding: "2px 18px" }}>
-                  programming
-                </Tag>
+                {tags.map((tag) => (
+                  <Tag color="blue" style={{ padding: "2px 18px" }}>
+                    {tag.name}
+                  </Tag>
+                ))}
               </div>
 
               <div style={{ display: "flex" }}>

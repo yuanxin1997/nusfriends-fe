@@ -80,6 +80,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         title: title,
         circleId: circleId,
         options: [{ optionContent: option1 }, { optionContent: option2 }],
+        tags: toAdd,
       },
     };
 
@@ -101,6 +102,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
           { optionContent: option2 },
           { optionContent: option3 },
         ],
+        tags: toAdd,
       },
     };
 
@@ -123,6 +125,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
           { optionContent: option3 },
           { optionContent: option4 },
         ],
+        tags: toAdd,
       },
     };
 

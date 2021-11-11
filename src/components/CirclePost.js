@@ -9,6 +9,7 @@ import PlaceholderPicture from "./PlaceholderPicture";
 
 import axios from "axios";
 import { Url } from "../constants/global";
+import moment from "moment";
 
 function CirclePost({
   circleNameVisible,
@@ -50,7 +51,6 @@ function CirclePost({
     // console.log(value);
     // await axios.post(`${Url}/options/submit`, updateOption);
   };
-
 
   const handleVote = async (ev) => {
     ev.preventDefault();
@@ -173,7 +173,7 @@ function CirclePost({
                   textAlign: "right",
                 }}
               >
-                {posted}
+                {moment(posted).fromNow()}
               </div>
             </div>
             <Link
