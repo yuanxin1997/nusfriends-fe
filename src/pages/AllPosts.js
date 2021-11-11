@@ -32,7 +32,7 @@ import PlaceholderPicture from "../components/PlaceholderPicture";
 import axios from "axios";
 import { Url } from "../constants/global";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const AllPosts = () => {
   const [loading, setLoading] = useState(true);
@@ -120,7 +120,7 @@ const AllPosts = () => {
     } else {
       await axios.delete(`${Url}/circles/${id}`);
       history.push("/");
-      message.success('Sucessfully deleted a circle');
+      message.success("Sucessfully deleted a circle");
     }
   };
 

@@ -45,6 +45,7 @@ function CirclePost({
   const isMounted = useRef(false);
   const [hasLiked, setHasLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
+  const [currUserVote, setCurrUserVote] = useState();
 
   const handleLike = async (ev) => {
     // alert("hey");
@@ -109,6 +110,7 @@ function CirclePost({
       console.log(data[i]);
       console.log("curr: " + data[i].curuservoted);
       if (data[i].curuservoted === true) {
+        setCurrUserVote(data[i].optioncontent);
         setHasPolled(true);
         break;
       }
@@ -304,6 +306,20 @@ function CirclePost({
                       />
                     </div>
                   ))}
+                  <div style={{ marginTop: 5 }}>
+                    <p style={{ fontWeight: "normal" }}>
+                      Total Votes:&nbsp;
+                      <span style={{ color: "var(--accent-darkpink)" }}>
+                        {totalPollVote}
+                      </span>
+                    </p>
+                    <p style={{ fontWeight: "normal" }}>
+                      Your Vote: &nbsp;
+                      <span style={{ color: "var(--accent-darkpink)" }}>
+                        {currUserVote}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               )}
 

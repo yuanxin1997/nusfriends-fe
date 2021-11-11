@@ -102,9 +102,10 @@ function CommentsCard({
           </div>
         </div>
 
-        <p style={{ textAlign: "left", paddingBottom: "10px" }}>
-          {description}
-        </p>
+        <div
+          dangerouslySetInnerHTML={{ __html: `${description}` }}
+          style={{ textAlign: "left", paddingBottom: "10px" }}
+        ></div>
 
         <div
           style={{
