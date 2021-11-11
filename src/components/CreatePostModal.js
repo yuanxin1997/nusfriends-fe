@@ -21,20 +21,30 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [loading, setLoading] = useState(true);
+  var toAdd = [];
 
   const history = useHistory();
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
 
-  const fetchTags = async () => {
+  const onCancel = () => {
+    form.resetFields();
+    closeCreateModal();
+    setTitle();
+    setDescription();
+    console.log("cancel");
+  };
+
+  const fetchDbTags = async () => {
     try {
       await axios.get(`${Url}/tags`).then((res) => {
-        setTags(res.data);
-        tags.map((tag) => {
-          children.push(<Option key={tag.tagid}>{tag.name}</Option>);
-          console.log("tag: " + tag.name);
+        const tags = res.data;
+        const children = [];
+        tags.forEach((tag) => {
+          children.push(<Option key={tag.name}>{tag.name}</Option>);
         });
+        setTags(children);
       });
     } catch (error) {
       console.log(error);
@@ -52,11 +62,13 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         title: title,
         content: description,
         circleId: circleId,
+        tags: toAdd,
       },
     };
     await axios.post(`${Url}/posts`, post);
     closeCreateModal();
     history.go(0);
+    form.resetFields();
   };
 
   const handleCreatePoll2 = async () => {
@@ -64,23 +76,25 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
       user: {
         userId: localStorage.userId,
       },
-      post: {
+      poll: {
         title: title,
-        content: description,
         circleId: circleId,
         options: [{ optionContent: option1 }, { optionContent: option2 }],
       },
     };
-    console.log("poll2 created");
+
+    await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
+    history.go(0);
+    form.resetFields();
   };
   const handleCreatePoll3 = async () => {
     const poll = {
       user: {
         userId: localStorage.userId,
       },
-      post: {
+      poll: {
         title: title,
-        content: description,
         circleId: circleId,
         options: [
           { optionContent: option1 },
@@ -89,7 +103,11 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         ],
       },
     };
-    console.log("poll3 created");
+
+    await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
+    history.go(0);
+    form.resetFields();
   };
   const handleCreatePoll4 = async () => {
     const poll = {
@@ -98,7 +116,6 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
       },
       post: {
         title: title,
-        content: description,
         circleId: circleId,
         options: [
           { optionContent: option1 },
@@ -108,11 +125,15 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         ],
       },
     };
-    console.log("poll4 created");
+
+    await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
+    history.go(0);
+    form.resetFields();
   };
 
   useEffect(() => {
-    fetchTags();
+    fetchDbTags();
     console.log("tags" + JSON.stringify(tags));
   }, []);
 
@@ -124,7 +145,8 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         <Modal
           title="Create New Post"
           visible={modalVisible}
-          onCancel={() => closeCreateModal()}
+          onCancel={onCancel}
+          destroyOnClose={true}
           cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
           okText="Create Post"
           width={850}
@@ -176,17 +198,34 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
 
             <Form.Item
               label={type === "discussion" ? "Discussion Title" : "Poll Title"}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input title of post!",
+                },
+              ]}
+              name="title"
             >
               <Input
                 placeholder="Type something..."
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
+                defaultValue={title}
               />
             </Form.Item>
 
             {type === "discussion" ? (
-              <Form.Item label="Discussion Body">
+              <Form.Item
+                label="Discussion Body"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input body of discussion!",
+                  },
+                ]}
+                name="body"
+              >
                 <TextArea
                   placeholder="Type something..."
                   autoSize={{ minRows: 4, maxRows: 8 }}
@@ -197,7 +236,16 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
               </Form.Item>
             ) : (
               <div>
-                <Form.Item label="Number of Poll Options">
+                <Form.Item
+                  label="Number of Poll Options"
+                  name="numoptions"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select number of poll options",
+                    },
+                  ]}
+                >
                   <Select
                     defaultValue="2"
                     onChange={(value) => {
@@ -209,13 +257,29 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                     <Option value="4">4</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item label="Poll Options">
+                <Form.Item
+                  label="Poll Options"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please all selected input poll options!",
+                    },
+                  ]}
+                  name="polloption"
+                >
                   <Input
                     style={{ marginBottom: 5 }}
                     placeholder="Option 1"
                     onChange={(e) => {
                       setOption1(e.target.value);
                     }}
+                    name="option1"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please all selected input poll options!",
+                      },
+                    ]}
                   />
                   <Input
                     style={{ marginBottom: 5 }}
@@ -251,12 +315,23 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                 <Form.Item label="Tags">
                   <Select
                     mode="tags"
+                    style={{ width: "100%" }}
+                    placeholder="Search Tags..."
+                    onChange={(e) => {
+                      toAdd = e;
+                    }}
+                  >
+                    {tags}
+                  </Select>
+
+                  {/* <Select
+                    mode="tags"
                     style={{ width: "100%", borderRadius: "var(--br-lg)" }}
                     placeholder="Tags Mode"
                     onChange={handleChange}
                   >
                     {children}
-                  </Select>
+                  </Select> */}
                 </Form.Item>
 
                 {/* <Input placeholder="Search Tags..." /> */}

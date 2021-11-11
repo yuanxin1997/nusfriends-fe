@@ -36,13 +36,19 @@ function CirclePost({
   // to replicate check from BE if user has polled
   const [hasPolled, setHasPolled] = useState(false);
   const [totalPollVote, setTotalPollVote] = useState(0);
-
-  const handleVote = (ev) => {
+  const [currPollOptions, setCurrPollOptions] = useState([]);
+  const handleVote = async (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
     ev.nativeEvent.stopImmediatePropagation();
-    setHasPolled(!hasPolled);
+    const optionId = currPollOptions[value - 1].optionid;
+    const updateOption = {
+      user: { userId: parseInt(localStorage.userId) },
+      options: [{ optionId: optionId }],
+    };
+    console.log(updateOption);
     console.log(value);
+    await axios.post(`${Url}/options/submit`, updateOption);
   };
 
   const onChange = (e) => {
@@ -54,8 +60,10 @@ function CirclePost({
     try {
       await axios.get(`${Url}/polls/${postId}`).then((res) => {
         console.log(JSON.stringify(res.data));
-        handleTotalVote(res.data);
+        setCurrPollOptions(res.data.options);
+        handleTotalVote(res.data.options);
         setPoll(res.data);
+        checkHasPolled(res.data.options);
         console.log(polled);
       });
     } catch (error) {
@@ -64,6 +72,15 @@ function CirclePost({
       setLoading(false);
     }
   };
+
+  function checkHasPolled(data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].currUserLiked === true) {
+        setHasPolled(true);
+        break;
+      }
+    }
+  }
 
   async function handleTotalVote(data) {
     const sum = data
@@ -77,6 +94,7 @@ function CirclePost({
       fetchPoll();
       console.log("fetched");
       console.log("total: " + totalPollVote);
+      console.log("hasPolled: " + hasPolled);
     } else {
       setLoading(false);
     }
@@ -197,7 +215,7 @@ function CirclePost({
                   <div>
                     <Radio.Group value={value} onChange={(e) => onChange(e)}>
                       <Space direction="vertical">
-                        {poll.map((pollOption, index) => (
+                        {poll.options.map((pollOption, index) => (
                           <Radio
                             value={index + 1}
                             style={{ fontWeight: "normal" }}
@@ -221,7 +239,7 @@ function CirclePost({
                 </div>
               ) : (
                 <div>
-                  {poll.map((pollOption) => (
+                  {poll.options.map((pollOption) => (
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <div style={{ width: "25%", textAlign: "center" }}>
                         <p style={{ marginRight: 30, fontWeight: "normal" }}>
@@ -230,7 +248,9 @@ function CirclePost({
                       </div>
                       <Progress
                         strokeColor="var(--accent-lightpink)"
-                        percent={Math.round((pollOption.numvote / totalPollVote) * 100)}
+                        percent={Math.round(
+                          (pollOption.numvote / totalPollVote) * 100
+                        )}
                       />
                     </div>
                   ))}
