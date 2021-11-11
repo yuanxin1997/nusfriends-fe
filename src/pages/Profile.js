@@ -208,8 +208,8 @@ function Profile(props) {
                         label="Level"
                         rules={[
                             {
-                                max: 20,
-                                message: "Maximum of 20 characters only!",
+                                max: 40,
+                                message: "Maximum of 40 characters only!",
                             },
                         ]}
                     >
