@@ -11,7 +11,7 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
   const { TextArea } = Input;
 
   const [name, setName] = useState();
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState("");
 
   const history = useHistory();
 
@@ -57,13 +57,13 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
             onChange={(e) => setName(e.target.value)}
           />
         </Form.Item>
-        <Form.Item label="Circle Description">
+        {/* <Form.Item label="Circle Description">
           <TextArea
             placeholder="Type something..."
             autoSize={{ minRows: 4, maxRows: 8 }}
             onChange={(e) => setDescription(e.target.value)}
           />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

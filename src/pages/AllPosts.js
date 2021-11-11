@@ -32,6 +32,7 @@ import PlaceholderPicture from "../components/PlaceholderPicture";
 import axios from "axios";
 import { Url } from "../constants/global";
 import DeleteModal from "../components/DeleteModal";
+import EditModal from "../components/EditModal";
 
 const { Sider, Content } = Layout;
 
@@ -59,6 +60,12 @@ const AllPosts = () => {
   function closeDeleteModal() {
     setDeleteModalVisible(false);
   }
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const openEditModal = () => setEditModalVisible(true);
+  function closeEditModal() {
+    setEditModalVisible(false);
+  }
+  const [circleCreatedBy, setCircleCreatedBy] = useState();
 
   const loadCachedata = () => {
     const cacheInstance = cacheData;
@@ -72,7 +79,9 @@ const AllPosts = () => {
   const loadMoreData = async () => {
     try {
       await axios.get(`${Url}/circles/circleId/${id}`).then((res) => {
+        console.log(res.data[0]);
         setCircleName(res.data[0].name);
+        setCircleCreatedBy(res.data[0].userid);
       });
 
       const userId = parseInt(localStorage.userId);
@@ -224,31 +233,43 @@ const AllPosts = () => {
               <div style={{ marginLeft: "20px" }}> {subCount} members</div>
 
               <BarWrapper>
-                <Button
-                  type="primary"
-                  icon={<DeleteFilled />}
-                  onClick={
-                    localStorage.userId ? openDeleteModal : rerouteToLogin
-                  }
-                >
-                  Delete This Circle
-                </Button>
-                <DeleteModal
-                  modalVisible={deleteModalVisible}
-                  closeDeleteModal={closeDeleteModal}
-                  type="circle"
-                  id={id}
-                  data={posts}
-                />
-                <Button
-                  type="primary"
-                  icon={<EditFilled />}
-                  onClick={
-                    localStorage.userId ? openCreateModal : rerouteToLogin
-                  }
-                >
-                  Edit This Circle
-                </Button>
+                {circleCreatedBy === parseInt(localStorage.userId) ? (
+                  <>
+                    <Button
+                      type="primary"
+                      icon={<DeleteFilled />}
+                      onClick={
+                        localStorage.userId ? openDeleteModal : rerouteToLogin
+                      }
+                    >
+                      Delete This Circle
+                    </Button>
+                    <DeleteModal
+                      modalVisible={deleteModalVisible}
+                      closeDeleteModal={closeDeleteModal}
+                      type="circle"
+                      id={id}
+                      data={posts}
+                    />
+                    <Button
+                      type="primary"
+                      icon={<EditFilled />}
+                      onClick={
+                        localStorage.userId ? openEditModal : rerouteToLogin
+                      }
+                    >
+                      Edit This Circle
+                    </Button>
+                    <EditModal
+                      modalVisible={editModalVisible}
+                      closeEditModal={closeEditModal}
+                      type="circle"
+                      titlePlaceholder={circleName}
+                      id={id}
+                    />
+                  </>
+                ) : null}
+
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
