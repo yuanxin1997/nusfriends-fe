@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { HeartFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Tag, Avatar } from "antd";
@@ -26,15 +26,19 @@ function CommentsCard({
   const history = useHistory();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const openDeleteModal = () => setDeleteModalVisible(true);
+
   function closeDeleteModal() {
     setDeleteModalVisible(false);
   }
-
   const [editModalVisible, setEditModalVisible] = useState(false);
   const openEditModal = () => setEditModalVisible(true);
   function closeEditModal() {
     setEditModalVisible(false);
   }
+  const [postTags, setPostTags] = useState([]);
+  useEffect(() => {
+    tags.map((tag) => postTags.push(tag.name));
+  }, []);
   return (
     <div style={{ marginBottom: 20 }}>
       <CommentCard>
@@ -164,6 +168,7 @@ function CommentsCard({
                       titlePlaceholder={title}
                       descriptionPlaceholder={description}
                       id={id}
+                      tags={postTags}
                     />
                   </div>
                 ) : (

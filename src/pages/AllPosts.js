@@ -37,7 +37,9 @@ const AllPosts = () => {
   let { id } = useParams();
   const [subscribers, setSubscribers] = useState([]);
   const [subCount, setSubCount] = useState();
+
   const [cacheData, setCacheData] = useState([]);
+
 
   // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
@@ -45,6 +47,7 @@ const AllPosts = () => {
   function closeCreateModal() {
     setModalVisible(false);
   }
+
 
   const loadCachedata = () => {
     const cacheInstance = cacheData;
