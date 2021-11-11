@@ -573,24 +573,26 @@ function Profile(props) {
                                         padding: "16px 24px",
                                     }}
                                 >
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            marginBottom: "8px",
-                                        }}
-                                    >
-                                        <Button
-                                            type="primary"
-                                            icon={<MessageOutlined />}
-                                            onClick={() =>
-                                                setMessageVisible(true)
-                                            }
+                                    {!owner && (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                marginBottom: "8px",
+                                            }}
                                         >
-                                            Message!
-                                        </Button>
-                                        {MessageModal()}
-                                    </div>
+                                            <Button
+                                                type="primary"
+                                                icon={<MessageOutlined />}
+                                                onClick={() =>
+                                                    setMessageVisible(true)
+                                                }
+                                            >
+                                                Message!
+                                            </Button>
+                                            {MessageModal()}
+                                        </div>
+                                    )}
                                     <div
                                         style={{
                                             color: "var(--base-40)",
