@@ -75,14 +75,11 @@ function CirclePost({
       user: { userId: parseInt(localStorage.userId) },
       options: [{ optionId: parseInt(optionId) }],
     };
-    console.log(updateOption);
-    console.log(value);
     await axios.post(`${Url}/options/submit`, updateOption);
     setRefreshComponent(!refreshComponent);
   };
 
   const onChange = (e) => {
-    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
 
@@ -91,12 +88,10 @@ function CirclePost({
       await axios
         .get(`${Url}/polls/${postId}?userId=${parseInt(localStorage.userId)}`)
         .then((res) => {
-          console.log(JSON.stringify(res.data));
           setCurrPollOptions(res.data.options);
           handleTotalVote(res.data.options);
           setPoll(res.data);
           checkHasPolled(res.data.options);
-          console.log(polled);
         });
     } catch (error) {
       console.log(error);
@@ -107,8 +102,6 @@ function CirclePost({
 
   function checkHasPolled(data) {
     for (let i = 0; i < data.length; i++) {
-      console.log(data[i]);
-      console.log("curr: " + data[i].curuservoted);
       if (data[i].curuservoted === true) {
         setCurrUserVote(data[i].optioncontent);
         setHasPolled(true);
@@ -120,12 +113,8 @@ function CirclePost({
   let total = 0;
   async function handleTotalVote(data) {
     for (let i = 0; i < data.length; i++) {
-      console.log(data[i].numvote);
-      console.log("curr num vote: " + data[i].numvote);
       total += parseInt(data[i].numvote);
-      console.log("total: " + total);
     }
-    console.log("end");
     setTotalPollVote(total);
   }
 
@@ -142,8 +131,6 @@ function CirclePost({
       setHasLiked(curUserLiked);
       setTotalLikes(numLikes);
       fetchPoll();
-      console.log("total: " + totalPollVote);
-      console.log("hasPolled: " + hasPolled);
     } else {
       setLoading(false);
     }

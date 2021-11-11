@@ -24,7 +24,11 @@ function EditModal({
   const [loading, setLoading] = useState(true);
 
   const editCircle = async () => {
-    await axios.put(`${Url}/`);
+    const circle = {
+      name: title,
+      description: "description",
+    };
+    await axios.put(`${Url}/circles/${id}`, { circle });
     closeEditModal();
     history.go(0);
   };
@@ -97,7 +101,7 @@ function EditModal({
         <Modal
           title={
             type === "circle"
-              ? "Edit circle"
+              ? "Edit Circle"
               : type === "post"
               ? "Edit Post"
               : type === "poll"
@@ -160,7 +164,7 @@ function EditModal({
               />
             </Form.Item>
 
-            {type === "circle" || type === "post" ? (
+            {type === "post" ? (
               <Form.Item
                 label={
                   type === "circle" ? "Circle Description" : "Post Content"
@@ -187,8 +191,8 @@ function EditModal({
               </Form.Item>
             ) : null}
 
-            <Form.Item label="Tags">
-              {tags && (
+            {tags && (
+              <Form.Item label="Tags">
                 <Select
                   mode="tags"
                   style={{ width: "100%" }}
@@ -200,8 +204,8 @@ function EditModal({
                 >
                   {dbTags}
                 </Select>
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
           </Form>
         </Modal>
       )}
