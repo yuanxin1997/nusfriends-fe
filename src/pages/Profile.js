@@ -1,6 +1,7 @@
 import {
     InstagramOutlined,
     MailOutlined,
+    MessageOutlined,
     PhoneOutlined,
     WhatsAppOutlined,
 } from "@ant-design/icons";
@@ -27,6 +28,7 @@ import { Url } from "../constants/global";
 function Profile(props) {
     const profileId = props.match.params.id;
     const [userProfile, setUserProfile] = useState(null);
+    const [userStats, setUserStats] = useState(null);
     const [userTags, setUserTags] = useState(null);
     const loggedInUser = localStorage.getItem("userId");
     const [owner, setOwner] = useState(false);
@@ -36,6 +38,7 @@ function Profile(props) {
     const [error, setError] = useState(null);
     const [tags, setTags] = useState([]);
     const [toAddTags, setToAddTags] = useState(null);
+    const [messageVisible, setMessageVisible] = useState(false);
 
     useEffect(() => {
         loadProfileUser();
@@ -49,10 +52,26 @@ function Profile(props) {
                 .get(`${Url}/users/${profileId}`)
                 .then((res) => {
                     setUserProfile(res.data[0]);
-                    console.log(res.data);
                     if (res.data[0].userid == loggedInUser) {
                         setOwner(true);
                     }
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        console.log(error.response.data);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log("Error", error.message);
+                    }
+                    //setPending(false);
+                    console.log(error.config);
+                });
+            axios
+                .get(`${Url}/users/${profileId}/stats`)
+                .then((res) => {
+                    setUserStats(res.data[0]);
                 })
                 .catch(function (error) {
                     if (error.response) {
@@ -103,7 +122,6 @@ function Profile(props) {
             tags.forEach((tag) => {
                 children.push(<Option key={tag.name}>{tag.name}</Option>);
             });
-            console.log(children);
             setTags(children);
         });
     };
@@ -338,7 +356,7 @@ function Profile(props) {
                     loadProfileUser();
                     loadUserTags();
                     loadDbTags();
-                    message.success("Tags added successfully!");
+                    message.success("Tags updated successfully!");
                 } else {
                     message.error("Error Code: ", res.status);
                 }
@@ -360,6 +378,114 @@ function Profile(props) {
                 }
                 //setEditLoading(false);
                 setTagVisible(false);
+                console.log(error.config);
+            });
+    };
+
+    const [messageForm] = Form.useForm();
+    const MessageModal = () => {
+        return (
+            <Modal
+                visible={messageVisible}
+                title={`Drop ${userProfile.name} a message`}
+                okText="Send"
+                onCancel={() => {
+                    setMessageVisible(false);
+                }}
+                onOk={() => {
+                    messageForm
+                        .validateFields()
+                        .then((values) => {
+                            //setEditLoading(true);
+                            sendMessage(values);
+                            messageForm.resetFields();
+                        })
+                        .catch((info) => {
+                            console.log("Validate Failed: ", info);
+                        });
+                }}
+                okButtonProps={{
+                    type: "primary",
+                    //loading: editLoading ? true : false,
+                }}
+                cancelButtonProps={{ type: "default" }}
+            >
+                <Form
+                    form={messageForm}
+                    layout="vertical"
+                    name="message_form"
+                    requiredMark={false}
+                >
+                    <Form.Item
+                        name="message"
+                        label="Message"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Message content cannot be empty.",
+                            },
+                        ]}
+                        style={{ marginBottom: "16px" }}
+                    >
+                        <Input.TextArea
+                            showCount={true}
+                            maxLength="500"
+                            placeholder="Write your message here..."
+                            rows={4}
+                        />
+                    </Form.Item>
+                </Form>
+            </Modal>
+        );
+    };
+
+    const sendMessage = async (values) => {
+        const data = {
+            message: {
+                content: values.message,
+                receivedUserId: userProfile.userid,
+            },
+            user: {
+                userId: parseInt(loggedInUser),
+            },
+        };
+
+        console.log(data);
+
+        await axios
+            .post(
+                `${Url}/messages`,
+                {
+                    ...data,
+                },
+                {
+                    headers: {
+                        authorization: localStorage.getItem("jwt"),
+                    },
+                }
+            )
+            .then((res) => {
+                if (res.status == 200) {
+                    setMessageVisible(false);
+                    //setEditVisible(false);
+                    message.success("Message sent!");
+                } else {
+                    message.error("Error Code: ", res.status);
+                }
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    setError(error.response.data);
+                } else if (error.request) {
+                    console.log(error.request);
+                    setError(error.request.data);
+                } else {
+                    console.log("Error", error.message);
+                    setError(error.message);
+                }
+                //setEditLoading(false);
+                setMessageVisible(false);
                 console.log(error.config);
             });
     };
@@ -447,6 +573,24 @@ function Profile(props) {
                                         padding: "16px 24px",
                                     }}
                                 >
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            marginBottom: "8px",
+                                        }}
+                                    >
+                                        <Button
+                                            type="primary"
+                                            icon={<MessageOutlined />}
+                                            onClick={() =>
+                                                setMessageVisible(true)
+                                            }
+                                        >
+                                            Message!
+                                        </Button>
+                                        {MessageModal()}
+                                    </div>
                                     <div
                                         style={{
                                             color: "var(--base-40)",
@@ -562,35 +706,43 @@ function Profile(props) {
                                 /> */}
                             </Col>
                             <Col span={15}>
-                                <Row
-                                    justify="space-around"
-                                    style={{ marginBottom: "36px" }}
-                                >
-                                    <Col>
-                                        <h1>12</h1>
-                                        <div
-                                            style={{ color: "var(--base-20)" }}
-                                        >
-                                            POSTS
-                                        </div>
-                                    </Col>
-                                    <Col>
-                                        <h1>12</h1>
-                                        <div
-                                            style={{ color: "var(--base-20)" }}
-                                        >
-                                            LIKES
-                                        </div>
-                                    </Col>
-                                    <Col>
-                                        <h1>12</h1>
-                                        <div
-                                            style={{ color: "var(--base-20)" }}
-                                        >
-                                            FOLLOWERS
-                                        </div>
-                                    </Col>
-                                </Row>
+                                {userStats && (
+                                    <Row
+                                        justify="space-around"
+                                        style={{ marginBottom: "36px" }}
+                                    >
+                                        <Col>
+                                            <h1>{userStats.no_posts}</h1>
+                                            <div
+                                                style={{
+                                                    color: "var(--base-20)",
+                                                }}
+                                            >
+                                                POSTS
+                                            </div>
+                                        </Col>
+                                        <Col>
+                                            <h1>{userStats.no_likes}</h1>
+                                            <div
+                                                style={{
+                                                    color: "var(--base-20)",
+                                                }}
+                                            >
+                                                LIKES
+                                            </div>
+                                        </Col>
+                                        <Col>
+                                            <h1>{userStats.no_followers}</h1>
+                                            <div
+                                                style={{
+                                                    color: "var(--base-20)",
+                                                }}
+                                            >
+                                                FOLLOWERS
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                )}
                                 {/* tags */}
                                 <div
                                     style={{
@@ -630,16 +782,18 @@ function Profile(props) {
                                                     </Tag>
                                                 </Col>
                                             ))}
-                                        <Col>
-                                            <AddTag
-                                                onClick={() =>
-                                                    setTagVisible(true)
-                                                }
-                                            >
-                                                + Add
-                                            </AddTag>
-                                            {<TagModal />}
-                                        </Col>
+                                        {owner && (
+                                            <Col>
+                                                <AddTag
+                                                    onClick={() =>
+                                                        setTagVisible(true)
+                                                    }
+                                                >
+                                                    + Add
+                                                </AddTag>
+                                                {<TagModal />}
+                                            </Col>
+                                        )}
                                     </Row>
                                 </div>
                             </Col>
