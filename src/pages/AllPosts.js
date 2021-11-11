@@ -13,8 +13,14 @@ import {
   List,
   Skeleton,
   Divider,
+  message,
 } from "antd";
-import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  WarningOutlined,
+  EditFilled,
+  DeleteFilled,
+} from "@ant-design/icons";
 import styled from "styled-components";
 
 import SideBar from "../components/SideBar";
@@ -40,14 +46,12 @@ const AllPosts = () => {
 
   const [cacheData, setCacheData] = useState([]);
 
-
   // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
     setModalVisible(false);
   }
-
 
   const loadCachedata = () => {
     const cacheInstance = cacheData;
@@ -104,6 +108,19 @@ const AllPosts = () => {
       console.log(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (posts.length > 0) {
+      notification["warning"]({
+        message: "Unable to delete",
+        description: "You cannot delete a circle with existing posts",
+      });
+    } else {
+      await axios.delete(`${Url}/circles/${id}`);
+      history.push("/");
+      message.success('Sucessfully deleted a circle');
     }
   };
 
@@ -212,11 +229,23 @@ const AllPosts = () => {
               </div>
               <div style={{ marginLeft: "20px" }}> {subCount} members</div>
 
-              <div
-                style={{
-                  marginLeft: "auto",
-                }}
-              >
+              <BarWrapper>
+                <Button
+                  type="primary"
+                  icon={<DeleteFilled />}
+                  onClick={localStorage.userId ? handleDelete : rerouteToLogin}
+                >
+                  Delete This Circle
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<EditFilled />}
+                  onClick={
+                    localStorage.userId ? openCreateModal : rerouteToLogin
+                  }
+                >
+                  Edit This Circle
+                </Button>
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
@@ -224,14 +253,14 @@ const AllPosts = () => {
                     localStorage.userId ? openCreateModal : rerouteToLogin
                   }
                 >
-                  Create a New Post
+                  Create New Post
                 </Button>
                 <CreatePostModal
                   modalVisible={modalVisible}
                   closeCreateModal={closeCreateModal}
                   circleId={id}
                 />
-              </div>
+              </BarWrapper>
             </Row>
             <div
               style={{
@@ -282,6 +311,13 @@ const AllPosts = () => {
 
 const UserGroupWrapper = styled.div`
   margin: 1rem 0 0.5rem 0;
+`;
+
+const BarWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-left: auto;
 `;
 
 export default AllPosts;
