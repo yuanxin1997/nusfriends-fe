@@ -48,9 +48,14 @@ const AllPosts = () => {
         setCircleName(res.data[0].name);
       });
 
-      await axios.get(`${Url}/posts/circle/${id}`).then((res) => {
-        setPosts(res.data);
-      });
+      const userId = parseInt(localStorage.userId);
+
+      await axios
+        .get(`${Url}/posts/circle/${id}?userId=${userId}`)
+        .then((res) => {
+          console.log(res.data);
+          setPosts(res.data);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -226,6 +231,7 @@ const AllPosts = () => {
                   posterId={post.userid}
                   postType={post.posttype}
                   polled={false}
+                  curUserLiked={post.curuserliked}
                 />
               ))}
             </div>
