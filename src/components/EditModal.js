@@ -158,10 +158,23 @@ function EditModal({
               ]}
               onChange={(e) => setTitle(e.target.value)}
             >
-              <TextArea
-                placeholder="Type something..."
-                defaultValue={titlePlaceholder}
-              />
+              {type === "comment" ? (
+                <FroalaEditorComponent
+                  model={titlePlaceholder}
+                  config={{
+                    placeholderText: "Edit Your Content Here!",
+                  }}
+                  onModelChange={(value) => {
+                    setTitle(value);
+                  }}
+                  tag="textarea"
+                />
+              ) : (
+                <TextArea
+                  placeholder="Type something..."
+                  defaultValue={titlePlaceholder}
+                />
+              )}
             </Form.Item>
 
             {type === "post" ? (
