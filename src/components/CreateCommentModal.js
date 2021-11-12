@@ -31,11 +31,17 @@ function CreateCommentModal({ modalVisible, closeCreateModal, postId }) {
     history.go(0);
   };
 
+  const onCancel = () => {
+    form.resetFields();
+    closeCreateModal();
+    setContent();
+  };
+
   return (
     <Modal
       title="Create Comment"
       visible={modalVisible}
-      onCancel={() => closeCreateModal()}
+      onCancel={onCancel}
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
       okText="Comment"
       width={850}
