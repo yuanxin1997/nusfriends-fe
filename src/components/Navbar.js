@@ -116,22 +116,27 @@ function Navbar(props) {
   }
   // web socket START HERE ================
 
+  // useEffect(() => {
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3030/nus-friends");
-
-    ws.onopen = function open(event) {
+    const websocket = new WebSocket(
+      `ws://localhost:3030/nus-friends?userId=${localStorage.getItem("userId")}`
+    );
+    websocket.onopen = () => {
       console.log("connected");
-      ws.send(Date.now());
     };
-
-    ws.onclose = function close(event) {
-      console.log("disconnected");
+    websocket.onmessage = (e) => {
+      trigger();
     };
-
-    ws.onmessage = function incoming(event) {
-      console.log(event.data);
+    return () => {
+      websocket.close();
     };
   }, []);
+
+  function trigger() {
+    loadData();
+  }
+
+  // }, []);
 
   // web socket END HERE ================
   const notificationMenu = (
