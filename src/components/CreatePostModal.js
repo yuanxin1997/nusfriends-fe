@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Form, Radio, Row, Col, Select, Spin } from "antd";
+import {
+  Modal,
+  Input,
+  Form,
+  Radio,
+  Row,
+  Col,
+  Select,
+  Spin,
+  Button,
+} from "antd";
 
 import { useHistory } from "react-router-dom";
 import FroalaEditorComponent from "react-froala-wysiwyg";
@@ -71,7 +81,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
     form.resetFields();
   };
 
-  const handleCreatePoll2 = async () => {
+  const handleCreatePoll2 = async ({ option1, option2 }) => {
     const poll = {
       user: {
         userId: localStorage.userId,
@@ -88,7 +98,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
     history.go(0);
     form.resetFields();
   };
-  const handleCreatePoll3 = async () => {
+  const handleCreatePoll3 = async ({ option1, option2, option3 }) => {
     const poll = {
       user: {
         userId: localStorage.userId,
@@ -109,7 +119,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
     history.go(0);
     form.resetFields();
   };
-  const handleCreatePoll4 = async () => {
+  const handleCreatePoll4 = async ({ option1, option2, option3, option4 }) => {
     const poll = {
       user: {
         userId: localStorage.userId,
@@ -137,6 +147,33 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
     console.log("tags" + JSON.stringify(tags));
   }, []);
 
+  const onFinish = (values) => {
+    const { option1, option2, option3, option4 } = values;
+    if (type === "discussion") {
+      if (!description) {
+        form.setFields([
+          {
+            name: ["body"],
+            value: "",
+            errors: [`Body cannot be empty!`],
+          },
+        ]);
+      } else {
+      }
+      handleCreatePost();
+    } else {
+      if (option4) {
+        alert("4");
+        handleCreatePoll4({ option1, option2, option3, option4 });
+      } else if (option3) {
+        alert("3");
+        handleCreatePoll3({ option1, option2, option3 });
+      } else {
+        alert("2");
+        handleCreatePoll2({ option1, option2 });
+      }
+    }
+  };
   return (
     <div>
       {loading ? (
@@ -148,17 +185,8 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
           onCancel={onCancel}
           destroyOnClose={true}
           cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
-          okText="Create Post"
           width={850}
-          onOk={
-            type === "discussion"
-              ? handleCreatePost
-              : numPollOption === "2"
-              ? handleCreatePoll2
-              : numPollOption === "3"
-              ? handleCreatePoll3
-              : handleCreatePoll4
-          }
+          footer={null}
         >
           <Form
             layout={"vertical"}
@@ -166,44 +194,38 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
             initialValues={{
               layout: "vertical",
             }}
+            onFinish={onFinish}
+            requiredMark={false}
           >
-            <Form.Item
-              label="Post Type"
-              name="layout"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input title of post!",
-                },
-              ]}
-            >
-              <Radio.Group value={"discussion"}>
-                <Radio.Button
-                  value="discussion"
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: 105,
-                    textAlign: "center",
-                  }}
-                  onClick={() => setType("discussion")}
-                  checked={true}
-                >
-                  <p>Discussion</p>
-                </Radio.Button>
-                <Radio.Button
-                  value="poll"
-                  style={{
-                    marginRight: "20px",
-                    width: 105,
-                    textAlign: "center",
-                  }}
-                  onClick={() => setType("poll")}
-                >
-                  <p style={{ color: "#fffffff" }}>Poll</p>
-                </Radio.Button>
-              </Radio.Group>
-            </Form.Item>
+            <div style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
+              Post Type
+            </div>
+            <Radio.Group value={type}>
+              <Radio.Button
+                value="discussion"
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 105,
+                  textAlign: "center",
+                  marginBottom: "1.5rem",
+                }}
+                onClick={() => setType("discussion")}
+              >
+                <p>Discussion</p>
+              </Radio.Button>
+              <Radio.Button
+                value="poll"
+                style={{
+                  marginRight: "20px",
+                  width: 105,
+                  textAlign: "center",
+                }}
+                onClick={() => setType("poll")}
+              >
+                <p style={{ color: "#fffffff" }}>Poll</p>
+              </Radio.Button>
+            </Radio.Group>
 
             <Form.Item
               label={type === "discussion" ? "Discussion Title" : "Poll Title"}
@@ -225,16 +247,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
             </Form.Item>
 
             {type === "discussion" ? (
-              <Form.Item
-                label="Discussion Body"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input body of discussion!",
-                  },
-                ]}
-                name="body"
-              >
+              <Form.Item label="Discussion Body" name="body">
                 <FroalaEditorComponent
                   config={{
                     placeholderText: "Edit Your Content Here!",
@@ -247,16 +260,7 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
               </Form.Item>
             ) : (
               <div>
-                <Form.Item
-                  label="Number of Poll Options"
-                  name="numoptions"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select number of poll options",
-                    },
-                  ]}
-                >
+                <Form.Item label="Number of Poll Options" name="numoptions">
                   <Select
                     defaultValue="2"
                     onChange={(value) => {
@@ -268,56 +272,73 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                     <Option value="4">4</Option>
                   </Select>
                 </Form.Item>
+                <div style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
+                  Poll Options
+                </div>
                 <Form.Item
-                  label="Poll Options"
                   rules={[
                     {
                       required: true,
-                      message: "Please all selected input poll options!",
+                      message: "Please enter your inputs!",
                     },
                   ]}
-                  name="polloption"
+                  name="option1"
                 >
                   <Input
-                    style={{ marginBottom: 5 }}
                     placeholder="Option 1"
-                    onChange={(e) => {
-                      setOption1(e.target.value);
-                    }}
-                    name="option1"
+                    onChange={(e) => setOption1(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your inputs!",
+                    },
+                  ]}
+                  name="option2"
+                >
+                  <Input
+                    style={{ top: "-1rem" }}
+                    placeholder="Option 2"
+                    onChange={(e) => setOption2(e.target.value)}
+                  />
+                </Form.Item>
+
+                {(numPollOption === "3" || numPollOption === "4") && (
+                  <Form.Item
                     rules={[
                       {
                         required: true,
-                        message: "Please all selected input poll options!",
+                        message: "Please enter your inputs!",
                       },
                     ]}
-                  />
-                  <Input
-                    style={{ marginBottom: 5 }}
-                    placeholder="Option 2"
-                    onChange={(e) => {
-                      setOption2(e.target.value);
-                    }}
-                  />
-                  {numPollOption === "3" || numPollOption === "4" ? (
+                    name="option3"
+                  >
                     <Input
-                      style={{ marginBottom: 5 }}
+                      style={{ top: "-2rem" }}
                       placeholder="Option 3"
-                      onChange={(e) => {
-                        setOption3(e.target.value);
-                      }}
+                      onChange={(e) => setOption3(e.target.value)}
                     />
-                  ) : null}
-                  {numPollOption === "4" ? (
+                  </Form.Item>
+                )}
+                {numPollOption === "4" && (
+                  <Form.Item
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your inputs!",
+                      },
+                    ]}
+                    name="option4"
+                  >
                     <Input
-                      style={{ marginBottom: 5 }}
+                      style={{ top: "-3rem" }}
                       placeholder="Option 4"
-                      onChange={(e) => {
-                        setOption4(e.target.value);
-                      }}
+                      onChange={(e) => setOption4(e.target.value)}
                     />
-                  ) : null}
-                </Form.Item>
+                  </Form.Item>
+                )}
               </div>
             )}
 
@@ -339,6 +360,11 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
                 {/* <Input placeholder="Search Tags..." /> */}
               </Col>
             </Row>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Done
+              </Button>
+            </Form.Item>
           </Form>
         </Modal>
       )}

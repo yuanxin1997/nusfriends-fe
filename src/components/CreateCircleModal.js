@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Input, Form, Radio, Row, Col } from "antd";
+import { Modal, Input, Form, Radio, Row, Col, Button } from "antd";
 import { CommentOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -34,36 +34,47 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
     history.go(0);
   };
 
+  const onFinish = () => {
+    onCreate();
+  };
+
   return (
     <Modal
       title="Create New Circle"
       visible={modalVisible}
       onCancel={() => closeCreateModal()}
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
-      okText="Create Circle"
       width={850}
-      onOk={() => onCreate()}
+      footer={null}
     >
       <Form
         layout={"vertical"}
         form={form}
+        onFinish={onFinish}
         initialValues={{
           layout: "vertical",
         }}
       >
-        <Form.Item label="Circle Title">
+        <Form.Item
+          name="title"
+          label="Circle Title"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input
             placeholder="Type something..."
             onChange={(e) => setName(e.target.value)}
           />
         </Form.Item>
-        {/* <Form.Item label="Circle Description">
-          <TextArea
-            placeholder="Type something..."
-            autoSize={{ minRows: 4, maxRows: 8 }}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Form.Item> */}
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Create circle
+          </Button>
+        </Form.Item>
       </Form>
     </Modal>
   );
