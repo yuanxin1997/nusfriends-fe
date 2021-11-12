@@ -82,20 +82,27 @@ function Navbar(props) {
 
     const loadData = async () => {
         console.log("loading data");
-        try {
-            const { data: results } = await axios.get(
-                `${Url}/notifications/userId/${localStorage.getItem("userId")}`
-            );
-            console.log(results);
-            const cacheInstance = [...results];
-            // cacheInstance.splice(0,7); testing UI
-            const lengthToRetrieve =
-                cacheInstance.length >= 8 ? 8 : cacheInstance.length;
-            const unloadedCacheData = cacheInstance.splice(0, lengthToRetrieve);
-            setCacheData(cacheInstance);
-            setData(unloadedCacheData);
-        } catch (error) {
-            console.error(error);
+        if (localStorage.getItem("userId")) {
+            try {
+                const { data: results } = await axios.get(
+                    `${Url}/notifications/userId/${localStorage.getItem(
+                        "userId"
+                    )}`
+                );
+                console.log(results);
+                const cacheInstance = [...results];
+                // cacheInstance.splice(0,7); testing UI
+                const lengthToRetrieve =
+                    cacheInstance.length >= 8 ? 8 : cacheInstance.length;
+                const unloadedCacheData = cacheInstance.splice(
+                    0,
+                    lengthToRetrieve
+                );
+                setCacheData(cacheInstance);
+                setData(unloadedCacheData);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -339,26 +346,28 @@ function Navbar(props) {
 
             {user != null && (
                 <Row align="middle" gutter={[16, 0]}>
-                    <Col>
-                        <Dropdown
-                            overlay={notificationMenu}
-                            trigger={["click"]}
-                            placement="bottomCenter"
-                            arrow
-                        >
-                            {data.length > 0 ? (
-                                <Badge dot>
+                    {user && (
+                        <Col>
+                            <Dropdown
+                                overlay={notificationMenu}
+                                trigger={["click"]}
+                                placement="bottomCenter"
+                                arrow
+                            >
+                                {data.length > 0 ? (
+                                    <Badge dot>
+                                        <NotificationWrapper>
+                                            <BellFilled />
+                                        </NotificationWrapper>
+                                    </Badge>
+                                ) : (
                                     <NotificationWrapper>
                                         <BellFilled />
                                     </NotificationWrapper>
-                                </Badge>
-                            ) : (
-                                <NotificationWrapper>
-                                    <BellFilled />
-                                </NotificationWrapper>
-                            )}
-                        </Dropdown>
-                    </Col>
+                                )}
+                            </Dropdown>
+                        </Col>
+                    )}
                     <Col>
                         <AutoComplete
                             style={{ width: 250 }}

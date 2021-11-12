@@ -144,7 +144,11 @@ const MyInbox = () => {
                                     }}
                                     size="large"
                                   >
-                                    <span style={{ fontSize: "var(--fs-b1" }}>
+                                    <span
+                                      style={{
+                                        fontSize: "var(--fs-b1",
+                                      }}
+                                    >
                                       {item.name.charAt(0)}
                                     </span>
                                   </Avatar>
