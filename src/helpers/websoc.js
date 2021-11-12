@@ -2,7 +2,7 @@ import WebSocket from "isomorphic-ws";
 
 export const wsTrigger = (id) => {
     const websocket = new WebSocket(
-        `wss://nusfriends-be.herokuapp.com/nus-friends?userId=${id}`
+        `wss://nusfriends-be.herokuapp.com:3030/nus-friends?userId=${id}`
     );
     websocket.onopen = () => {
         websocket.send(JSON.stringify(id));

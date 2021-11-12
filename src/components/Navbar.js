@@ -132,7 +132,7 @@ function Navbar(props) {
     // useEffect(() => {
     useEffect(() => {
         const websocket = new WebSocket(
-            `wss://nusfriends-be.herokuapp.com/nus-friends?userId=${localStorage.getItem(
+            `wss://nusfriends-be.herokuapp.com:3030/nus-friends?userId=${localStorage.getItem(
                 "userId"
             )}`
         );
