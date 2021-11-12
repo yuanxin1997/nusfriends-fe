@@ -106,7 +106,11 @@ function Comments(props) {
         <Spin />
       ) : (
         <Layout
-          style={{ height: "100vh", backgroundColor: "var(--accent-bg)" }}
+          style={{
+            height: "100%",
+            minHeight: "100vp",
+            backgroundColor: "var(--accent-bg)",
+          }}
         >
           <Sider style={{ backgroundColor: "var(--accent-bg)" }}>
             <SideBar tabData={tabData} />
@@ -196,7 +200,7 @@ function Comments(props) {
                 />
               )}
 
-              {comments.reverse().map((comment) => (
+              {comments.map((comment) => (
                 <CommentsCard
                   type="comment"
                   description={comment.content}
