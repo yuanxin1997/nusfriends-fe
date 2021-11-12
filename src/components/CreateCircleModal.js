@@ -38,11 +38,18 @@ function CreateCircleModal({ modalVisible, closeCreateModal }) {
     onCreate();
   };
 
+  const onCancel = () => {
+    form.resetFields();
+    closeCreateModal();
+    setName();
+    setDescription("");
+    console.log("cancel");
+  };
   return (
     <Modal
       title="Create New Circle"
       visible={modalVisible}
-      onCancel={() => closeCreateModal()}
+      onCancel={onCancel}
       cancelButtonProps={{ displayed: "none", style: { display: "none" } }}
       width={850}
       footer={null}

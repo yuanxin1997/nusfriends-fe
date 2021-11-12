@@ -93,8 +93,9 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-    closeCreateModal();
+    setLoading(true);
     await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
     history.go(0);
     form.resetFields();
   };
@@ -114,8 +115,9 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-    closeCreateModal();
+    setLoading(true);
     await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
     history.go(0);
     form.resetFields();
   };
@@ -136,8 +138,9 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
         tags: toAdd,
       },
     };
-    closeCreateModal();
+    setLoading(true);
     await axios.post(`${Url}/polls`, poll);
+    closeCreateModal();
     history.go(0);
     form.resetFields();
   };
@@ -163,13 +166,10 @@ function CreatePostModal({ modalVisible, closeCreateModal, circleId }) {
       handleCreatePost();
     } else {
       if (option4) {
-        alert("4");
         handleCreatePoll4({ option1, option2, option3, option4 });
       } else if (option3) {
-        alert("3");
         handleCreatePoll3({ option1, option2, option3 });
       } else {
-        alert("2");
         handleCreatePoll2({ option1, option2 });
       }
     }

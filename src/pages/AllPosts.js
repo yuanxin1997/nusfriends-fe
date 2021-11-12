@@ -143,6 +143,8 @@ const AllPosts = () => {
       if (data[i].userid === parseInt(localStorage.userId)) {
         setIsSubscriber(true);
         break;
+      } else {
+        setIsSubscriber(false);
       }
     }
   }
