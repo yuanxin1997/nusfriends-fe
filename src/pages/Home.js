@@ -122,7 +122,7 @@ function Home() {
                                                 post.classification
                                             }
                                             posterId={post.userid}
-                                            currUserLiked={post.curuserliked}
+                                            curUserLiked={post.curuserliked}
                                             postedPhoto={post.photo}
                                             postType={post.posttype}
                                         />
