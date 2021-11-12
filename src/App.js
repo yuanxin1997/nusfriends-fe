@@ -19,12 +19,12 @@ import axios from "axios";
 
 import Comments from "./pages/Comments";
 function App() {
-  const [userId, setUserId] = useState(localStorage.userId);
+    const [userId, setUserId] = useState(localStorage.userId);
 
-  const [currentUser, setCurrentUser] = useState(null);
-  
+    const [currentUser, setCurrentUser] = useState(null);
+
     useEffect(() => {
-        if (userId !== null) {
+        if (userId) {
             axios
                 .get(`${Url}/users/${userId}`)
                 .then((res) => {
@@ -104,16 +104,15 @@ function App() {
                         component={Messages}
                     />
                     <Route exact path="/circle/:id" />
-                      <Route
-            exact
-            path="/my-circles/:circleId/:postId/comments"
-            component={Comments}
-          />
+                    <Route
+                        exact
+                        path="/my-circles/:circleId/:postId/comments"
+                        component={Comments}
+                    />
                 </Switch>
             </div>
         </BrowserRouter>
     );
-
 }
 
 export default App;
