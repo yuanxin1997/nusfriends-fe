@@ -172,6 +172,7 @@ function Comments(props) {
                   posterId={post.userid}
                   tags={post.tags}
                   postType={post.posttype}
+                  postedDate={post.createdat}
                   comments={comments}
                 />
               ) : (
