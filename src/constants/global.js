@@ -1,3 +1,3 @@
-const Url = "http://localhost:8080";
+const Url = "https://nusfriends-be.herokuapp.com";
 
 export { Url };

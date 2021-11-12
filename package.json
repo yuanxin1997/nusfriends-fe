@@ -1,70 +1,69 @@
 {
-  "name": "nusfriends-fe",
-  "version": "0.1.0",
-  "private": true,
-  "type" : "module",
-  "dependencies": {
-    "@ant-design/icons": "^4.7.0",
-    "antd": "^4.16.13",
-    "axios": "^0.23.0",
-    "babel-plugin-styled-components": "^1.13.2",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "cra-template": "1.1.2",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-jwt": "^6.1.0",
-    "froala-editor": "^4.0.6",
-    "is-empty": "^1.2.0",
-    "isomorphic-ws": "^4.0.1",
-    "jsonwebtoken": "^8.5.1",
-    "jwt-decode": "^3.1.2",
-    "moment": "^2.29.1",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.12",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-froala-wysiwyg": "^4.0.6",
-    "react-helmet": "^6.1.0",
-    "react-infinite-scroll-component": "^6.1.0",
-    "react-router": "^5.2.1",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
-    "react-use": "^17.3.1",
-    "styled-components": "^5.3.1",
-    "use-debounce": "^7.0.1",
-    "validator": "^13.6.0",
-    "ws": "^8.2.3"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "scss": "node-sass -w public/scss -o public/css"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "node-sass": "^6.0.1",
-    "web-vitals": "^2.1.0"
-  }
+    "name": "nusfriends-fe",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@ant-design/icons": "^4.7.0",
+        "antd": "^4.16.13",
+        "axios": "^0.23.0",
+        "babel-plugin-styled-components": "^1.13.2",
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "cra-template": "1.1.2",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "express-jwt": "^6.1.0",
+        "froala-editor": "^4.0.6",
+        "is-empty": "^1.2.0",
+        "isomorphic-ws": "^4.0.1",
+        "jsonwebtoken": "^8.5.1",
+        "jwt-decode": "^3.1.2",
+        "moment": "^2.29.1",
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.12",
+        "prop-types": "^15.7.2",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-froala-wysiwyg": "^4.0.6",
+        "react-helmet": "^6.1.0",
+        "react-infinite-scroll-component": "^6.1.0",
+        "react-router": "^5.2.1",
+        "react-router-dom": "^5.3.0",
+        "react-scripts": "4.0.3",
+        "react-use": "^17.3.1",
+        "styled-components": "^5.3.1",
+        "use-debounce": "^7.0.1",
+        "validator": "^13.6.0",
+        "ws": "^8.2.3"
+    },
+    "scripts": {
+        "start": "node --max_old_space_size=2560 node_modules/.bin/react-scripts start",
+        "build": "node --max_old_space_size=2560 node_modules/.bin/react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "node-sass": "^6.0.1",
+        "web-vitals": "^2.1.0"
+    }
 }
