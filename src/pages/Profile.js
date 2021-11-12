@@ -31,6 +31,7 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { Url } from "../constants/global";
 import { generateDarkColorHex } from "../helpers/helper";
+import { wsTrigger } from "../helpers/websoc";
 
 function Profile(props) {
     const profileId = props.match.params.id;
@@ -497,6 +498,8 @@ function Profile(props) {
                     setMessageVisible(false);
                     //setEditVisible(false);
                     message.success("Message sent!");
+                    wsTrigger(userProfile.userid);
+                    
                 } else {
                     message.error("Error Code: ", res.status);
                 }

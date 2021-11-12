@@ -13,6 +13,7 @@ import {
   AutoComplete,
   Input,
   Select,
+  notification,
 } from "antd";
 import Search from "antd/lib/input/Search";
 import React, { useState, useEffect } from "react";
@@ -34,6 +35,13 @@ function Navbar(props) {
   const [curRoute, setCurRoute] = useState("/");
   const location = useLocation();
   const history = useHistory();
+
+  const openNotificationWithIcon = () => {
+    notification["info"]({
+      message: "You have a new notification!",
+      description: "Please check your notification inbox",
+    });
+  };
 
   const onClick = ({ key }) => {
     if (key == 0) {
@@ -125,15 +133,19 @@ function Navbar(props) {
       console.log("connected");
     };
     websocket.onmessage = (e) => {
-      trigger();
+      let id = JSON.parse(e.data).message;
+      if(id == localStorage.getItem("userId")) {
+        trigger(id);
+      }
     };
     return () => {
       websocket.close();
     };
   }, []);
 
-  function trigger() {
+  function trigger(e) {
     loadData();
+    openNotificationWithIcon();
   }
 
   // }, []);
