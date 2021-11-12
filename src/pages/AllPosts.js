@@ -45,10 +45,7 @@ const AllPosts = () => {
   let { id } = useParams();
   const [subscribers, setSubscribers] = useState([]);
   const [subCount, setSubCount] = useState();
-
   const [cacheData, setCacheData] = useState([]);
-
-  // dummy data, to be replaced by API call
   const [posts, setPosts] = useState([]);
   const openCreateModal = () => setModalVisible(true);
   function closeCreateModal() {
@@ -66,6 +63,7 @@ const AllPosts = () => {
     setEditModalVisible(false);
   }
   const [circleCreatedBy, setCircleCreatedBy] = useState();
+  const [isSubscriber, setIsSubscriber] = useState(false);
 
   const loadCachedata = () => {
     const cacheInstance = cacheData;
@@ -119,6 +117,7 @@ const AllPosts = () => {
       await axios.get(`${Url}/circles/subscribers/${id}`).then((res) => {
         setSubscribers(res.data);
         setSubCount(res.data.length);
+        checkIsSubscriber(res.data);
       });
     } catch (error) {
       console.log(error);
@@ -137,6 +136,33 @@ const AllPosts = () => {
         console.log("Notification Clicked!");
       },
     });
+  };
+
+  function checkIsSubscriber(data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].userid === parseInt(localStorage.userId)) {
+        setIsSubscriber(true);
+        break;
+      }
+    }
+  }
+
+  const handleLeaveCircle = async () => {
+    await axios.post(`${Url}/circles/unsubscribeUser`, {
+      circleId: id,
+      userId: parseInt(localStorage.userId),
+    });
+    history.push("/my-circles");
+    message.success("You have left the circle.");
+  };
+
+  const handleJoinCircle = async () => {
+    await axios.post(`${Url}/circles/subscribeUser`, {
+      circleId: id,
+      userId: parseInt(localStorage.userId),
+    });
+    history.go(0);
+    message.success("You have joined the circle.");
   };
   /* START -- SETUP FOR COMPONENT */
   const tabData = [
@@ -192,6 +218,21 @@ const AllPosts = () => {
                 <ContainerHeader headData={headData} />
               </Col>
             </Row>
+            {localStorage.userId &&
+            isSubscriber === true &&
+            circleCreatedBy !== parseInt(localStorage.userId) ? (
+              <Row>
+                <Button
+                  type="default"
+                  onClick={
+                    localStorage.userId ? handleLeaveCircle : rerouteToLogin
+                  }
+                >
+                  Leave Circle
+                </Button>
+              </Row>
+            ) : null}
+
             <Row
               justify="start"
               style={{
@@ -270,20 +311,34 @@ const AllPosts = () => {
                   </>
                 ) : null}
 
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={
-                    localStorage.userId ? openCreateModal : rerouteToLogin
-                  }
-                >
-                  Create New Post
-                </Button>
-                <CreatePostModal
-                  modalVisible={modalVisible}
-                  closeCreateModal={closeCreateModal}
-                  circleId={id}
-                />
+                {isSubscriber ? (
+                  <>
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      onClick={
+                        localStorage.userId ? openCreateModal : rerouteToLogin
+                      }
+                    >
+                      Create New Post
+                    </Button>
+                    <CreatePostModal
+                      modalVisible={modalVisible}
+                      closeCreateModal={closeCreateModal}
+                      circleId={id}
+                    />
+                  </>
+                ) : (
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={
+                      localStorage.userId ? handleJoinCircle : rerouteToLogin
+                    }
+                  >
+                    Join Circle
+                  </Button>
+                )}
               </BarWrapper>
             </Row>
             <div
