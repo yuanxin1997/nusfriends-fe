@@ -51,18 +51,6 @@ const MyInbox = () => {
     loadData();
   }, [id]);
   /* START -- SETUP FOR COMPONENT */
-  const tabData = [
-    {
-      icon: "CommentOutlined",
-      title: "All Posts",
-      path: "/my-circles/replace by id/my-discussions",
-    },
-    {
-      icon: "TrophyOutlined",
-      title: "Leaderboard",
-      path: "/my-circles/replace by id/circles",
-    },
-  ];
 
   const headData = {
     title: "Messages",

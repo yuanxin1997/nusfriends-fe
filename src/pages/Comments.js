@@ -80,7 +80,7 @@ function Comments(props) {
     {
       icon: "TrophyOutlined",
       title: "Leaderboard",
-      path: "/my-circles/replace by id/leaderboard",
+      path: "/my-circles/" + circleId + "/leaderboard",
     },
   ];
 
